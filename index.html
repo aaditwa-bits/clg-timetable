@@ -7,7 +7,7 @@
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@400;500;600;700;800&family=Oswald:wght@600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Oswald:wght@600;700&display=swap" rel="stylesheet">
   <style>
     :root {
       --bg-main: #0c1017;
@@ -26,7 +26,6 @@
       font-family: 'Oswald', sans-serif;
       letter-spacing: -0.02em;
     }
-    /* Custom Scrollbar */
     ::-webkit-scrollbar { width: 6px; height: 6px; }
     ::-webkit-scrollbar-track { background: #0c1017; }
     ::-webkit-scrollbar-thumb { background: #263042; border-radius: 3px; }
@@ -34,19 +33,19 @@
 
     /* Subject Themes */
     .theme-emerald {
-      background-color: rgba(16, 86, 79, 0.42);
-      border: 1px solid rgba(25, 133, 122, 0.55);
+      background-color: rgba(16, 86, 79, 0.45);
+      border: 1px solid rgba(25, 133, 122, 0.6);
       color: #e2f8f5;
     }
-    .theme-emerald:hover { background-color: rgba(20, 107, 98, 0.58); }
+    .theme-emerald:hover { background-color: rgba(20, 107, 98, 0.65); }
     .modal-header-emerald { background-color: #0e7c66; }
 
     .theme-gold {
-      background-color: rgba(92, 74, 30, 0.42);
-      border: 1px solid rgba(145, 115, 42, 0.5);
+      background-color: rgba(92, 74, 30, 0.45);
+      border: 1px solid rgba(145, 115, 42, 0.55);
       color: #fef3c7;
     }
-    .theme-gold:hover { background-color: rgba(115, 92, 36, 0.58); }
+    .theme-gold:hover { background-color: rgba(115, 92, 36, 0.65); }
     .modal-header-gold { background-color: #986c08; }
 
     .theme-purple {
@@ -89,6 +88,14 @@
     .theme-brown:hover { background-color: rgba(130, 75, 46, 0.65); }
     .modal-header-brown { background-color: #844723; }
 
+    .theme-cyan {
+      background-color: rgba(21, 94, 117, 0.48);
+      border: 1px solid rgba(6, 182, 212, 0.55);
+      color: #cffafe;
+    }
+    .theme-cyan:hover { background-color: rgba(14, 116, 144, 0.65); }
+    .modal-header-cyan { background-color: #0e7490; }
+
     .active-now-ring {
       border: 1.5px solid #e2e8f0 !important;
       box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.2), 0 8px 20px -4px rgba(0, 0, 0, 0.6);
@@ -102,7 +109,7 @@
 </head>
 <body class="min-h-screen pb-14 selection:bg-emerald-500 selection:text-white">
 
-  <div class="max-w-[1160px] mx-auto px-3.5 sm:px-6 pt-5 sm:pt-7">
+  <div class="max-w-[1180px] mx-auto px-3.5 sm:px-6 pt-5 sm:pt-7">
 
     <!-- TOP HEADER -->
     <header class="flex flex-col sm:flex-row sm:items-start justify-between gap-4 mb-5">
@@ -135,7 +142,7 @@
       </div>
     </header>
 
-    <!-- CONTROLS BAR (NO LAB BATCHES, NO DEMO TIME) -->
+    <!-- CONTROLS BAR -->
     <div class="flex flex-wrap items-center justify-between gap-3 mb-6 pb-1">
       <!-- Left: Clock Format Toggle -->
       <div class="flex items-center gap-2.5">
@@ -146,7 +153,7 @@
         </div>
       </div>
 
-      <!-- Right: Page Navigation + Cloud Sync Button -->
+      <!-- Right: Sync + Page Switcher -->
       <div class="flex items-center gap-2">
         <button onclick="openSyncModal()" id="syncStatusBtn" class="inline-flex items-center gap-1.5 px-3 py-2 rounded-xl bg-[#161c28] hover:bg-slate-800 border border-slate-800/90 text-xs sm:text-sm font-semibold text-slate-300 transition-all" title="Sync To-Dos across Mac and iPhone">
           <span id="syncIndicatorDot" class="w-2 h-2 rounded-full bg-slate-500"></span>
@@ -181,9 +188,7 @@
       <div class="grid grid-cols-1 lg:grid-cols-12 gap-5 items-stretch">
         <!-- LEFT LIVE STATUS CARD -->
         <div class="lg:col-span-5 flex">
-          <div id="liveStatusCard" class="w-full rounded-2xl bg-[#107c65] p-5 sm:p-6 text-white shadow-xl flex flex-col justify-between relative overflow-hidden border border-white/10">
-            <!-- Populated dynamically by renderLiveStatusCard() -->
-          </div>
+          <div id="liveStatusCard" class="w-full rounded-2xl bg-[#107c65] p-5 sm:p-6 text-white shadow-xl flex flex-col justify-between relative overflow-hidden border border-white/10"></div>
         </div>
 
         <!-- RIGHT DAILY SCHEDULE PANEL -->
@@ -207,17 +212,25 @@
       <!-- BOTTOM WEEKLY TIMETABLE GRID -->
       <div class="rounded-2xl bg-[#131822] border border-[#222938] p-4 sm:p-6 shadow-lg">
         <div class="flex flex-wrap items-center justify-between gap-2 mb-5">
-          <h2 class="font-condensed text-2xl sm:text-3xl font-bold text-white tracking-tight">This week</h2>
+          <div class="flex items-center gap-3">
+            <h2 class="font-condensed text-2xl sm:text-3xl font-bold text-white tracking-tight">This week</h2>
+            <div class="inline-flex rounded-lg bg-[#1a2130] p-0.5 border border-slate-800 text-xs">
+              <button onclick="changeWeekOffset(0)" id="week-btn-current" class="px-2.5 py-1 rounded-md font-bold bg-white text-slate-950">Current Week</button>
+              <button onclick="changeWeekOffset(1)" id="week-btn-next" class="px-2.5 py-1 rounded-md font-semibold text-slate-400 hover:text-white">Next Week</button>
+            </div>
+          </div>
           <span id="weekRangeLabel" class="text-slate-400 text-xs sm:text-sm font-medium">Monday to Saturday</span>
         </div>
 
         <div class="overflow-x-auto pb-2">
-          <div class="min-w-[760px] relative" id="weeklyGridWrapper"></div>
+          <div class="min-w-[820px] relative" id="weeklyGridWrapper"></div>
         </div>
 
-        <p class="text-slate-400 text-xs mt-4 pt-3 border-t border-slate-800/80">
-          Each week: 16 h of theory, 6 h of labs and 1 h of tutorials. Saturday and Sunday have no classes.
-        </p>
+        <!-- Upcoming Official Holidays Strip -->
+        <div class="mt-4 pt-3 border-t border-slate-800/80 flex flex-col sm:flex-row sm:items-center justify-between gap-2 text-xs text-slate-400">
+          <span>Weekly schedule: 15 h theory, 6 h labs, 1 h tutorial (including German 8–10 am Fri). Saturday and Sunday have no classes.</span>
+          <span class="text-amber-400/90 font-medium">Next Holidays: Diwali (6–12 Nov) · Gurunanak Jayanti (24 Nov) · Christmas (25 Dec)</span>
+        </div>
       </div>
     </div>
 
@@ -237,9 +250,9 @@
           <p class="text-xs text-slate-400 mt-1">Finished assignments & labs</p>
         </div>
         <div class="rounded-2xl bg-[#131822] border border-[#222938] p-5">
-          <span class="text-xs font-semibold uppercase tracking-wider text-amber-400">Sync Status</span>
+          <span class="text-xs font-semibold uppercase tracking-wider text-amber-400">Mac ↔ iPhone Sync</span>
           <div id="statSyncStatus" class="font-condensed text-2xl font-bold text-amber-400 mt-2 truncate">Local Only</div>
-          <button onclick="openSyncModal()" class="text-xs text-emerald-400 hover:underline mt-1 inline-block">Configure Mac/iPhone Sync →</button>
+          <button onclick="openSyncModal()" class="text-xs text-emerald-400 hover:underline mt-1 inline-block">Configure Cloud Sync →</button>
         </div>
       </div>
 
@@ -252,7 +265,7 @@
         <form id="pageTodoForm" onsubmit="handlePageTodoSubmit(event)" class="grid grid-cols-1 sm:grid-cols-12 gap-3">
           <div class="sm:col-span-5">
             <label class="block text-[11px] font-semibold uppercase tracking-wider text-slate-400 mb-1">Task Description</label>
-            <input type="text" id="pageTodoTitle" required placeholder="e.g., Complete Lab 4 C program..." class="w-full px-3.5 py-2.5 rounded-xl bg-[#0c1017] border border-slate-700/80 text-sm text-white placeholder-slate-500 focus:outline-none focus:border-emerald-500" />
+            <input type="text" id="pageTodoTitle" required placeholder="e.g., Complete Lab 4 C program or German worksheet..." class="w-full px-3.5 py-2.5 rounded-xl bg-[#0c1017] border border-slate-700/80 text-sm text-white placeholder-slate-500 focus:outline-none focus:border-emerald-500" />
           </div>
           <div class="sm:col-span-3">
             <label class="block text-[11px] font-semibold uppercase tracking-wider text-slate-400 mb-1">Subject / Class</label>
@@ -298,7 +311,6 @@
   <!-- ========================================== -->
   <div id="classModalOverlay" onclick="handleModalBackdropClick(event)" class="fixed inset-0 z-50 hidden bg-black/75 backdrop-blur-sm flex items-center justify-center p-4 overflow-y-auto">
     <div id="classModalCard" class="w-full max-w-[540px] rounded-2xl bg-[#161b28] border border-slate-700/70 shadow-2xl overflow-hidden my-8">
-      <!-- Coloured Top Header matching screenshots -->
       <div id="modalHeaderBanner" class="modal-header-emerald p-6 sm:p-7 relative transition-colors">
         <button onclick="closeClassModal()" class="w-11 h-11 rounded-2xl bg-white/20 hover:bg-white/30 text-white flex items-center justify-center absolute top-5 right-5 transition" aria-label="Close modal">
           <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
@@ -318,7 +330,6 @@
         </div>
       </div>
 
-      <!-- Metadata Table + Add To-Do Section -->
       <div class="p-6 sm:p-7 space-y-6">
         <div class="grid grid-cols-12 gap-y-3 text-sm sm:text-[15px]">
           <div class="col-span-3 text-slate-400 font-medium">When</div>
@@ -339,7 +350,6 @@
 
         <hr class="border-slate-800" />
 
-        <!-- Class To-Do Section Inside Modal -->
         <div>
           <div class="flex items-center justify-between mb-3">
             <h4 class="text-xs font-bold uppercase tracking-wider text-slate-300 flex items-center gap-2">
@@ -376,11 +386,11 @@
         <button onclick="closeSyncModal()" class="text-slate-400 hover:text-white text-xl font-bold">&times;</button>
       </div>
       <p class="text-xs text-slate-300 leading-relaxed">
-        Enter the exact same secret Sync Key on both your <strong>Mac</strong> and <strong>iPhone</strong>. Whenever you add or check off a To-Do on one device, it automatically syncs to the other!
+        Enter the exact same private Sync Key on both your <strong>Mac</strong> and <strong>iPhone</strong>. Whenever you add or complete a To-Do on one device, it pushes to the other automatically.
       </p>
       <div>
         <label class="block text-[11px] font-bold uppercase tracking-wider text-slate-400 mb-1">Your Private Sync Key</label>
-        <input type="text" id="syncKeyInput" placeholder="e.g., aaditwa-vit-ita-2026-secret" class="w-full px-3.5 py-2.5 rounded-xl bg-[#0c1017] border border-slate-700 text-sm text-white font-mono focus:outline-none focus:border-emerald-500" />
+        <input type="text" id="syncKeyInput" placeholder="e.g., aaditwa-vit-ita-2026" class="w-full px-3.5 py-2.5 rounded-xl bg-[#0c1017] border border-slate-700 text-sm text-white font-mono focus:outline-none focus:border-emerald-500" />
       </div>
       <div class="flex items-center justify-between gap-2 pt-2">
         <button onclick="pullFromCloudNow()" class="px-3.5 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-xs font-semibold text-slate-200 transition">
@@ -396,7 +406,37 @@
 
   <script>
     /**************************************************************
-     * 1. COURSE CATALOG & WEEKLY SCHEDULE (IT-A)
+     * 1. OFFICIAL VIT HOLIDAY LIST (FROM CIRCULAR)
+     **************************************************************/
+    const OFFICIAL_HOLIDAYS = {
+      '2026-09-18': 'Gauri Pujan',
+      '2026-09-25': 'Anant Chaturdashi',
+      '2026-10-02': 'Mahatma Gandhi Jayanti',
+      '2026-10-20': 'Vijaya Dashami / Dasara',
+      '2026-11-06': 'Diwali Vacation',
+      '2026-11-07': 'Diwali Vacation',
+      '2026-11-08': 'Diwali Vacation',
+      '2026-11-09': 'Diwali Vacation',
+      '2026-11-10': 'Diwali Vacation',
+      '2026-11-11': 'Diwali Vacation',
+      '2026-11-12': 'Diwali Vacation',
+      '2026-11-24': 'Gurunanak Jayanti',
+      '2026-12-25': 'Christmas'
+    };
+
+    function toDateKey(dateObj) {
+      const y = dateObj.getFullYear();
+      const m = String(dateObj.getMonth() + 1).padStart(2, '0');
+      const d = String(dateObj.getDate()).padStart(2, '0');
+      return `${y}-${m}-${d}`;
+    }
+
+    function getHolidayName(dateObj) {
+      return OFFICIAL_HOLIDAYS[toDateKey(dateObj)] || null;
+    }
+
+    /**************************************************************
+     * 2. ACTUAL IT-A COURSE CATALOG & WEEKLY SCHEDULE
      **************************************************************/
     const COURSES = {
       PROG: {
@@ -419,25 +459,16 @@
       },
       LOGIC: {
         key: 'LOGIC',
-        code: 'ES26101',
+        code: 'ES26103',
         title: 'Logic and Quantitative Aptitude 1',
         shortTitle: 'Logic & Apt.',
         faculty: 'Prof. V. S. Shirke (VSS)',
         facultyShort: 'VSS',
         theme: 'purple'
       },
-      ENG: {
-        key: 'ENG',
-        code: 'ES26102',
-        title: 'Professional English Communication',
-        shortTitle: 'English',
-        faculty: 'Prof. S. Patil (SP)',
-        facultyShort: 'SP',
-        theme: 'maroon'
-      },
       LA: {
         key: 'LA',
-        code: 'ES26103',
+        code: 'ES26101',
         title: 'Linear Algebra',
         shortTitle: 'Lin. Algebra',
         faculty: 'Prof. J. A. Kulkarni (JAK)',
@@ -446,8 +477,8 @@
       },
       ACT: {
         key: 'ACT',
-        code: 'ES26107',
-        title: 'Student Activity & Mentoring',
+        code: 'ES26109',
+        title: 'Student Activity',
         shortTitle: 'Activity',
         faculty: 'Manasi Vyankatesh Ghamande (MVG)',
         facultyShort: 'MVG',
@@ -461,22 +492,46 @@
         faculty: 'Prof. R. S. Gayakwad (RSG)',
         facultyShort: 'RSG',
         theme: 'brown'
+      },
+      IKS: {
+        key: 'IKS',
+        code: 'ES26107',
+        title: 'Indian Knowledge System',
+        shortTitle: 'Ind. Knowledge',
+        faculty: 'Prof. A. M. Kulkarni (AMK)',
+        facultyShort: 'AMK',
+        theme: 'maroon'
+      },
+      GER: {
+        key: 'GER',
+        code: 'FL26101',
+        title: 'German (Foreign Language)',
+        shortTitle: 'German',
+        faculty: 'German Language Faculty',
+        facultyShort: 'GER',
+        theme: 'cyan'
       }
     };
 
-    // Day Index: 0 = Sun, 1 = Mon, 2 = Tue, 3 = Wed, 4 = Thu, 5 = Fri, 6 = Sat
+    // Day Index: 1 = Monday, 2 = Tuesday, 3 = Wednesday, 4 = Thursday, 5 = Friday
     const WEEKLY_SESSIONS = [
-      // MONDAY (Day 1)
-      { id: 'mon-10', dayOfWeek: 1, courseKey: 'LOGIC', startHour: 10, endHour: 11, room: '1125', type: 'Theory', typeDetail: 'Theory, whole division' },
-      { id: 'mon-11', dayOfWeek: 1, courseKey: 'LOGIC', startHour: 11, endHour: 12, room: '1125', type: 'Theory', typeDetail: 'Theory, whole division' },
-      { id: 'mon-13', dayOfWeek: 1, courseKey: 'ENG',   startHour: 13, endHour: 14, room: '1109', type: 'Theory', typeDetail: 'Theory, whole division' },
-      { id: 'mon-14', dayOfWeek: 1, courseKey: 'LA',    startHour: 14, endHour: 15, room: '1109', type: 'Theory', typeDetail: 'Theory, whole division' },
-      { id: 'mon-15', dayOfWeek: 1, courseKey: 'ACT',   startHour: 15, endHour: 16, room: '1109', type: 'Theory', typeDetail: 'Theory, whole division' },
+      // MONDAY (Day 1) - No English!
+      { id: 'mon-10', dayOfWeek: 1, courseKey: 'LOGIC', startHour: 10, endHour: 11, room: '1125', type: 'Theory',   typeDetail: 'Theory, whole division' },
+      { id: 'mon-11', dayOfWeek: 1, courseKey: 'LOGIC', startHour: 11, endHour: 12, room: '1125', type: 'Theory',   typeDetail: 'Theory, whole division' },
+      { id: 'mon-14', dayOfWeek: 1, courseKey: 'LA',    startHour: 14, endHour: 15, room: '1109', type: 'Theory',   typeDetail: 'Theory, whole division' },
+      { id: 'mon-15', dayOfWeek: 1, courseKey: 'ACT',   startHour: 15, endHour: 16, room: '1109', type: 'Theory',   typeDetail: 'Theory, whole division' },
       { id: 'mon-16', dayOfWeek: 1, courseKey: 'LA',    startHour: 16, endHour: 17, room: '1115', type: 'Tutorial', typeDetail: 'Tutorial' },
 
-      // TUESDAY (Day 2) - Holiday / No classes in screenshot
+      // TUESDAY (Day 2) - Full 5-class schedule (1:00 PM to 6:00 PM)
+      { id: 'tue-13', dayOfWeek: 2, courseKey: 'BOE',   startHour: 13, endHour: 14, room: '1002',  type: 'Theory', typeDetail: 'Theory, whole division' },
+      { id: 'tue-14', dayOfWeek: 2, courseKey: 'IKS',   startHour: 14, endHour: 15, room: '1002',  type: 'Theory', typeDetail: 'Theory, whole division' },
+      { id: 'tue-15', dayOfWeek: 2, courseKey: 'LA',    startHour: 15, endHour: 16, room: '1002',  type: 'Theory', typeDetail: 'Theory, whole division' },
+      { id: 'tue-16', dayOfWeek: 2, courseKey: 'BOE',   startHour: 16, endHour: 17, room: '1220D', type: 'Lab',    typeDetail: 'Lab session' },
+      { id: 'tue-17', dayOfWeek: 2, courseKey: 'BOE',   startHour: 17, endHour: 18, room: '1220D', type: 'Lab',    typeDetail: 'Lab session' },
+
       // WEDNESDAY (Day 3)
-      { id: 'wed-14', dayOfWeek: 3, courseKey: 'PROG',  startHour: 14, endHour: 15, room: '1103', type: 'Theory', typeDetail: 'Theory, whole division' },
+      { id: 'wed-12', dayOfWeek: 3, courseKey: 'UHV',   startHour: 12, endHour: 13, room: '1107', type: 'Theory', typeDetail: 'Theory, whole division' },
+      { id: 'wed-14', dayOfWeek: 3, courseKey: 'PROG',  startHour: 14, endHour: 15, room: '1116', type: 'Theory', typeDetail: 'Theory, whole division' },
       { id: 'wed-15', dayOfWeek: 3, courseKey: 'UHV',   startHour: 15, endHour: 16, room: '1001', type: 'Theory', typeDetail: 'Theory, whole division' },
       { id: 'wed-16', dayOfWeek: 3, courseKey: 'PROG',  startHour: 16, endHour: 17, room: '1114', type: 'Lab',    typeDetail: 'Lab session' },
       { id: 'wed-17', dayOfWeek: 3, courseKey: 'PROG',  startHour: 17, endHour: 18, room: '1114', type: 'Lab',    typeDetail: 'Lab session' },
@@ -486,22 +541,24 @@
       { id: 'thu-13', dayOfWeek: 4, courseKey: 'ACT',   startHour: 13, endHour: 14, room: '1001', type: 'Theory', typeDetail: 'Theory, whole division' },
       { id: 'thu-15', dayOfWeek: 4, courseKey: 'LA',    startHour: 15, endHour: 16, room: '1103', type: 'Theory', typeDetail: 'Theory, whole division' },
 
-      // FRIDAY (Day 5)
+      // FRIDAY (Day 5) - Includes German 8:00-10:00 AM
+      { id: 'fri-08', dayOfWeek: 5, courseKey: 'GER',   startHour: 8,  endHour: 9,  room: 'FL',   type: 'Theory', typeDetail: 'Foreign Language (German)' },
+      { id: 'fri-09', dayOfWeek: 5, courseKey: 'GER',   startHour: 9,  endHour: 10, room: 'FL',   type: 'Theory', typeDetail: 'Foreign Language (German)' },
       { id: 'fri-14', dayOfWeek: 5, courseKey: 'PROG',  startHour: 14, endHour: 15, room: '1102', type: 'Theory', typeDetail: 'Theory, whole division' },
-      { id: 'fri-15', dayOfWeek: 5, courseKey: 'UHV',   startHour: 15, endHour: 16, room: '1001', type: 'Theory', typeDetail: 'Theory, whole division' },
       { id: 'fri-16', dayOfWeek: 5, courseKey: 'PROG',  startHour: 16, endHour: 17, room: '1201', type: 'Lab',    typeDetail: 'Lab session' },
       { id: 'fri-17', dayOfWeek: 5, courseKey: 'PROG',  startHour: 17, endHour: 18, room: '1201', type: 'Lab',    typeDetail: 'Lab session' }
     ];
 
     /**************************************************************
-     * 2. STATE & STORAGE
+     * 3. STATE & LOCALSTORAGE
      **************************************************************/
-    const STORAGE_KEY_TODOS = 'vit_ita_todos_v2';
+    const STORAGE_KEY_TODOS = 'vit_ita_todos_v3';
     const STORAGE_KEY_SYNC  = 'vit_ita_sync_channel_v1';
 
     let state = {
       clockFormat: '12h',
-      selectedDayOffset: 0, // 0 = Today, 1 = Tomorrow, etc. (7 rolling days)
+      selectedDayOffset: 0,
+      weekOffset: 0, // 0 = Current Week, 1 = Next Week
       activeView: 'timetable',
       activeModalSessionId: null,
       todoFilterStatus: 'all',
@@ -527,8 +584,8 @@
             },
             {
               id: 'seed-2',
-              title: 'Read Unit 2 Notes for Universal Human Values',
-              courseKey: 'UHV',
+              title: 'Revise German vocabulary & sentence structure for Friday morning',
+              courseKey: 'GER',
               dueDate: '',
               completed: false,
               createdAt: Date.now()
@@ -550,7 +607,7 @@
     }
 
     /**************************************************************
-     * 3. REAL-TIME CLOCK & TIME FORMATTING HELPERS
+     * 4. TIME & SCHEDULE ENGINE (WITH HOLIDAY SUPPORT)
      **************************************************************/
     const SHORT_MONTHS = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
     const LONG_MONTHS  = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
@@ -599,27 +656,31 @@
         `${LONG_DAYS[now.getDay()]}, ${now.getDate()} ${LONG_MONTHS[now.getMonth()]} ${now.getFullYear()}`;
     }
 
-    function getSessionsForDayOfWeek(dayOfWeek) {
+    // Returns sessions for a specific Date object (returns [] if official holiday)
+    function getSessionsForDate(dateObj) {
+      if (getHolidayName(dateObj)) return [];
+      const dow = dateObj.getDay();
       return WEEKLY_SESSIONS
-        .filter(s => s.dayOfWeek === dayOfWeek)
+        .filter(s => s.dayOfWeek === dow)
         .sort((a, b) => a.startHour - b.startHour);
     }
 
-    // Finds the very next upcoming session from real `now`
+    // Finds the next upcoming session across the next 14 days (skipping holidays)
     function findNextUpcomingSession(now) {
-      const currentDay = now.getDay();
       const currentDecHour = now.getHours() + now.getMinutes() / 60;
 
-      for (let offset = 0; offset < 7; offset++) {
-        const checkDay = (currentDay + offset) % 7;
-        const daySessions = getSessionsForDayOfWeek(checkDay);
+      for (let offset = 0; offset < 14; offset++) {
+        const checkDate = new Date(now);
+        checkDate.setDate(now.getDate() + offset);
+        const daySessions = getSessionsForDate(checkDate);
+
         for (const sess of daySessions) {
           if (offset === 0) {
             if (sess.startHour > currentDecHour) {
-              return { session: sess, dayOffset: offset, dayOfWeek: checkDay };
+              return { session: sess, dayOffset: offset, dateObj: checkDate };
             }
           } else {
-            return { session: sess, dayOffset: offset, dayOfWeek: checkDay };
+            return { session: sess, dayOffset: offset, dateObj: checkDate };
           }
         }
       }
@@ -627,16 +688,16 @@
     }
 
     /**************************************************************
-     * 4. RENDER LIVE STATUS CARD (LEFT GREEN PANEL)
+     * 5. RENDER LIVE STATUS CARD (LEFT GREEN PANEL)
      **************************************************************/
     function renderLiveStatusCard() {
       const card = document.getElementById('liveStatusCard');
       const now = new Date();
       const currentDay = now.getDay();
       const currentHourDec = now.getHours() + now.getMinutes() / 60;
-      const todaySessions = getSessionsForDayOfWeek(currentDay);
+      const todayHoliday = getHolidayName(now);
+      const todaySessions = getSessionsForDate(now);
 
-      // 1. Check if user is currently inside an active class right now
       const activeSession = todaySessions.find(
         s => currentHourDec >= s.startHour && currentHourDec < s.endHour
       );
@@ -652,7 +713,7 @@
         let nextLineText = 'No more classes scheduled after this.';
         if (nextInfo) {
           const nextCourse = COURSES[nextInfo.session.courseKey];
-          const dayLabel = nextInfo.dayOffset === 0 ? 'Today' : SHORT_DAYS[nextInfo.dayOfWeek];
+          const dayLabel = nextInfo.dayOffset === 0 ? 'Today' : SHORT_DAYS[nextInfo.dateObj.getDay()];
           nextLineText = `Then ${dayLabel} at ${formatHourLabel(nextInfo.session.startHour)}: ${nextCourse.title}, room ${nextInfo.session.room}.`;
         }
 
@@ -707,15 +768,16 @@
         return;
       }
 
-      // 2. If not in class right now -> Show live "Free / Next Up" status
+      // Not currently in class
       let statusBadge = 'No class in session';
       let headline = 'Free right now';
 
-      if (currentDay === 0 || currentDay === 6) {
+      if (todayHoliday) {
+        statusBadge = `Official Holiday · ${todayHoliday}`;
+        headline = 'Holiday Today';
+      } else if (currentDay === 0 || currentDay === 6) {
         statusBadge = 'Weekend · No classes today';
-      } else if (todaySessions.length === 0) {
-        statusBadge = 'Holiday · No classes today';
-      } else {
+      } else if (todaySessions.length > 0) {
         const firstToday = todaySessions[0];
         const lastToday = todaySessions[todaySessions.length - 1];
         if (currentHourDec < firstToday.startHour) {
@@ -731,12 +793,13 @@
       if (nextInfo) {
         const nextSess = nextInfo.session;
         const nextCourse = COURSES[nextSess.courseKey];
+        const nextDow = nextInfo.dateObj.getDay();
         const dayWord =
           nextInfo.dayOffset === 0
             ? 'Today'
             : nextInfo.dayOffset === 1
-            ? `Tomorrow (${SHORT_DAYS[nextInfo.dayOfWeek]})`
-            : LONG_DAYS[nextInfo.dayOfWeek];
+            ? `Tomorrow (${SHORT_DAYS[nextDow]})`
+            : `${LONG_DAYS[nextDow]}, ${nextInfo.dateObj.getDate()} ${SHORT_MONTHS[nextInfo.dateObj.getMonth()]}`;
 
         card.innerHTML = `
           <div>
@@ -783,7 +846,7 @@
     }
 
     /**************************************************************
-     * 5. RENDER ROLLING 7-DAY TABS & DAILY TIMELINE (RIGHT PANEL)
+     * 6. RENDER ROLLING 7-DAY TABS & DAILY TIMELINE (RIGHT PANEL)
      **************************************************************/
     function renderDayTabsAndDailyTimeline() {
       const now = new Date();
@@ -794,8 +857,13 @@
         const d = new Date(now);
         d.setDate(now.getDate() + offset);
         const dow = d.getDay();
-        const sessions = getSessionsForDayOfWeek(dow);
-        const countLabel = sessions.length === 0 ? 'No classes' : `${sessions.length} classes`;
+        const holidayName = getHolidayName(d);
+        const sessions = getSessionsForDate(d);
+        const countLabel = holidayName
+          ? 'Holiday'
+          : sessions.length === 0
+          ? 'No classes'
+          : `${sessions.length} classes`;
 
         let topLabel = LONG_DAYS[dow];
         if (offset === 0) topLabel = 'Today';
@@ -820,7 +888,7 @@
           <div class="text-[11px] ${isSelected ? 'text-slate-700 font-semibold' : 'text-slate-400'} mt-0.5">
             ${d.getDate()} ${SHORT_MONTHS[d.getMonth()]}
           </div>
-          <div class="text-[10px] ${isSelected ? 'text-slate-900 font-bold' : 'text-slate-500'} mt-0.5">
+          <div class="text-[10px] ${holidayName ? 'text-rose-500 font-bold' : isSelected ? 'text-slate-900 font-bold' : 'text-slate-500'} mt-0.5">
             ${countLabel}
           </div>
         `;
@@ -831,7 +899,8 @@
       const selectedDate = new Date(now);
       selectedDate.setDate(now.getDate() + state.selectedDayOffset);
       const selectedDow = selectedDate.getDay();
-      const daySessions = getSessionsForDayOfWeek(selectedDow);
+      const selectedHoliday = getHolidayName(selectedDate);
+      const daySessions = getSessionsForDate(selectedDate);
 
       document.getElementById('selectedDayTitle').textContent =
         `${LONG_DAYS[selectedDow]}, ${selectedDate.getDate()} ${LONG_MONTHS[selectedDate.getMonth()]}`;
@@ -839,12 +908,24 @@
       const summaryEl = document.getElementById('selectedDaySummary');
       const timelineEl = document.getElementById('dailyTimelineContainer');
 
+      if (selectedHoliday) {
+        summaryEl.textContent = `Holiday · ${selectedHoliday}`;
+        timelineEl.innerHTML = `
+          <div class="h-56 rounded-xl bg-rose-950/20 border border-dashed border-rose-800/60 flex flex-col items-center justify-center text-center p-6">
+            <span class="px-3 py-1 rounded-full bg-rose-500/20 text-rose-300 text-xs font-bold mb-2">Official VIT Holiday</span>
+            <div class="text-white font-bold text-lg">${selectedHoliday}</div>
+            <p class="text-slate-400 text-xs mt-1 max-w-xs">No classes scheduled on this day according to the VIT Holiday circular.</p>
+          </div>
+        `;
+        return;
+      }
+
       if (daySessions.length === 0) {
         summaryEl.textContent = 'No classes scheduled';
         timelineEl.innerHTML = `
           <div class="h-56 rounded-xl bg-[#0e131d] border border-dashed border-slate-800 flex flex-col items-center justify-center text-center p-6">
             <div class="text-slate-300 font-bold text-base">No classes on ${LONG_DAYS[selectedDow]}!</div>
-            <p class="text-slate-500 text-xs mt-1 max-w-xs">Use the day tabs above to inspect upcoming lectures or switch to the To-Do tab to plan ahead.</p>
+            <p class="text-slate-500 text-xs mt-1 max-w-xs">Click any weekday tab above (Mon–Fri) to inspect your lectures and labs.</p>
           </div>
         `;
         return;
@@ -854,11 +935,10 @@
       const maxHour = daySessions[daySessions.length - 1].endHour;
       summaryEl.textContent = `${daySessions.length} classes, ${formatRangeLabel(minHour, maxHour)}`;
 
-      const ROW_HEIGHT = 64; // px per hour
+      const ROW_HEIGHT = 56;
       const totalHours = maxHour - minHour;
       let html = `<div class="relative" style="height: ${totalHours * ROW_HEIGHT + 24}px;">`;
 
-      // Hour grid lines
       for (let h = minHour; h <= maxHour; h++) {
         const topPx = (h - minHour) * ROW_HEIGHT;
         html += `
@@ -869,36 +949,34 @@
         `;
       }
 
-      // Session blocks
       const currentDecHour = now.getHours() + now.getMinutes() / 60;
       daySessions.forEach(sess => {
         const course = COURSES[sess.courseKey];
-        const topPx = (sess.startHour - minHour) * ROW_HEIGHT + 3;
-        const heightPx = (sess.endHour - sess.startHour) * ROW_HEIGHT - 6;
+        const topPx = (sess.startHour - minHour) * ROW_HEIGHT + 2;
+        const heightPx = (sess.endHour - sess.startHour) * ROW_HEIGHT - 4;
         const isNow = state.selectedDayOffset === 0 && currentDecHour >= sess.startHour && currentDecHour < sess.endHour;
         const pendingCount = state.todos.filter(t => t.courseKey === sess.courseKey && !t.completed).length;
 
         html += `
           <div onclick="openClassModal('${sess.id}')"
                style="top: ${topPx}px; height: ${heightPx}px;"
-               class="absolute left-12 right-1 rounded-xl px-3.5 py-2 cursor-pointer transition flex items-center justify-between theme-${course.theme} ${isNow ? 'active-now-ring' : ''}">
+               class="absolute left-12 right-1 rounded-xl px-3.5 py-1.5 cursor-pointer transition flex items-center justify-between theme-${course.theme} ${isNow ? 'active-now-ring' : ''}">
             <div class="min-w-0">
-              <div class="font-bold text-sm text-white truncate">${course.title}</div>
-              <div class="flex items-center gap-2 text-xs opacity-90 mt-0.5">
+              <div class="font-bold text-xs sm:text-sm text-white truncate">${course.title}</div>
+              <div class="flex items-center gap-2 text-[11px] opacity-90">
                 <span class="font-extrabold text-white">${sess.room}</span>
                 <span>${sess.type}</span>
                 <span>${course.facultyShort}</span>
               </div>
             </div>
             <div class="flex items-center gap-2 shrink-0">
-              ${pendingCount > 0 ? `<span class="px-2 py-0.5 rounded-full bg-black/35 text-[11px] font-bold text-emerald-300">${pendingCount} to-do</span>` : ''}
-              ${isNow ? `<span class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full bg-white text-slate-950 text-[11px] font-extrabold"><span class="w-1.5 h-1.5 rounded-full bg-rose-600"></span>Now</span>` : ''}
+              ${pendingCount > 0 ? `<span class="px-2 py-0.5 rounded-full bg-black/35 text-[10px] font-bold text-emerald-300">${pendingCount} to-do</span>` : ''}
+              ${isNow ? `<span class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full bg-white text-slate-950 text-[10px] font-extrabold"><span class="w-1.5 h-1.5 rounded-full bg-rose-600"></span>Now</span>` : ''}
             </div>
           </div>
         `;
       });
 
-      // Live Red Current-Time Line (if Today and within range)
       if (state.selectedDayOffset === 0 && currentDecHour >= minHour && currentDecHour <= maxHour) {
         const lineTop = (currentDecHour - minHour) * ROW_HEIGHT;
         const badgeTime = `${now.getHours() % 12 || 12}:${String(now.getMinutes()).padStart(2, '0')}`;
@@ -915,15 +993,27 @@
     }
 
     /**************************************************************
-     * 6. RENDER FULL WEEKLY TIMETABLE GRID (BOTTOM PANEL)
+     * 7. RENDER FULL WEEKLY TIMETABLE GRID (8 AM TO 6 PM)
      **************************************************************/
+    function changeWeekOffset(offset) {
+      state.weekOffset = offset;
+      document.getElementById('week-btn-current').className =
+        offset === 0
+          ? 'px-2.5 py-1 rounded-md font-bold bg-white text-slate-950'
+          : 'px-2.5 py-1 rounded-md font-semibold text-slate-400 hover:text-white';
+      document.getElementById('week-btn-next').className =
+        offset === 1
+          ? 'px-2.5 py-1 rounded-md font-bold bg-white text-slate-950'
+          : 'px-2.5 py-1 rounded-md font-semibold text-slate-400 hover:text-white';
+      renderWeeklyGrid();
+    }
+
     function renderWeeklyGrid() {
       const now = new Date();
       const currentDow = now.getDay();
-      // Compute Monday of the current week
       const diffToMon = currentDow === 0 ? -6 : 1 - currentDow;
       const mondayDate = new Date(now);
-      mondayDate.setDate(now.getDate() + diffToMon);
+      mondayDate.setDate(now.getDate() + diffToMon + state.weekOffset * 7);
 
       const saturdayDate = new Date(mondayDate);
       saturdayDate.setDate(mondayDate.getDate() + 5);
@@ -931,9 +1021,9 @@
       document.getElementById('weekRangeLabel').textContent =
         `${mondayDate.getDate()} ${SHORT_MONTHS[mondayDate.getMonth()]} to ${saturdayDate.getDate()} ${SHORT_MONTHS[saturdayDate.getMonth()]}`;
 
-      const START_HOUR = 10;
-      const END_HOUR = 18;
-      const HOUR_HEIGHT = 56;
+      const START_HOUR = 8; // Starts at 8:00 AM for Friday German
+      const END_HOUR = 18;  // Ends at 6:00 PM
+      const HOUR_HEIGHT = 54;
       const wrapper = document.getElementById('weeklyGridWrapper');
 
       // Header Row (Mon - Sat)
@@ -943,6 +1033,7 @@
         d.setDate(mondayDate.getDate() + i);
         const dow = d.getDay();
         const isToday = d.toDateString() === now.toDateString();
+        const hol = getHolidayName(d);
 
         headerCols += `
           <div class="flex-1 px-2 pb-3 text-left">
@@ -950,7 +1041,9 @@
               ${isToday ? `<span class="w-1.5 h-1.5 rounded-full bg-rose-500"></span>` : ''}
               <span>${SHORT_DAYS[dow]}</span>
             </div>
-            <div class="text-[11px] text-slate-400">${d.getDate()} ${SHORT_MONTHS[d.getMonth()]}</div>
+            <div class="text-[11px] ${hol ? 'text-rose-400 font-semibold' : 'text-slate-400'}">
+              ${d.getDate()} ${SHORT_MONTHS[d.getMonth()]} ${hol ? '· Holiday' : ''}
+            </div>
           </div>
         `;
       }
@@ -958,7 +1051,6 @@
       const totalHeight = (END_HOUR - START_HOUR) * HOUR_HEIGHT;
       let gridBody = `<div class="relative flex" style="height: ${totalHeight}px;">`;
 
-      // Left Hour Labels + Horizontal Lines
       for (let h = START_HOUR; h <= END_HOUR; h++) {
         const topPx = (h - START_HOUR) * HOUR_HEIGHT;
         gridBody += `
@@ -969,23 +1061,33 @@
         `;
       }
 
-      // 6 Day Columns (Mon=1 .. Sat=6)
       gridBody += `<div class="w-14 shrink-0"></div>`;
       const currentDecHour = now.getHours() + now.getMinutes() / 60;
 
-      for (let dayIdx = 1; dayIdx <= 6; dayIdx++) {
-        const colSessions = getSessionsForDayOfWeek(dayIdx);
+      for (let i = 0; i < 6; i++) {
+        const colDate = new Date(mondayDate);
+        colDate.setDate(mondayDate.getDate() + i);
+        const dayIdx = colDate.getDay();
+        const holidayName = getHolidayName(colDate);
+        const colSessions = getSessionsForDate(colDate);
+        const isTodayCol = colDate.toDateString() === now.toDateString();
+
         gridBody += `<div class="flex-1 relative border-l border-slate-800/60">`;
 
-        if (dayIdx === 2 && colSessions.length === 0) {
-          gridBody += `<div class="p-2 text-[11px] font-semibold text-rose-400/90">Holiday</div>`;
+        if (holidayName) {
+          gridBody += `
+            <div class="m-1.5 p-2.5 rounded-lg bg-rose-950/30 border border-rose-800/40 text-rose-300 text-[11px] font-semibold leading-snug">
+              <div>Holiday</div>
+              <div class="text-[10px] text-rose-400/80 font-normal mt-0.5">${holidayName}</div>
+            </div>
+          `;
         }
 
         colSessions.forEach(sess => {
           const course = COURSES[sess.courseKey];
           const topPx = (sess.startHour - START_HOUR) * HOUR_HEIGHT + 2;
           const heightPx = (sess.endHour - sess.startHour) * HOUR_HEIGHT - 4;
-          const isNow = currentDow === dayIdx && currentDecHour >= sess.startHour && currentDecHour < sess.endHour;
+          const isNow = isTodayCol && currentDecHour >= sess.startHour && currentDecHour < sess.endHour;
           const todoCount = state.todos.filter(t => t.courseKey === sess.courseKey && !t.completed).length;
 
           gridBody += `
@@ -1006,8 +1108,7 @@
         gridBody += `</div>`;
       }
 
-      // Live Red Current-Time Line across weekly grid
-      if (currentDow >= 1 && currentDow <= 6 && currentDecHour >= START_HOUR && currentDecHour <= END_HOUR) {
+      if (state.weekOffset === 0 && currentDow >= 1 && currentDow <= 6 && currentDecHour >= START_HOUR && currentDecHour <= END_HOUR) {
         const lineTop = (currentDecHour - START_HOUR) * HOUR_HEIGHT;
         const badgeTime = `${now.getHours() % 12 || 12}:${String(now.getMinutes()).padStart(2, '0')}`;
         gridBody += `
@@ -1023,7 +1124,7 @@
     }
 
     /**************************************************************
-     * 7. CLASS DETAIL POPUP MODAL & SUBJECT TO-DO HANDLERS
+     * 8. CLASS DETAIL POPUP MODAL & TO-DO HANDLERS
      **************************************************************/
     function openClassModal(sessionId) {
       const sess = WEEKLY_SESSIONS.find(s => s.id === sessionId);
@@ -1037,13 +1138,12 @@
       document.getElementById('modalCourseTitle').textContent = course.title;
       document.getElementById('modalCourseSub').textContent = `${course.code}, ${sess.type}`;
 
-      // Live status calculation for this class
       const now = new Date();
       const currentDow = now.getDay();
       const currentDec = now.getHours() + now.getMinutes() / 60;
-      let statusLabel = `Scheduled on ${LONG_DAYS[sess.dayOfWeek]}`;
+      let statusLabel = `Every ${LONG_DAYS[sess.dayOfWeek]}`;
 
-      if (currentDow === sess.dayOfWeek) {
+      if (currentDow === sess.dayOfWeek && !getHolidayName(now)) {
         if (currentDec >= sess.startHour && currentDec < sess.endHour) {
           const left = Math.max(1, Math.ceil((sess.endHour - currentDec) * 60));
           statusLabel = `In progress, ${left} min left`;
@@ -1120,7 +1220,7 @@
     }
 
     /**************************************************************
-     * 8. DEDICATED TO-DO PAGE LOGIC
+     * 9. TO-DO PAGE LOGIC
      **************************************************************/
     function populateSubjectDropdowns() {
       const pageSelect = document.getElementById('pageTodoSubject');
@@ -1255,7 +1355,7 @@
     }
 
     /**************************************************************
-     * 9. REAL-TIME MAC <-> IPHONE SYNC (NTFY CLOUD RELAY)
+     * 10. REAL-TIME MAC <-> IPHONE SYNC (NTFY CLOUD RELAY)
      **************************************************************/
     function openSyncModal() {
       document.getElementById('syncKeyInput').value = state.syncChannel;
@@ -1332,7 +1432,6 @@
 
       pullFromCloudNow();
 
-      // Live real-time listener
       const es = new EventSource(`https://ntfy.sh/${state.syncChannel}/sse`);
       es.onmessage = (event) => {
         try {
@@ -1351,7 +1450,7 @@
     }
 
     /**************************************************************
-     * 10. VIEW & CLOCK CONTROLS
+     * 11. VIEW & CLOCK CONTROLS
      **************************************************************/
     function setClockFormat(fmt) {
       state.clockFormat = fmt;
@@ -1409,7 +1508,6 @@
     renderAll();
     initCloudSync();
 
-    // Update live clock & schedule progress every 15 seconds
     setInterval(() => {
       updateHeaderClock();
       renderLiveStatusCard();
