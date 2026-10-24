@@ -2,922 +2,562 @@
 <html lang="en" class="dark">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
   <title>IT-A Timetable & To-Do Tracker</title>
-  <!-- Tailwind CSS -->
   <script src="https://cdn.tailwindcss.com"></script>
-  <!-- Google Fonts: Barlow Condensed for tight display headers & Inter for clean UI body -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-  <script>
-    tailwind.config = {
-      darkMode: 'class',
-      theme: {
-        extend: {
-          colors: {
-            bgMain: '#0b0e17',
-            bgCard: '#121624',
-            bgElevated: '#1a2033',
-            borderSubtle: '#22293e',
-            textMuted: '#8e98b0',
-            emeraldCard: '#137a63',
-            emeraldCardDark: '#0e614e',
-          },
-          fontFamily: {
-            display: ['"Barlow Condensed"', 'sans-serif'],
-            sans: ['"Inter"', 'sans-serif'],
-          }
-        }
-      }
-    }
-  </script>
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@400;500;600;700;800&family=Oswald:wght@600;700&display=swap" rel="stylesheet">
   <style>
+    :root {
+      --bg-main: #0c1017;
+      --bg-panel: #131822;
+      --bg-card: #1a2130;
+      --border-subtle: #242c3d;
+    }
     body {
-      background-color: #0b0e17;
+      background-color: var(--bg-main);
       color: #f1f5f9;
-      font-family: 'Inter', sans-serif;
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
       -webkit-font-smoothing: antialiased;
+      overflow-x: hidden;
     }
-
     .font-condensed {
-      font-family: 'Barlow Condensed', sans-serif;
-      letter-spacing: -0.01em;
+      font-family: 'Oswald', sans-serif;
+      letter-spacing: -0.02em;
     }
-
     /* Custom Scrollbar */
-    ::-webkit-scrollbar {
-      width: 6px;
-      height: 6px;
-    }
-    ::-webkit-scrollbar-track {
-      background: #0b0e17;
-    }
-    ::-webkit-scrollbar-thumb {
-      background: #262f47;
-      border-radius: 9999px;
-    }
-    ::-webkit-scrollbar-thumb:hover {
-      background: #3a4666;
-    }
+    ::-webkit-scrollbar { width: 6px; height: 6px; }
+    ::-webkit-scrollbar-track { background: #0c1017; }
+    ::-webkit-scrollbar-thumb { background: #263042; border-radius: 3px; }
+    ::-webkit-scrollbar-thumb:hover { background: #3b4963; }
 
-    /* Course Color Themes */
-    .course-prog {
-      background-color: rgba(19, 122, 99, 0.24);
-      border-color: rgba(38, 145, 120, 0.45);
-      color: #e2f8f3;
+    /* Subject Themes */
+    .theme-emerald {
+      background-color: rgba(16, 86, 79, 0.42);
+      border: 1px solid rgba(25, 133, 122, 0.55);
+      color: #e2f8f5;
     }
-    .course-prog:hover {
-      background-color: rgba(19, 122, 99, 0.36);
-      border-color: rgba(52, 185, 154, 0.7);
-    }
+    .theme-emerald:hover { background-color: rgba(20, 107, 98, 0.58); }
+    .modal-header-emerald { background-color: #0e7c66; }
 
-    .course-uhv {
-      background-color: rgba(138, 99, 0, 0.24);
-      border-color: rgba(168, 124, 18, 0.45);
+    .theme-gold {
+      background-color: rgba(92, 74, 30, 0.42);
+      border: 1px solid rgba(145, 115, 42, 0.5);
       color: #fef3c7;
     }
-    .course-uhv:hover {
-      background-color: rgba(138, 99, 0, 0.36);
-      border-color: rgba(204, 154, 30, 0.7);
-    }
+    .theme-gold:hover { background-color: rgba(115, 92, 36, 0.58); }
+    .modal-header-gold { background-color: #986c08; }
 
-    .course-logic {
-      background-color: rgba(83, 56, 126, 0.32);
-      border-color: rgba(118, 84, 173, 0.5);
+    .theme-purple {
+      background-color: rgba(68, 51, 106, 0.48);
+      border: 1px solid rgba(109, 83, 166, 0.55);
       color: #ede9fe;
     }
-    .course-logic:hover {
-      background-color: rgba(83, 56, 126, 0.45);
-      border-color: rgba(145, 107, 207, 0.75);
-    }
+    .theme-purple:hover { background-color: rgba(84, 63, 130, 0.65); }
+    .modal-header-purple { background-color: #5b3ea8; }
 
-    .course-eng {
-      background-color: rgba(110, 44, 70, 0.32);
-      border-color: rgba(148, 63, 97, 0.5);
+    .theme-maroon {
+      background-color: rgba(102, 43, 66, 0.48);
+      border: 1px solid rgba(153, 66, 99, 0.55);
       color: #fce7f3;
     }
-    .course-eng:hover {
-      background-color: rgba(110, 44, 70, 0.45);
-      border-color: rgba(181, 81, 121, 0.75);
-    }
+    .theme-maroon:hover { background-color: rgba(125, 53, 81, 0.65); }
+    .modal-header-maroon { background-color: #88294f; }
 
-    .course-linalg {
-      background-color: rgba(37, 75, 133, 0.32);
-      border-color: rgba(59, 108, 181, 0.5);
+    .theme-blue {
+      background-color: rgba(34, 64, 109, 0.48);
+      border: 1px solid rgba(56, 102, 171, 0.55);
       color: #dbeafe;
     }
-    .course-linalg:hover {
-      background-color: rgba(37, 75, 133, 0.45);
-      border-color: rgba(82, 138, 222, 0.75);
-    }
+    .theme-blue:hover { background-color: rgba(43, 81, 138, 0.65); }
+    .modal-header-blue { background-color: #1e4b8f; }
 
-    .course-boe {
-      background-color: rgba(112, 59, 34, 0.34);
-      border-color: rgba(153, 84, 52, 0.5);
-      color: #ffedd5;
-    }
-    .course-boe:hover {
-      background-color: rgba(112, 59, 34, 0.48);
-      border-color: rgba(186, 106, 69, 0.75);
-    }
-
-    .course-act {
-      background-color: rgba(60, 70, 92, 0.34);
-      border-color: rgba(90, 104, 135, 0.5);
+    .theme-slate {
+      background-color: rgba(54, 65, 86, 0.48);
+      border: 1px solid rgba(86, 102, 133, 0.55);
       color: #f1f5f9;
     }
-    .course-act:hover {
-      background-color: rgba(60, 70, 92, 0.48);
-      border-color: rgba(119, 136, 173, 0.75);
-    }
+    .theme-slate:hover { background-color: rgba(69, 83, 110, 0.65); }
+    .modal-header-slate { background-color: #3b4861; }
 
-    /* Active class highlight */
-    .active-class-card {
-      border: 2px solid #ffffff !important;
-      box-shadow: 0 0 20px rgba(19, 122, 99, 0.35);
+    .theme-brown {
+      background-color: rgba(107, 62, 38, 0.48);
+      border: 1px solid rgba(158, 93, 58, 0.55);
+      color: #ffedd5;
     }
+    .theme-brown:hover { background-color: rgba(130, 75, 46, 0.65); }
+    .modal-header-brown { background-color: #844723; }
 
-    /* Modal Backdrop Animation */
-    .modal-enter {
-      animation: modalFadeIn 0.18s ease-out forwards;
+    .active-now-ring {
+      border: 1.5px solid #e2e8f0 !important;
+      box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.2), 0 8px 20px -4px rgba(0, 0, 0, 0.6);
     }
-    @keyframes modalFadeIn {
-      from {
-        opacity: 0;
-        transform: scale(0.96) translateY(6px);
-      }
-      to {
-        opacity: 1;
-        transform: scale(1) translateY(0);
-      }
+    @keyframes pulseDot {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.45; transform: scale(0.92); }
     }
+    .pulse-dot { animation: pulseDot 2s infinite ease-in-out; }
   </style>
 </head>
 <body class="min-h-screen pb-14 selection:bg-emerald-500 selection:text-white">
 
-  <!-- Main Container -->
-  <div class="max-w-[1160px] mx-auto px-4 sm:px-6 pt-5 sm:pt-7">
+  <div class="max-w-[1160px] mx-auto px-3.5 sm:px-6 pt-5 sm:pt-7">
 
-    <!-- HEADER SECTION -->
-    <header class="flex flex-col md:flex-row md:items-start md:justify-between gap-4 mb-6">
-      <!-- Left Info -->
+    <!-- TOP HEADER -->
+    <header class="flex flex-col sm:flex-row sm:items-start justify-between gap-4 mb-5">
       <div>
-        <h1 class="font-condensed font-extrabold text-5xl sm:text-6xl tracking-tight text-white leading-none mb-2.5">
-          IT-A
-        </h1>
-
-        <!-- Latest Schedule Green Pill -->
-        <div class="inline-flex items-center gap-2 bg-[#12805c] text-white text-xs sm:text-[13px] font-semibold px-3 py-1 rounded-full mb-2.5 shadow-sm">
-          <span class="w-2 h-2 rounded-full bg-white animate-pulse"></span>
+        <h1 class="font-condensed text-5xl sm:text-6xl font-bold tracking-tight text-white leading-none mb-3">IT-A</h1>
+        <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#117864] text-emerald-50 text-xs sm:text-[13px] font-semibold mb-2.5 shadow-sm">
+          <span class="w-2 h-2 rounded-full bg-white pulse-dot"></span>
           <span>Latest schedule · V1 · from 15 September 2026</span>
         </div>
-
-        <!-- Campus Location -->
-        <div class="flex items-center gap-1.5 text-[#a3adc2] text-xs sm:text-[13px] font-semibold mb-1">
-          <svg class="w-3.5 h-3.5 text-[#8e98b0] shrink-0" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
+        <div class="flex items-center gap-1.5 text-slate-300 text-xs sm:text-[13px] font-medium mb-1">
+          <svg class="w-3.5 h-3.5 text-slate-400 shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/>
             <path stroke-linecap="round" stroke-linejoin="round" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/>
           </svg>
           <span>Bibwewadi Campus</span>
         </div>
-
-        <!-- Validity Subtitle -->
-        <p class="text-[#7b859e] text-xs sm:text-[13px] max-w-md leading-relaxed">
+        <p class="text-slate-400 text-xs sm:text-[13px] leading-relaxed max-w-md">
           First year, semester 1. Timetable version V1, valid 15 September 2026 to 10 January 2027.
         </p>
       </div>
 
-      <!-- Right Live Clock & Mode Toggle -->
-      <div class="flex flex-col md:items-end justify-end mt-1 md:mt-6">
-        <div id="headerClock" class="font-condensed font-bold text-5xl sm:text-[56px] text-white leading-none tracking-tight">
-          5:39 pm
+      <!-- LIVE SYSTEM CLOCK ONLY -->
+      <div class="flex flex-col sm:items-end justify-end mt-1 sm:mt-4">
+        <div id="liveClockDisplay" class="font-condensed text-5xl sm:text-[56px] font-bold text-white leading-none tracking-tight">
+          --:--
         </div>
-        <div id="headerDate" class="text-[#949eb8] text-xs sm:text-sm font-medium mt-1">
-          Friday, 23 October 2026
-        </div>
-        <!-- Time Simulation Switcher so user can test "In class now" or Real Time -->
-        <div class="mt-2.5 inline-flex items-center gap-1.5 bg-[#151a2b] border border-[#232b42] rounded-lg px-2.5 py-1 text-[11px] text-[#949eb8]">
-          <span class="w-1.5 h-1.5 rounded-full bg-emerald-400" id="timeModeDot"></span>
-          <span id="timeModeLabel">Demo: Fri 5:39 PM</span>
-          <button onclick="toggleTimeMode()" class="ml-1.5 text-emerald-400 hover:text-emerald-300 font-semibold underline cursor-pointer">
-            Switch to Live Clock
-          </button>
+        <div id="liveDateDisplay" class="text-slate-400 text-xs sm:text-sm font-medium mt-1.5">
+          Loading date...
         </div>
       </div>
     </header>
 
-    <!-- CONTROLS & PAGE NAVIGATION BAR (No Change Class / Forum / About Me) -->
-    <div class="flex flex-wrap items-center justify-between gap-4 mb-6">
-      <!-- Left Controls: Lab Batch & Clock Format -->
-      <div class="flex flex-wrap items-center gap-4 sm:gap-5">
-        <!-- Lab Batch Selector -->
-        <div class="flex items-center gap-2.5">
-          <span class="text-xs sm:text-[13px] text-[#8e98b0] font-medium">Lab batch</span>
-          <div class="inline-flex items-center bg-[#151a2b] p-1 rounded-xl border border-[#22293e]">
-            <button onclick="setBatch('B1')" id="batchBtn-B1" class="px-3.5 py-1.5 rounded-lg text-xs sm:text-[13px] font-bold transition-all bg-white text-[#0b0e17] shadow">
-              B1
-            </button>
-            <button onclick="setBatch('B2')" id="batchBtn-B2" class="px-3.5 py-1.5 rounded-lg text-xs sm:text-[13px] font-semibold transition-all text-[#949eb8] hover:text-white">
-              B2
-            </button>
-            <button onclick="setBatch('B3')" id="batchBtn-B3" class="px-3.5 py-1.5 rounded-lg text-xs sm:text-[13px] font-semibold transition-all text-[#949eb8] hover:text-white">
-              B3
-            </button>
-          </div>
-        </div>
-
-        <!-- Clock Format Selector -->
-        <div class="flex items-center gap-2.5">
-          <span class="text-xs sm:text-[13px] text-[#8e98b0] font-medium">Clock</span>
-          <div class="inline-flex items-center bg-[#151a2b] p-1 rounded-xl border border-[#22293e]">
-            <button onclick="setClockFormat('12h')" id="clockBtn-12h" class="px-3 py-1.5 rounded-lg text-xs sm:text-[13px] font-bold transition-all bg-white text-[#0b0e17] shadow">
-              12 h
-            </button>
-            <button onclick="setClockFormat('24h')" id="clockBtn-24h" class="px-3 py-1.5 rounded-lg text-xs sm:text-[13px] font-semibold transition-all text-[#949eb8] hover:text-white">
-              24 h
-            </button>
-          </div>
+    <!-- CONTROLS BAR (NO LAB BATCHES, NO DEMO TIME) -->
+    <div class="flex flex-wrap items-center justify-between gap-3 mb-6 pb-1">
+      <!-- Left: Clock Format Toggle -->
+      <div class="flex items-center gap-2.5">
+        <span class="text-slate-400 text-xs sm:text-sm font-medium">Clock</span>
+        <div class="inline-flex p-1 rounded-xl bg-[#161c28] border border-slate-800/80">
+          <button onclick="setClockFormat('12h')" id="clock-btn-12h" class="px-3.5 py-1.5 rounded-lg text-xs sm:text-sm font-bold transition-all bg-white text-slate-950 shadow">12 h</button>
+          <button onclick="setClockFormat('24h')" id="clock-btn-24h" class="px-3.5 py-1.5 rounded-lg text-xs sm:text-sm font-semibold transition-all text-slate-400 hover:text-white">24 h</button>
         </div>
       </div>
 
-      <!-- Right Navigation Switcher: Timetable vs To-Do Page -->
-      <div class="inline-flex items-center bg-[#151a2b] p-1 rounded-xl border border-[#252e47] shadow-lg">
-        <button onclick="switchPage('timetable')" id="navBtn-timetable" class="flex items-center gap-2 px-4 py-2 rounded-lg text-xs sm:text-sm font-bold transition-all bg-white text-[#0b0e17] shadow">
-          <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/>
-          </svg>
-          <span>Timetable</span>
+      <!-- Right: Page Navigation + Cloud Sync Button -->
+      <div class="flex items-center gap-2">
+        <button onclick="openSyncModal()" id="syncStatusBtn" class="inline-flex items-center gap-1.5 px-3 py-2 rounded-xl bg-[#161c28] hover:bg-slate-800 border border-slate-800/90 text-xs sm:text-sm font-semibold text-slate-300 transition-all" title="Sync To-Dos across Mac and iPhone">
+          <span id="syncIndicatorDot" class="w-2 h-2 rounded-full bg-slate-500"></span>
+          <span>☁️ Sync</span>
         </button>
-        <button onclick="switchPage('todo')" id="navBtn-todo" class="flex items-center gap-2 px-4 py-2 rounded-lg text-xs sm:text-sm font-semibold transition-all text-[#a3adc2] hover:text-white">
-          <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4"/>
-          </svg>
-          <span>To-Do</span>
-          <span id="navTodoBadge" class="inline-flex items-center justify-center px-1.5 py-0.5 text-[11px] font-bold rounded-full bg-emerald-500 text-slate-950 min-w-[20px]">
-            0
-          </span>
-        </button>
+
+        <div class="inline-flex p-1 rounded-xl bg-[#161c28] border border-slate-800/90">
+          <button onclick="switchMainView('timetable')" id="nav-btn-timetable" class="flex items-center gap-2 px-4 py-1.5 rounded-lg text-xs sm:text-sm font-bold transition-all bg-white text-slate-950 shadow">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
+              <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+              <line x1="16" y1="2" x2="16" y2="6"></line>
+              <line x1="8" y1="2" x2="8" y2="6"></line>
+              <line x1="3" y1="10" x2="21" y2="10"></line>
+            </svg>
+            <span>Timetable</span>
+          </button>
+          <button onclick="switchMainView('todo')" id="nav-btn-todo" class="flex items-center gap-2 px-4 py-1.5 rounded-lg text-xs sm:text-sm font-semibold transition-all text-slate-300 hover:text-white">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4"/>
+            </svg>
+            <span>To-Do</span>
+            <span id="navTodoCounter" class="px-1.5 py-0.5 text-[11px] font-extrabold rounded-full bg-emerald-500 text-slate-950">0</span>
+          </button>
+        </div>
       </div>
     </div>
 
     <!-- ========================================== -->
-    <!-- PAGE 1: TIMETABLE VIEW                     -->
+    <!-- VIEW 1: TIMETABLE                          -->
     <!-- ========================================== -->
-    <div id="page-timetable" class="space-y-6">
-
-      <!-- TOP GRID: Left "In class now" Card + Right Day Schedule Card -->
+    <div id="view-timetable" class="space-y-6">
       <div class="grid grid-cols-1 lg:grid-cols-12 gap-5 items-stretch">
-
-        <!-- LEFT CARD: IN CLASS NOW (5 Columns on Desktop) -->
-        <div id="liveClassCard" class="lg:col-span-5 bg-[#137a63] rounded-2xl p-5 sm:p-6 text-white flex flex-col justify-between shadow-xl border border-white/10 relative overflow-hidden">
-          <!-- Dynamically rendered by JS -->
+        <!-- LEFT LIVE STATUS CARD -->
+        <div class="lg:col-span-5 flex">
+          <div id="liveStatusCard" class="w-full rounded-2xl bg-[#107c65] p-5 sm:p-6 text-white shadow-xl flex flex-col justify-between relative overflow-hidden border border-white/10">
+            <!-- Populated dynamically by renderLiveStatusCard() -->
+          </div>
         </div>
 
-        <!-- RIGHT CARD: DAILY SCHEDULE TIMELINE (7 Columns on Desktop) -->
-        <div class="lg:col-span-7 bg-[#121624] border border-[#22293e] rounded-2xl p-4 sm:p-5 flex flex-col justify-between shadow-xl">
-          <div>
-            <!-- Day Selector Pills Row -->
-            <div id="daySelectorRow" class="grid grid-cols-4 sm:grid-cols-7 gap-1.5 mb-5">
-              <!-- Populated by JS -->
-            </div>
+        <!-- RIGHT DAILY SCHEDULE PANEL -->
+        <div class="lg:col-span-7 flex">
+          <div class="w-full rounded-2xl bg-[#131822] border border-[#222938] p-4 sm:p-5 flex flex-col justify-between shadow-lg">
+            <!-- Rolling 7-Day Selector Pills -->
+            <div id="dayTabsContainer" class="grid grid-cols-4 sm:grid-cols-7 gap-1.5 mb-4"></div>
 
             <!-- Selected Day Header -->
-            <div class="flex flex-wrap items-baseline gap-2.5 mb-4">
-              <h2 id="selectedDayTitle" class="font-condensed font-bold text-3xl sm:text-[34px] text-white tracking-tight leading-none">
-                Friday, 23 October
-              </h2>
-              <span id="selectedDaySummary" class="text-xs sm:text-[13px] text-[#8e98b0] font-medium">
-                4 classes, 2:00 pm to 6:00 pm
-              </span>
+            <div class="flex flex-wrap items-baseline gap-x-3 gap-y-1 mb-4">
+              <h2 id="selectedDayTitle" class="font-condensed text-2xl sm:text-3xl font-bold text-white tracking-tight">Today</h2>
+              <span id="selectedDaySummary" class="text-slate-400 text-xs sm:text-sm font-medium"></span>
             </div>
 
-            <!-- Daily Vertical Timeline Container -->
-            <div id="dailyTimelineContainer" class="relative pt-1 pb-2">
-              <!-- Populated by JS -->
-            </div>
+            <!-- Daily Timeline Container -->
+            <div id="dailyTimelineContainer" class="relative flex-1 min-h-[260px]"></div>
           </div>
         </div>
-
       </div>
 
-      <!-- BOTTOM SECTION: THIS WEEK GRID -->
-      <div class="bg-[#121624] border border-[#22293e] rounded-2xl p-4 sm:p-6 shadow-xl">
-        <!-- Header -->
-        <div class="flex flex-wrap items-baseline justify-between gap-2 mb-5">
-          <h2 class="font-condensed font-bold text-2xl sm:text-3xl text-white tracking-tight">
-            This week
-          </h2>
-          <span id="weekRangeLabel" class="text-xs sm:text-[13px] text-[#8e98b0] font-medium">
-            19 Oct to 24 Oct, batch B1
-          </span>
+      <!-- BOTTOM WEEKLY TIMETABLE GRID -->
+      <div class="rounded-2xl bg-[#131822] border border-[#222938] p-4 sm:p-6 shadow-lg">
+        <div class="flex flex-wrap items-center justify-between gap-2 mb-5">
+          <h2 class="font-condensed text-2xl sm:text-3xl font-bold text-white tracking-tight">This week</h2>
+          <span id="weekRangeLabel" class="text-slate-400 text-xs sm:text-sm font-medium">Monday to Saturday</span>
         </div>
 
-        <!-- Responsive Scroll Wrapper for Weekly Grid -->
         <div class="overflow-x-auto pb-2">
-          <div class="min-w-[780px] relative" id="weeklyGridWrapper">
-            <!-- Populated by JS -->
-          </div>
+          <div class="min-w-[760px] relative" id="weeklyGridWrapper"></div>
         </div>
 
-        <!-- Footer Summary -->
-        <p id="weeklyFooterSummary" class="text-[11px] sm:text-xs text-[#7b859e] mt-4 pt-3 border-t border-[#1d2438]">
-          Each week for batch B1: 16 h of theory, 6 h of labs and 1 h of tutorials. Saturday and Sunday have no classes.
+        <p class="text-slate-400 text-xs mt-4 pt-3 border-t border-slate-800/80">
+          Each week: 16 h of theory, 6 h of labs and 1 h of tutorials. Saturday and Sunday have no classes.
         </p>
       </div>
-
     </div>
 
     <!-- ========================================== -->
-    <!-- PAGE 2: TO-DO LIST VIEW                    -->
+    <!-- VIEW 2: TO-DO PAGE                         -->
     <!-- ========================================== -->
-    <div id="page-todo" class="hidden space-y-6">
+    <div id="view-todo" class="hidden space-y-6">
+      <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+        <div class="rounded-2xl bg-[#131822] border border-[#222938] p-5">
+          <span class="text-xs font-semibold uppercase tracking-wider text-slate-400">Pending Tasks</span>
+          <div id="statPendingCount" class="font-condensed text-4xl font-bold text-white mt-1">0</div>
+          <p class="text-xs text-slate-400 mt-1">Linked to your IT-A subjects</p>
+        </div>
+        <div class="rounded-2xl bg-[#131822] border border-[#222938] p-5">
+          <span class="text-xs font-semibold uppercase tracking-wider text-emerald-400">Completed</span>
+          <div id="statCompletedCount" class="font-condensed text-4xl font-bold text-emerald-400 mt-1">0</div>
+          <p class="text-xs text-slate-400 mt-1">Finished assignments & labs</p>
+        </div>
+        <div class="rounded-2xl bg-[#131822] border border-[#222938] p-5">
+          <span class="text-xs font-semibold uppercase tracking-wider text-amber-400">Sync Status</span>
+          <div id="statSyncStatus" class="font-condensed text-2xl font-bold text-amber-400 mt-2 truncate">Local Only</div>
+          <button onclick="openSyncModal()" class="text-xs text-emerald-400 hover:underline mt-1 inline-block">Configure Mac/iPhone Sync →</button>
+        </div>
+      </div>
 
-      <!-- To-Do Page Banner & Quick Add Button -->
-      <div class="bg-[#121624] border border-[#22293e] rounded-2xl p-5 sm:p-6 flex flex-col sm:flex-row sm:items-center justify-between gap-4 shadow-xl">
-        <div>
-          <div class="inline-flex items-center gap-2 text-emerald-400 text-xs font-semibold uppercase tracking-wider mb-1">
-            <span>Division IT-A · Class Task Manager</span>
+      <!-- Quick Add To-Do Card -->
+      <div class="rounded-2xl bg-[#131822] border border-[#222938] p-5 shadow-lg">
+        <h3 class="text-base font-bold text-white mb-3.5 flex items-center gap-2">
+          <span class="w-2 h-2 rounded-full bg-emerald-400"></span>
+          <span>Add New Class Task</span>
+        </h3>
+        <form id="pageTodoForm" onsubmit="handlePageTodoSubmit(event)" class="grid grid-cols-1 sm:grid-cols-12 gap-3">
+          <div class="sm:col-span-5">
+            <label class="block text-[11px] font-semibold uppercase tracking-wider text-slate-400 mb-1">Task Description</label>
+            <input type="text" id="pageTodoTitle" required placeholder="e.g., Complete Lab 4 C program..." class="w-full px-3.5 py-2.5 rounded-xl bg-[#0c1017] border border-slate-700/80 text-sm text-white placeholder-slate-500 focus:outline-none focus:border-emerald-500" />
           </div>
-          <h2 class="font-condensed font-bold text-3xl sm:text-4xl text-white tracking-tight">
-            Class To-Do List & Assignments
-          </h2>
-          <p class="text-xs sm:text-sm text-[#8e98b0] mt-0.5">
-            Tasks added from any class popup card appear here automatically. Click a task's class badge to inspect class details.
-          </p>
-        </div>
-        <button onclick="openStandaloneTodoModal()" class="inline-flex items-center justify-center gap-2 bg-[#137a63] hover:bg-[#179478] text-white font-semibold text-xs sm:text-sm px-4 py-3 rounded-xl shadow-lg transition-all cursor-pointer shrink-0 border border-white/15">
-          <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4"/>
-          </svg>
-          <span>Add New To-Do</span>
-        </button>
+          <div class="sm:col-span-3">
+            <label class="block text-[11px] font-semibold uppercase tracking-wider text-slate-400 mb-1">Subject / Class</label>
+            <select id="pageTodoSubject" class="w-full px-3 py-2.5 rounded-xl bg-[#0c1017] border border-slate-700/80 text-sm text-white focus:outline-none focus:border-emerald-500"></select>
+          </div>
+          <div class="sm:col-span-2">
+            <label class="block text-[11px] font-semibold uppercase tracking-wider text-slate-400 mb-1">Due Date</label>
+            <input type="date" id="pageTodoDue" class="w-full px-3 py-2.5 rounded-xl bg-[#0c1017] border border-slate-700/80 text-sm text-white focus:outline-none focus:border-emerald-500" />
+          </div>
+          <div class="sm:col-span-2 flex items-end">
+            <button type="submit" class="w-full py-2.5 px-4 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-sm transition shadow-md">
+              + Add Task
+            </button>
+          </div>
+        </form>
       </div>
 
-      <!-- KPI Stats Row -->
-      <div class="grid grid-cols-2 sm:grid-cols-4 gap-3.5">
-        <div class="bg-[#121624] border border-[#22293e] rounded-2xl p-4">
-          <span class="text-xs text-[#8e98b0] font-medium">Total Tasks</span>
-          <div id="statTotalTasks" class="font-condensed font-bold text-3xl sm:text-4xl text-white mt-1">0</div>
-        </div>
-        <div class="bg-[#121624] border border-[#22293e] rounded-2xl p-4">
-          <span class="text-xs text-amber-400/90 font-medium">Pending</span>
-          <div id="statPendingTasks" class="font-condensed font-bold text-3xl sm:text-4xl text-amber-400 mt-1">0</div>
-        </div>
-        <div class="bg-[#121624] border border-[#22293e] rounded-2xl p-4">
-          <span class="text-xs text-emerald-400/90 font-medium">Completed</span>
-          <div id="statCompletedTasks" class="font-condensed font-bold text-3xl sm:text-4xl text-emerald-400 mt-1">0</div>
-        </div>
-        <div class="bg-[#121624] border border-[#22293e] rounded-2xl p-4">
-          <span class="text-xs text-rose-400/90 font-medium">High Priority Pending</span>
-          <div id="statHighPriority" class="font-condensed font-bold text-3xl sm:text-4xl text-rose-400 mt-1">0</div>
-        </div>
-      </div>
-
-      <!-- Filters & Search Bar -->
-      <div class="bg-[#121624] border border-[#22293e] rounded-2xl p-4 flex flex-col md:flex-row items-stretch md:items-center justify-between gap-3.5">
-        <!-- Status Filter Pills -->
-        <div class="flex items-center gap-1.5 bg-[#0b0e17] p-1 rounded-xl border border-[#22293e] self-start">
-          <button onclick="setTodoStatusFilter('all')" id="todoFilter-all" class="px-3 py-1.5 rounded-lg text-xs font-bold bg-white text-[#0b0e17] transition-all">
-            All
-          </button>
-          <button onclick="setTodoStatusFilter('pending')" id="todoFilter-pending" class="px-3 py-1.5 rounded-lg text-xs font-semibold text-[#8e98b0] hover:text-white transition-all">
-            Pending
-          </button>
-          <button onclick="setTodoStatusFilter('completed')" id="todoFilter-completed" class="px-3 py-1.5 rounded-lg text-xs font-semibold text-[#8e98b0] hover:text-white transition-all">
-            Completed
-          </button>
-        </div>
-
-        <!-- Subject Filter & Search -->
-        <div class="flex flex-wrap items-center gap-2.5">
-          <select id="todoSubjectFilter" onchange="renderTodoPage()" class="bg-[#0b0e17] border border-[#22293e] text-white text-xs sm:text-[13px] rounded-xl px-3 py-2 focus:outline-none focus:border-emerald-500">
-            <option value="ALL">All Subjects</option>
-            <option value="ES26104">Programming for Engineers (ES26104)</option>
-            <option value="ES26106">Universal Human Values (ES26106)</option>
-            <option value="ES26101">Logic & Quantitative Aptitude 1 (ES26101)</option>
-            <option value="ES26103">Linear Algebra (ES26103)</option>
-            <option value="ES26102">English (ES26102)</option>
-            <option value="ES26105">Basics of Engineering (ES26105)</option>
-            <option value="ES26107">Activity (ES26107)</option>
-          </select>
-
-          <div class="relative flex-1 sm:w-56">
-            <input
-              type="text"
-              id="todoSearchInput"
-              oninput="renderTodoPage()"
-              placeholder="Search tasks, room, faculty..."
-              class="w-full bg-[#0b0e17] border border-[#22293e] text-white text-xs sm:text-[13px] rounded-xl pl-8 pr-3 py-2 focus:outline-none focus:border-emerald-500 placeholder-[#64708a]"
-            />
-            <svg class="w-3.5 h-3.5 text-[#64708a] absolute left-2.5 top-1/2 -translate-y-1/2" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
-            </svg>
+      <!-- Filter & Task List -->
+      <div class="rounded-2xl bg-[#131822] border border-[#222938] p-5 shadow-lg">
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-4 mb-4 border-b border-slate-800">
+          <div class="flex flex-wrap items-center gap-1.5" id="todoStatusFilterBar">
+            <button onclick="setTodoFilterStatus('all')" data-status="all" class="todo-status-btn px-3 py-1.5 rounded-lg text-xs font-bold bg-white text-slate-950">All Tasks</button>
+            <button onclick="setTodoFilterStatus('pending')" data-status="pending" class="todo-status-btn px-3 py-1.5 rounded-lg text-xs font-semibold text-slate-400 hover:text-white bg-[#1a2130]">Pending</button>
+            <button onclick="setTodoFilterStatus('completed')" data-status="completed" class="todo-status-btn px-3 py-1.5 rounded-lg text-xs font-semibold text-slate-400 hover:text-white bg-[#1a2130]">Completed</button>
+          </div>
+          <div class="flex items-center gap-2">
+            <select id="todoFilterSubjectSelect" onchange="renderTodoPage()" class="px-3 py-1.5 rounded-lg bg-[#0c1017] border border-slate-700/80 text-xs text-slate-200 focus:outline-none">
+              <option value="ALL">All Subjects</option>
+            </select>
+            <button onclick="clearCompletedTodos()" class="px-3 py-1.5 rounded-lg bg-rose-950/50 hover:bg-rose-900/60 text-rose-300 border border-rose-800/50 text-xs font-semibold transition">
+              Clear Done
+            </button>
           </div>
         </div>
+        <div id="todoPageListContainer" class="space-y-2.5"></div>
       </div>
-
-      <!-- To-Do Items List Container -->
-      <div id="todoListContainer" class="space-y-3">
-        <!-- Populated by JS -->
-      </div>
-
     </div>
 
   </div>
 
-  <!-- ================================================================= -->
-  <!-- CLASS DETAILS & ADD TO-DO POPUP MODAL (Matches Screenshots 2 & 3) -->
-  <!-- ================================================================= -->
-  <div id="classDetailModal" class="fixed inset-0 z-50 hidden items-center justify-center p-4 bg-black/75 backdrop-blur-sm overflow-y-auto">
-    <div id="classDetailModalCard" class="w-full max-w-[540px] rounded-[24px] overflow-hidden shadow-2xl border border-white/15 bg-[#141829] modal-enter my-8">
-      
-      <!-- Colored Header Banner (Matches Universal Human Values gold or Programming emerald) -->
-      <div id="modalHeaderBanner" class="p-6 sm:p-7 relative transition-colors">
-        <div class="flex items-start justify-between gap-4">
-          <div class="pr-2">
-            <h3 id="modalCourseTitle" class="font-condensed font-bold text-3xl sm:text-[38px] text-white leading-[1.05] tracking-tight">
-              Universal Human Values
-            </h3>
-            <p id="modalCourseSub" class="text-white/90 text-sm sm:text-[15px] font-medium mt-1">
-              ES26106, Theory
-            </p>
-            <!-- Status Pill -->
-            <div id="modalStatusPill" class="inline-block mt-3.5 px-3.5 py-1 rounded-full text-xs sm:text-[13px] font-bold bg-white/25 text-white backdrop-blur-xs">
-              Finished for today
-            </div>
-          </div>
-
-          <!-- Rounded Square Close Button matching screenshot -->
-          <button onclick="closeClassModal()" class="w-11 h-11 rounded-2xl bg-white/20 hover:bg-white/30 text-white flex items-center justify-center transition-colors shrink-0 cursor-pointer" aria-label="Close modal">
-            <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/>
-            </svg>
-          </button>
+  <!-- ========================================== -->
+  <!-- CLASS DETAIL & TO-DO POPUP MODAL           -->
+  <!-- ========================================== -->
+  <div id="classModalOverlay" onclick="handleModalBackdropClick(event)" class="fixed inset-0 z-50 hidden bg-black/75 backdrop-blur-sm flex items-center justify-center p-4 overflow-y-auto">
+    <div id="classModalCard" class="w-full max-w-[540px] rounded-2xl bg-[#161b28] border border-slate-700/70 shadow-2xl overflow-hidden my-8">
+      <!-- Coloured Top Header matching screenshots -->
+      <div id="modalHeaderBanner" class="modal-header-emerald p-6 sm:p-7 relative transition-colors">
+        <button onclick="closeClassModal()" class="w-11 h-11 rounded-2xl bg-white/20 hover:bg-white/30 text-white flex items-center justify-center absolute top-5 right-5 transition" aria-label="Close modal">
+          <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/>
+          </svg>
+        </button>
+        <h3 id="modalCourseTitle" class="font-condensed text-3xl sm:text-4xl font-bold text-white leading-tight pr-14">
+          Programming for Engineers
+        </h3>
+        <p id="modalCourseSub" class="text-white/90 text-sm sm:text-base font-medium mt-1">
+          ES26104, Lab
+        </p>
+        <div class="mt-4">
+          <span id="modalStatusBadge" class="inline-block px-3.5 py-1 rounded-full bg-black/25 text-white text-xs sm:text-sm font-bold backdrop-blur-xs">
+            Scheduled
+          </span>
         </div>
       </div>
 
-      <!-- Modal Dark Navy Body -->
-      <div class="p-6 sm:p-7 bg-[#141829] text-white space-y-6">
-        
-        <!-- 5-Row Metadata Table exactly like Screenshot 2 & 3 -->
-        <div class="space-y-3 text-sm sm:text-[15px]">
-          <div class="grid grid-cols-12 items-baseline">
-            <span class="col-span-3 text-[#8e98b0] font-medium">When</span>
-            <span id="modalWhen" class="col-span-9 font-bold text-white">Friday, 23 Oct</span>
-          </div>
-          <div class="grid grid-cols-12 items-baseline">
-            <span class="col-span-3 text-[#8e98b0] font-medium">Time</span>
-            <span id="modalTime" class="col-span-9 font-bold text-white">3:00–4:00 pm (1 h)</span>
-          </div>
-          <div class="grid grid-cols-12 items-baseline">
-            <span class="col-span-3 text-[#8e98b0] font-medium">Room</span>
-            <span id="modalRoom" class="col-span-9 font-bold text-white">1001</span>
-          </div>
-          <div class="grid grid-cols-12 items-baseline">
-            <span class="col-span-3 text-[#8e98b0] font-medium">Type</span>
-            <span id="modalType" class="col-span-9 font-bold text-white">Theory, whole division</span>
-          </div>
-          <div class="grid grid-cols-12 items-baseline">
-            <span class="col-span-3 text-[#8e98b0] font-medium">Faculty</span>
-            <span id="modalFaculty" class="col-span-9 font-bold text-white">Manasi Vyankatesh Ghamande (MVG)</span>
-          </div>
+      <!-- Metadata Table + Add To-Do Section -->
+      <div class="p-6 sm:p-7 space-y-6">
+        <div class="grid grid-cols-12 gap-y-3 text-sm sm:text-[15px]">
+          <div class="col-span-3 text-slate-400 font-medium">When</div>
+          <div id="modalMetaWhen" class="col-span-9 text-white font-bold">Friday</div>
+
+          <div class="col-span-3 text-slate-400 font-medium">Time</div>
+          <div id="modalMetaTime" class="col-span-9 text-white font-bold">5:00–6:00 pm (1 h)</div>
+
+          <div class="col-span-3 text-slate-400 font-medium">Room</div>
+          <div id="modalMetaRoom" class="col-span-9 text-white font-bold">1201</div>
+
+          <div class="col-span-3 text-slate-400 font-medium">Type</div>
+          <div id="modalMetaType" class="col-span-9 text-white font-bold">Lab</div>
+
+          <div class="col-span-3 text-slate-400 font-medium">Faculty</div>
+          <div id="modalMetaFaculty" class="col-span-9 text-white font-bold">Mr. Vijay Krishna Itnal (VKI)</div>
         </div>
 
-        <!-- Divider -->
-        <div class="border-t border-[#252d44]"></div>
+        <hr class="border-slate-800" />
 
-        <!-- Integrated To-Do Section inside Class Card -->
+        <!-- Class To-Do Section Inside Modal -->
         <div>
           <div class="flex items-center justify-between mb-3">
-            <div class="flex items-center gap-2">
-              <span class="font-condensed font-bold text-xl tracking-tight text-white">Class To-Dos</span>
-              <span id="modalClassTodoCount" class="px-2 py-0.5 text-[11px] font-bold rounded-full bg-[#232b42] text-emerald-400">0</span>
-            </div>
-            <button onclick="closeClassModalAndGoToTodo()" class="text-xs font-semibold text-emerald-400 hover:text-emerald-300 flex items-center gap-1 cursor-pointer">
-              <span>Open Full To-Do Page</span>
-              <span>→</span>
+            <h4 class="text-xs font-bold uppercase tracking-wider text-slate-300 flex items-center gap-2">
+              <svg class="w-4 h-4 text-emerald-400" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+              </svg>
+              <span>To-Dos for this Subject</span>
+            </h4>
+            <button onclick="closeClassModal(); switchMainView('todo');" class="text-xs font-semibold text-emerald-400 hover:underline">
+              Open To-Do Page →
             </button>
           </div>
 
-          <!-- Existing To-Dos for this Class -->
-          <div id="modalExistingTodos" class="space-y-2 mb-4 max-h-36 overflow-y-auto pr-1">
-            <!-- Populated by JS -->
-          </div>
+          <div id="modalTodoList" class="space-y-2 max-h-40 overflow-y-auto mb-3 pr-1"></div>
 
-          <!-- Add New To-Do Form right inside the Class Modal -->
-          <form id="modalAddTodoForm" onsubmit="handleModalAddTodo(event)" class="bg-[#0d101b] border border-[#242c44] rounded-xl p-3.5 space-y-3">
-            <div class="text-xs font-semibold text-[#a3adc2]">
-              + Add a To-Do for this class
-            </div>
-            <div>
-              <input
-                type="text"
-                id="modalTodoInput"
-                required
-                placeholder="e.g., Complete lab assignment / Read notes for next lecture..."
-                class="w-full bg-[#151a2b] border border-[#28324e] rounded-lg px-3 py-2 text-xs sm:text-sm text-white placeholder-[#64708a] focus:outline-none focus:border-emerald-500"
-              />
-            </div>
-            <div class="grid grid-cols-2 sm:grid-cols-3 gap-2">
-              <div>
-                <label class="block text-[10px] uppercase tracking-wider text-[#7b859e] mb-1">Category</label>
-                <select id="modalTodoTag" class="w-full bg-[#151a2b] border border-[#28324e] rounded-lg px-2.5 py-1.5 text-xs text-white focus:outline-none focus:border-emerald-500">
-                  <option value="Assignment">Assignment</option>
-                  <option value="Lab Journal">Lab Journal</option>
-                  <option value="Exam Prep">Exam Prep</option>
-                  <option value="Homework">Homework</option>
-                  <option value="Bring Material">Bring Material</option>
-                </select>
-              </div>
-              <div>
-                <label class="block text-[10px] uppercase tracking-wider text-[#7b859e] mb-1">Priority</label>
-                <select id="modalTodoPriority" class="w-full bg-[#151a2b] border border-[#28324e] rounded-lg px-2.5 py-1.5 text-xs text-white focus:outline-none focus:border-emerald-500">
-                  <option value="Medium">Medium</option>
-                  <option value="High">High</option>
-                  <option value="Low">Low</option>
-                </select>
-              </div>
-              <div class="col-span-2 sm:col-span-1">
-                <label class="block text-[10px] uppercase tracking-wider text-[#7b859e] mb-1">Due Date</label>
-                <input
-                  type="text"
-                  id="modalTodoDue"
-                  value="Next class"
-                  placeholder="e.g., Mon, 26 Oct"
-                  class="w-full bg-[#151a2b] border border-[#28324e] rounded-lg px-2.5 py-1.5 text-xs text-white focus:outline-none focus:border-emerald-500"
-                />
-              </div>
-            </div>
-
-            <div class="flex items-center justify-between pt-1">
-              <span id="modalTodoFeedback" class="text-xs text-emerald-400 font-medium opacity-0 transition-opacity">
-                ✓ Saved to To-Do Page!
-              </span>
-              <button type="submit" class="bg-[#137a63] hover:bg-[#179478] text-white font-semibold text-xs sm:text-[13px] px-4 py-2 rounded-lg shadow transition-all cursor-pointer">
-                Add to To-Do List
-              </button>
-            </div>
+          <form onsubmit="handleModalTodoSubmit(event)" class="flex flex-col sm:flex-row gap-2">
+            <input type="text" id="modalTodoInput" required placeholder="Add homework, lab journal, or exam note..." class="flex-1 px-3.5 py-2.5 rounded-xl bg-[#0c1017] border border-slate-700 text-sm text-white placeholder-slate-500 focus:outline-none focus:border-emerald-500" />
+            <button type="submit" class="px-4 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs sm:text-sm shrink-0 transition shadow">
+              + Add to To-Do
+            </button>
           </form>
         </div>
-
       </div>
     </div>
   </div>
 
-  <!-- ================================================================= -->
-  <!-- STANDALONE ADD TO-DO MODAL (From To-Do Page)                      -->
-  <!-- ================================================================= -->
-  <div id="standaloneTodoModal" class="fixed inset-0 z-50 hidden items-center justify-center p-4 bg-black/75 backdrop-blur-sm">
-    <div class="w-full max-w-md rounded-2xl overflow-hidden shadow-2xl border border-[#28324e] bg-[#141829] modal-enter p-6">
-      <div class="flex items-center justify-between mb-4">
-        <h3 class="font-condensed font-bold text-2xl text-white">Add Class To-Do</h3>
-        <button onclick="closeStandaloneTodoModal()" class="w-8 h-8 rounded-lg bg-[#1f263d] text-[#949eb8] hover:text-white flex items-center justify-center">
-          ✕
+  <!-- ========================================== -->
+  <!-- MAC <-> IPHONE CLOUD SYNC MODAL            -->
+  <!-- ========================================== -->
+  <div id="syncModalOverlay" onclick="if(event.target.id==='syncModalOverlay') closeSyncModal()" class="fixed inset-0 z-50 hidden bg-black/75 backdrop-blur-sm flex items-center justify-center p-4">
+    <div class="w-full max-w-md rounded-2xl bg-[#161b28] border border-slate-700 p-6 shadow-2xl space-y-4">
+      <div class="flex items-center justify-between">
+        <h3 class="font-condensed text-2xl font-bold text-white">☁️ Mac & iPhone Live Sync</h3>
+        <button onclick="closeSyncModal()" class="text-slate-400 hover:text-white text-xl font-bold">&times;</button>
+      </div>
+      <p class="text-xs text-slate-300 leading-relaxed">
+        Enter the exact same secret Sync Key on both your <strong>Mac</strong> and <strong>iPhone</strong>. Whenever you add or check off a To-Do on one device, it automatically syncs to the other!
+      </p>
+      <div>
+        <label class="block text-[11px] font-bold uppercase tracking-wider text-slate-400 mb-1">Your Private Sync Key</label>
+        <input type="text" id="syncKeyInput" placeholder="e.g., aaditwa-vit-ita-2026-secret" class="w-full px-3.5 py-2.5 rounded-xl bg-[#0c1017] border border-slate-700 text-sm text-white font-mono focus:outline-none focus:border-emerald-500" />
+      </div>
+      <div class="flex items-center justify-between gap-2 pt-2">
+        <button onclick="pullFromCloudNow()" class="px-3.5 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-xs font-semibold text-slate-200 transition">
+          ⬇️ Force Pull Now
         </button>
+        <div class="flex gap-2">
+          <button onclick="closeSyncModal()" class="px-4 py-2 rounded-xl bg-slate-800 text-xs font-semibold text-slate-300">Cancel</button>
+          <button onclick="saveSyncKey()" class="px-4 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-xs font-bold text-white">Save & Connect</button>
+        </div>
       </div>
-      <form onsubmit="handleStandaloneTodoSubmit(event)" class="space-y-3.5">
-        <div>
-          <label class="block text-xs text-[#8e98b0] font-medium mb-1">Select Class / Subject</label>
-          <select id="standaloneCourseCode" required class="w-full bg-[#0d101b] border border-[#28324e] rounded-xl px-3 py-2.5 text-xs sm:text-sm text-white focus:outline-none focus:border-emerald-500">
-            <option value="ES26104">Programming for Engineers (ES26104)</option>
-            <option value="ES26106">Universal Human Values (ES26106)</option>
-            <option value="ES26101">Logic & Quantitative Aptitude 1 (ES26101)</option>
-            <option value="ES26103">Linear Algebra (ES26103)</option>
-            <option value="ES26102">English (ES26102)</option>
-            <option value="ES26105">Basics of Engineering (ES26105)</option>
-            <option value="ES26107">Activity (ES26107)</option>
-          </select>
-        </div>
-        <div>
-          <label class="block text-xs text-[#8e98b0] font-medium mb-1">Task Description</label>
-          <input
-            type="text"
-            id="standaloneTodoText"
-            required
-            placeholder="What do you need to complete?"
-            class="w-full bg-[#0d101b] border border-[#28324e] rounded-xl px-3 py-2.5 text-xs sm:text-sm text-white placeholder-[#64708a] focus:outline-none focus:border-emerald-500"
-          />
-        </div>
-        <div class="grid grid-cols-3 gap-2.5">
-          <div>
-            <label class="block text-xs text-[#8e98b0] font-medium mb-1">Category</label>
-            <select id="standaloneTodoTag" class="w-full bg-[#0d101b] border border-[#28324e] rounded-xl px-2.5 py-2 text-xs text-white">
-              <option value="Assignment">Assignment</option>
-              <option value="Lab Journal">Lab Journal</option>
-              <option value="Exam Prep">Exam Prep</option>
-              <option value="Homework">Homework</option>
-              <option value="Bring Material">Bring Material</option>
-            </select>
-          </div>
-          <div>
-            <label class="block text-xs text-[#8e98b0] font-medium mb-1">Priority</label>
-            <select id="standaloneTodoPriority" class="w-full bg-[#0d101b] border border-[#28324e] rounded-xl px-2.5 py-2 text-xs text-white">
-              <option value="Medium">Medium</option>
-              <option value="High">High</option>
-              <option value="Low">Low</option>
-            </select>
-          </div>
-          <div>
-            <label class="block text-xs text-[#8e98b0] font-medium mb-1">Due</label>
-            <input
-              type="text"
-              id="standaloneTodoDue"
-              value="Mon, 26 Oct"
-              class="w-full bg-[#0d101b] border border-[#28324e] rounded-xl px-2.5 py-2 text-xs text-white"
-            />
-          </div>
-        </div>
-        <div class="pt-2 flex justify-end gap-2">
-          <button type="button" onclick="closeStandaloneTodoModal()" class="px-4 py-2 rounded-xl text-xs font-semibold text-[#949eb8] hover:text-white">
-            Cancel
-          </button>
-          <button type="submit" class="bg-[#137a63] hover:bg-[#179478] text-white font-semibold text-xs sm:text-sm px-5 py-2 rounded-xl shadow">
-            Save Task
-          </button>
-        </div>
-      </form>
     </div>
   </div>
 
-  <!-- Toast Notification -->
-  <div id="toastNotification" class="fixed bottom-5 right-5 z-50 pointer-events-none opacity-0 translate-y-2 transition-all duration-200 bg-[#137a63] text-white text-xs sm:text-sm font-semibold px-4 py-3 rounded-xl shadow-2xl border border-white/20 flex items-center gap-2.5">
-    <span class="w-2 h-2 rounded-full bg-white"></span>
-    <span id="toastMessage">Task added to To-Do list!</span>
-  </div>
-
-  <!-- APPLICATION JAVASCRIPT -->
   <script>
-    /********************************************************************
-     * 1. COURSE CATALOG & THEME DEFINITIONS (Division IT-A)
-     ********************************************************************/
+    /**************************************************************
+     * 1. COURSE CATALOG & WEEKLY SCHEDULE (IT-A)
+     **************************************************************/
     const COURSES = {
-      ES26104: {
+      PROG: {
+        key: 'PROG',
         code: 'ES26104',
         title: 'Programming for Engineers',
         shortTitle: 'Programming',
-        facultyFull: 'Mr. Vijay Krishna Itnal (VKI)',
-        facultyCode: 'VKI',
-        colorClass: 'course-prog',
-        bannerHex: '#137a63',
-        badgeBg: 'rgba(19, 122, 99, 0.28)',
-        badgeText: '#6ee7b7',
-        borderHex: '#137a63'
+        faculty: 'Mr. Vijay Krishna Itnal (VKI)',
+        facultyShort: 'VKI',
+        theme: 'emerald'
       },
-      ES26106: {
+      UHV: {
+        key: 'UHV',
         code: 'ES26106',
         title: 'Universal Human Values',
         shortTitle: 'Human Values',
-        facultyFull: 'Manasi Vyankatesh Ghamande (MVG)',
-        facultyCode: 'MVG',
-        colorClass: 'course-uhv',
-        bannerHex: '#8a6300',
-        badgeBg: 'rgba(138, 99, 0, 0.3)',
-        badgeText: '#fcd34d',
-        borderHex: '#b48309'
+        faculty: 'Manasi Vyankatesh Ghamande (MVG)',
+        facultyShort: 'MVG',
+        theme: 'gold'
       },
-      ES26101: {
+      LOGIC: {
+        key: 'LOGIC',
         code: 'ES26101',
         title: 'Logic and Quantitative Aptitude 1',
         shortTitle: 'Logic & Apt.',
-        facultyFull: 'Prof. V. S. Sabnis (VSS)',
-        facultyCode: 'VSS',
-        colorClass: 'course-logic',
-        bannerHex: '#53387e',
-        badgeBg: 'rgba(83, 56, 126, 0.35)',
-        badgeText: '#ddd6fe',
-        borderHex: '#7c52bd'
+        faculty: 'Prof. V. S. Shirke (VSS)',
+        facultyShort: 'VSS',
+        theme: 'purple'
       },
-      ES26102: {
+      ENG: {
+        key: 'ENG',
         code: 'ES26102',
         title: 'Professional English Communication',
         shortTitle: 'English',
-        facultyFull: 'Prof. S. Patil (SP)',
-        facultyCode: 'SP',
-        colorClass: 'course-eng',
-        bannerHex: '#6e2c46',
-        badgeBg: 'rgba(110, 44, 70, 0.35)',
-        badgeText: '#fbcfe8',
-        borderHex: '#9d4166'
+        faculty: 'Prof. S. Patil (SP)',
+        facultyShort: 'SP',
+        theme: 'maroon'
       },
-      ES26103: {
+      LA: {
+        key: 'LA',
         code: 'ES26103',
         title: 'Linear Algebra',
         shortTitle: 'Lin. Algebra',
-        facultyFull: 'Prof. J. A. Kulkarni (JAK)',
-        facultyCode: 'JAK',
-        colorClass: 'course-linalg',
-        bannerHex: '#254b85',
-        badgeBg: 'rgba(37, 75, 133, 0.35)',
-        badgeText: '#bfdbfe',
-        borderHex: '#3b6cb5'
+        faculty: 'Prof. J. A. Kulkarni (JAK)',
+        facultyShort: 'JAK',
+        theme: 'blue'
       },
-      ES26105: {
+      ACT: {
+        key: 'ACT',
+        code: 'ES26107',
+        title: 'Student Activity & Mentoring',
+        shortTitle: 'Activity',
+        faculty: 'Manasi Vyankatesh Ghamande (MVG)',
+        facultyShort: 'MVG',
+        theme: 'slate'
+      },
+      BOE: {
+        key: 'BOE',
         code: 'ES26105',
         title: 'Basics of Engineering',
         shortTitle: 'Basics of Engg.',
-        facultyFull: 'Prof. R. S. Gadkari (RSG)',
-        facultyCode: 'RSG',
-        colorClass: 'course-boe',
-        bannerHex: '#703b22',
-        badgeBg: 'rgba(112, 59, 34, 0.35)',
-        badgeText: '#fed7aa',
-        borderHex: '#a35632'
-      },
-      ES26107: {
-        code: 'ES26107',
-        title: 'Student Induction & Co-Curricular Activity',
-        shortTitle: 'Activity',
-        facultyFull: 'Manasi Vyankatesh Ghamande (MVG)',
-        facultyCode: 'MVG',
-        colorClass: 'course-act',
-        bannerHex: '#3c465c',
-        badgeBg: 'rgba(60, 70, 92, 0.4)',
-        badgeText: '#e2e8f0',
-        borderHex: '#5a6887'
+        faculty: 'Prof. R. S. Gayakwad (RSG)',
+        facultyShort: 'RSG',
+        theme: 'brown'
       }
     };
 
-    /********************************************************************
-     * 2. TIMETABLE SCHEDULE DATA (Supports Batch B1, B2, B3)
-     ********************************************************************/
-    // Days order in the top pill bar matching screenshot:
-    // Today (Fri 23 Oct), Tomorrow (Sat 24 Oct), Sunday (25 Oct), Monday (26 Oct), Tuesday (27 Oct), Wednesday (28 Oct), Thursday (29 Oct)
-    const DAY_TABS = [
-      { key: 'fri', label: 'Today', fullDay: 'Friday', dateShort: '23 Oct', fullDate: 'Friday, 23 October', modalDate: 'Friday, 23 Oct', isToday: true },
-      { key: 'sat', label: 'Tomorrow', fullDay: 'Saturday', dateShort: '24 Oct', fullDate: 'Saturday, 24 October', modalDate: 'Saturday, 24 Oct', isToday: false },
-      { key: 'sun', label: 'Sunday', fullDay: 'Sunday', dateShort: '25 Oct', fullDate: 'Sunday, 25 October', modalDate: 'Sunday, 25 Oct', isToday: false },
-      { key: 'mon', label: 'Monday', fullDay: 'Monday', dateShort: '26 Oct', fullDate: 'Monday, 26 October', modalDate: 'Monday, 26 Oct', isToday: false },
-      { key: 'tue', label: 'Tuesday', fullDay: 'Tuesday', dateShort: '27 Oct', fullDate: 'Tuesday, 27 October', modalDate: 'Tuesday, 27 Oct', isToday: false },
-      { key: 'wed', label: 'Wednesday', fullDay: 'Wednesday', dateShort: '28 Oct', fullDate: 'Wednesday, 28 October', modalDate: 'Wednesday, 28 Oct', isToday: false },
-      { key: 'thu', label: 'Thursday', fullDay: 'Thursday', dateShort: '29 Oct', fullDate: 'Thursday, 29 October', modalDate: 'Thursday, 29 Oct', isToday: false }
+    // Day Index: 0 = Sun, 1 = Mon, 2 = Tue, 3 = Wed, 4 = Thu, 5 = Fri, 6 = Sat
+    const WEEKLY_SESSIONS = [
+      // MONDAY (Day 1)
+      { id: 'mon-10', dayOfWeek: 1, courseKey: 'LOGIC', startHour: 10, endHour: 11, room: '1125', type: 'Theory', typeDetail: 'Theory, whole division' },
+      { id: 'mon-11', dayOfWeek: 1, courseKey: 'LOGIC', startHour: 11, endHour: 12, room: '1125', type: 'Theory', typeDetail: 'Theory, whole division' },
+      { id: 'mon-13', dayOfWeek: 1, courseKey: 'ENG',   startHour: 13, endHour: 14, room: '1109', type: 'Theory', typeDetail: 'Theory, whole division' },
+      { id: 'mon-14', dayOfWeek: 1, courseKey: 'LA',    startHour: 14, endHour: 15, room: '1109', type: 'Theory', typeDetail: 'Theory, whole division' },
+      { id: 'mon-15', dayOfWeek: 1, courseKey: 'ACT',   startHour: 15, endHour: 16, room: '1109', type: 'Theory', typeDetail: 'Theory, whole division' },
+      { id: 'mon-16', dayOfWeek: 1, courseKey: 'LA',    startHour: 16, endHour: 17, room: '1115', type: 'Tutorial', typeDetail: 'Tutorial' },
+
+      // TUESDAY (Day 2) - Holiday / No classes in screenshot
+      // WEDNESDAY (Day 3)
+      { id: 'wed-14', dayOfWeek: 3, courseKey: 'PROG',  startHour: 14, endHour: 15, room: '1103', type: 'Theory', typeDetail: 'Theory, whole division' },
+      { id: 'wed-15', dayOfWeek: 3, courseKey: 'UHV',   startHour: 15, endHour: 16, room: '1001', type: 'Theory', typeDetail: 'Theory, whole division' },
+      { id: 'wed-16', dayOfWeek: 3, courseKey: 'PROG',  startHour: 16, endHour: 17, room: '1114', type: 'Lab',    typeDetail: 'Lab session' },
+      { id: 'wed-17', dayOfWeek: 3, courseKey: 'PROG',  startHour: 17, endHour: 18, room: '1114', type: 'Lab',    typeDetail: 'Lab session' },
+
+      // THURSDAY (Day 4)
+      { id: 'thu-12', dayOfWeek: 4, courseKey: 'BOE',   startHour: 12, endHour: 13, room: '1409', type: 'Theory', typeDetail: 'Theory, whole division' },
+      { id: 'thu-13', dayOfWeek: 4, courseKey: 'ACT',   startHour: 13, endHour: 14, room: '1001', type: 'Theory', typeDetail: 'Theory, whole division' },
+      { id: 'thu-15', dayOfWeek: 4, courseKey: 'LA',    startHour: 15, endHour: 16, room: '1103', type: 'Theory', typeDetail: 'Theory, whole division' },
+
+      // FRIDAY (Day 5)
+      { id: 'fri-14', dayOfWeek: 5, courseKey: 'PROG',  startHour: 14, endHour: 15, room: '1102', type: 'Theory', typeDetail: 'Theory, whole division' },
+      { id: 'fri-15', dayOfWeek: 5, courseKey: 'UHV',   startHour: 15, endHour: 16, room: '1001', type: 'Theory', typeDetail: 'Theory, whole division' },
+      { id: 'fri-16', dayOfWeek: 5, courseKey: 'PROG',  startHour: 16, endHour: 17, room: '1201', type: 'Lab',    typeDetail: 'Lab session' },
+      { id: 'fri-17', dayOfWeek: 5, courseKey: 'PROG',  startHour: 17, endHour: 18, room: '1201', type: 'Lab',    typeDetail: 'Lab session' }
     ];
 
-    // Helper to generate schedule dynamically per batch (B1 matches screenshot 100%, B2/B3 adjust lab rooms/faculty slightly)
-    function getScheduleForBatch(batch) {
-      const labRoomProgFri = batch === 'B1' ? '1201' : (batch === 'B2' ? '1202' : '1203');
-      const labRoomProgWed = batch === 'B1' ? '1114' : (batch === 'B2' ? '1115' : '1201');
-      const tutRoomMon = batch === 'B1' ? '1115' : (batch === 'B2' ? '1116' : '1117');
+    /**************************************************************
+     * 2. STATE & STORAGE
+     **************************************************************/
+    const STORAGE_KEY_TODOS = 'vit_ita_todos_v2';
+    const STORAGE_KEY_SYNC  = 'vit_ita_sync_channel_v1';
 
-      return {
-        mon: [
-          { id: 'mon-10', courseCode: 'ES26101', startHour: 10, endHour: 11, room: '1125', sessionType: 'Theory', isLab: false },
-          { id: 'mon-11', courseCode: 'ES26101', startHour: 11, endHour: 12, room: '1125', sessionType: 'Theory', isLab: false },
-          { id: 'mon-13', courseCode: 'ES26102', startHour: 13, endHour: 14, room: '1109', sessionType: 'Theory', isLab: false },
-          { id: 'mon-14', courseCode: 'ES26103', startHour: 14, endHour: 15, room: '1109', sessionType: 'Theory', isLab: false },
-          { id: 'mon-15', courseCode: 'ES26107', startHour: 15, endHour: 16, room: '1109', sessionType: 'Theory', isLab: false },
-          { id: 'mon-16', courseCode: 'ES26103', startHour: 16, endHour: 17, room: tutRoomMon, sessionType: 'Tutorial', isLab: true }
-        ],
-        tue: [
-          { id: 'tue-10', courseCode: 'ES26103', startHour: 10, endHour: 11, room: '1109', sessionType: 'Theory', isLab: false },
-          { id: 'tue-11', courseCode: 'ES26105', startHour: 11, endHour: 12, room: '1409', sessionType: 'Theory', isLab: false },
-          { id: 'tue-13', courseCode: 'ES26102', startHour: 13, endHour: 14, room: '1109', sessionType: 'Theory', isLab: false },
-          { id: 'tue-14', courseCode: 'ES26104', startHour: 14, endHour: 15, room: '1102', sessionType: 'Theory', isLab: false },
-          { id: 'tue-15', courseCode: 'ES26105', startHour: 15, endHour: 16, room: '1409', sessionType: 'Lab', isLab: true },
-          { id: 'tue-16', courseCode: 'ES26105', startHour: 16, endHour: 17, room: '1409', sessionType: 'Lab', isLab: true }
-        ],
-        wed: [
-          { id: 'wed-14', courseCode: 'ES26104', startHour: 14, endHour: 15, room: '1103', sessionType: 'Theory', isLab: false },
-          { id: 'wed-15', courseCode: 'ES26106', startHour: 15, endHour: 16, room: '1001', sessionType: 'Theory', isLab: false },
-          { id: 'wed-16', courseCode: 'ES26104', startHour: 16, endHour: 17, room: labRoomProgWed, sessionType: 'Lab', isLab: true },
-          { id: 'wed-17', courseCode: 'ES26104', startHour: 17, endHour: 18, room: labRoomProgWed, sessionType: 'Lab', isLab: true }
-        ],
-        thu: [
-          { id: 'thu-12', courseCode: 'ES26105', startHour: 12, endHour: 13, room: '1409', sessionType: 'Theory', isLab: false },
-          { id: 'thu-13', courseCode: 'ES26107', startHour: 13, endHour: 14, room: '1001', sessionType: 'Theory', isLab: false },
-          { id: 'thu-15', courseCode: 'ES26103', startHour: 15, endHour: 16, room: '1103', sessionType: 'Theory', isLab: false }
-        ],
-        fri: [
-          { id: 'fri-14', courseCode: 'ES26104', startHour: 14, endHour: 15, room: '1102', sessionType: 'Theory', isLab: false },
-          { id: 'fri-15', courseCode: 'ES26106', startHour: 15, endHour: 16, room: '1001', sessionType: 'Theory', isLab: false },
-          { id: 'fri-16', courseCode: 'ES26104', startHour: 16, endHour: 17, room: labRoomProgFri, sessionType: 'Lab', isLab: true },
-          { id: 'fri-17', courseCode: 'ES26104', startHour: 17, endHour: 18, room: labRoomProgFri, sessionType: 'Lab', isLab: true }
-        ],
-        sat: [],
-        sun: []
-      };
-    }
-
-    /********************************************************************
-     * 3. APPLICATION STATE & STORAGE
-     ********************************************************************/
     let state = {
-      currentPage: 'timetable',   // 'timetable' | 'todo'
-      selectedBatch: 'B1',        // 'B1' | 'B2' | 'B3'
-      clockFormat: '12h',         // '12h' | '24h'
-      selectedDayKey: 'fri',      // 'fri', 'sat', 'sun', 'mon', 'tue', 'wed', 'thu'
-      useDemoTime: true,          // true = Friday 23 Oct 2026, 5:39 PM (17:39)
-      todoStatusFilter: 'all',    // 'all' | 'pending' | 'completed'
-      activeModalSession: null,   // Stores currently clicked session object
-      todos: []
+      clockFormat: '12h',
+      selectedDayOffset: 0, // 0 = Today, 1 = Tomorrow, etc. (7 rolling days)
+      activeView: 'timetable',
+      activeModalSessionId: null,
+      todoFilterStatus: 'all',
+      todos: [],
+      syncChannel: localStorage.getItem(STORAGE_KEY_SYNC) || '',
+      eventSource: null
     };
-
-    const STORAGE_KEY = 'ita_timetable_todos_v1';
-
-    const DEFAULT_TODOS = [
-      {
-        id: 'todo-1',
-        courseCode: 'ES26104',
-        text: 'Complete C Programming Lab Exercise 4 (Loops & Arrays) and upload to portal',
-        tag: 'Lab Journal',
-        priority: 'High',
-        dueDate: 'Mon, 26 Oct',
-        room: '1201',
-        sessionContext: 'Friday, 23 Oct · 5:00–6:00 pm',
-        completed: false,
-        createdAt: 'Added from Fri 5:00 pm Lab'
-      },
-      {
-        id: 'todo-2',
-        courseCode: 'ES26106',
-        text: 'Write short reflection essay on Harmony in Self & Family (Unit 1)',
-        tag: 'Assignment',
-        priority: 'Medium',
-        dueDate: 'Wed, 28 Oct',
-        room: '1001',
-        sessionContext: 'Friday, 23 Oct · 3:00–4:00 pm',
-        completed: false,
-        createdAt: 'Added from Fri 3:00 pm Theory'
-      },
-      {
-        id: 'todo-3',
-        courseCode: 'ES26101',
-        text: 'Solve practice worksheet on Number Series & Syllogisms before Monday 10 am lecture',
-        tag: 'Homework',
-        priority: 'High',
-        dueDate: 'Mon, 26 Oct',
-        room: '1125',
-        sessionContext: 'Monday, 19 Oct · 10:00–11:00 am',
-        completed: false,
-        createdAt: 'Added from Mon 10:00 am Theory'
-      },
-      {
-        id: 'todo-4',
-        courseCode: 'ES26103',
-        text: 'Revise Cayley-Hamilton Theorem solved examples for Tutorial batch B1',
-        tag: 'Exam Prep',
-        priority: 'Low',
-        dueDate: 'Mon, 26 Oct',
-        room: '1115',
-        sessionContext: 'Monday, 19 Oct · 4:00–5:00 pm',
-        completed: true,
-        createdAt: 'Added from Mon 4:00 pm Tutorial'
-      }
-    ];
 
     function loadTodos() {
       try {
-        const raw = localStorage.getItem(STORAGE_KEY);
+        const raw = localStorage.getItem(STORAGE_KEY_TODOS);
         if (raw) {
           state.todos = JSON.parse(raw);
         } else {
-          state.todos = [...DEFAULT_TODOS];
-          saveTodos();
+          state.todos = [
+            {
+              id: 'seed-1',
+              title: 'Complete Lab Assignment on Functions & Pointers',
+              courseKey: 'PROG',
+              dueDate: '',
+              completed: false,
+              createdAt: Date.now()
+            },
+            {
+              id: 'seed-2',
+              title: 'Read Unit 2 Notes for Universal Human Values',
+              courseKey: 'UHV',
+              dueDate: '',
+              completed: false,
+              createdAt: Date.now()
+            }
+          ];
+          saveTodos(false);
         }
       } catch (e) {
-        state.todos = [...DEFAULT_TODOS];
+        state.todos = [];
       }
     }
 
-    function saveTodos() {
-      try {
-        localStorage.setItem(STORAGE_KEY, JSON.stringify(state.todos));
-      } catch (e) {
-        // Ignore storage errors in restricted environments
-      }
-      updateTodoBadges();
-    }
-
-    /********************************************************************
-     * 4. TIME & FORMATTING HELPERS
-     ********************************************************************/
-    function getCurrentTimeInfo() {
-      if (state.useDemoTime) {
-        // Matches screenshot: Friday, 23 October 2026, 5:39 pm (17 hours, 39 minutes)
-        return {
-          dayKey: 'fri',
-          hours: 17,
-          minutes: 39,
-          decimalHour: 17 + 39 / 60,
-          dateString: 'Friday, 23 October 2026'
-        };
-      } else {
-        const now = new Date();
-        const dayMap = ['sun', 'mon', 'tue', 'wed', 'thu', 'fri', 'sat'];
-        const hours = now.getHours();
-        const minutes = now.getMinutes();
-        const options = { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' };
-        return {
-          dayKey: dayMap[now.getDay()],
-          hours,
-          minutes,
-          decimalHour: hours + minutes / 60,
-          dateString: now.toLocaleDateString('en-GB', options)
-        };
+    function saveTodos(pushCloud = true) {
+      localStorage.setItem(STORAGE_KEY_TODOS, JSON.stringify(state.todos));
+      updateTodoBadgeCount();
+      if (pushCloud && state.syncChannel) {
+        pushTodosToCloud();
       }
     }
 
-    function formatHourAxis(hour24) {
+    /**************************************************************
+     * 3. REAL-TIME CLOCK & TIME FORMATTING HELPERS
+     **************************************************************/
+    const SHORT_MONTHS = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+    const LONG_MONTHS  = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+    const SHORT_DAYS   = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+    const LONG_DAYS    = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+
+    function formatHourLabel(hour24) {
       if (state.clockFormat === '24h') {
         return `${String(hour24).padStart(2, '0')}:00`;
       }
@@ -926,908 +566,825 @@
       return `${h12} ${period}`;
     }
 
-    function formatRange(startHour, endHour) {
+    function formatRangeLabel(startHour, endHour) {
       if (state.clockFormat === '24h') {
         return `${String(startHour).padStart(2, '0')}:00–${String(endHour).padStart(2, '0')}:00`;
       }
       const endPeriod = endHour >= 12 ? 'pm' : 'am';
+      const startPeriod = startHour >= 12 ? 'pm' : 'am';
       const s12 = startHour % 12 === 0 ? 12 : startHour % 12;
       const e12 = endHour % 12 === 0 ? 12 : endHour % 12;
-      return `${s12}:00–${e12}:00 ${endPeriod}`;
-    }
-
-    function formatFullRangeWithStartAmPm(startHour, endHour) {
-      if (state.clockFormat === '24h') {
-        return `${String(startHour).padStart(2, '0')}:00 to ${String(endHour).padStart(2, '0')}:00`;
+      if (startPeriod === endPeriod) {
+        return `${s12}:00–${e12}:00 ${endPeriod}`;
       }
-      const sPeriod = startHour >= 12 ? 'pm' : 'am';
-      const ePeriod = endHour >= 12 ? 'pm' : 'am';
-      const s12 = startHour % 12 === 0 ? 12 : startHour % 12;
-      const e12 = endHour % 12 === 0 ? 12 : endHour % 12;
-      return `${s12}:00 ${sPeriod} to ${e12}:00 ${ePeriod}`;
+      return `${s12}:00 ${startPeriod}–${e12}:00 ${endPeriod}`;
     }
 
-    function formatClockDisplay(hours, minutes) {
-      const m = String(minutes).padStart(2, '0');
+    function updateHeaderClock() {
+      const now = new Date();
+      const hrs = now.getHours();
+      const mins = String(now.getMinutes()).padStart(2, '0');
+      let timeStr = '';
+
       if (state.clockFormat === '24h') {
-        return `${String(hours).padStart(2, '0')}:${m}`;
+        timeStr = `${String(hrs).padStart(2, '0')}:${mins}`;
+      } else {
+        const period = hrs >= 12 ? 'pm' : 'am';
+        const h12 = hrs % 12 === 0 ? 12 : hrs % 12;
+        timeStr = `${h12}:${mins} ${period}`;
       }
-      const period = hours >= 12 ? 'pm' : 'am';
-      const h12 = hours % 12 === 0 ? 12 : hours % 12;
-      return `${h12}:${m} ${period}`;
+
+      document.getElementById('liveClockDisplay').textContent = timeStr;
+      document.getElementById('liveDateDisplay').textContent =
+        `${LONG_DAYS[now.getDay()]}, ${now.getDate()} ${LONG_MONTHS[now.getMonth()]} ${now.getFullYear()}`;
     }
 
-    function formatShortPillTime(hours, minutes) {
-      const m = String(minutes).padStart(2, '0');
-      if (state.clockFormat === '24h') {
-        return `${String(hours).padStart(2, '0')}:${m}`;
-      }
-      const h12 = hours % 12 === 0 ? 12 : hours % 12;
-      return `${h12}:${m}`;
+    function getSessionsForDayOfWeek(dayOfWeek) {
+      return WEEKLY_SESSIONS
+        .filter(s => s.dayOfWeek === dayOfWeek)
+        .sort((a, b) => a.startHour - b.startHour);
     }
 
-    /********************************************************************
-     * 5. RENDER HEADER, LIVE CARD, DAILY TIMELINE & WEEKLY GRID
-     ********************************************************************/
-    function renderAll() {
-      const timeInfo = getCurrentTimeInfo();
+    // Finds the very next upcoming session from real `now`
+    function findNextUpcomingSession(now) {
+      const currentDay = now.getDay();
+      const currentDecHour = now.getHours() + now.getMinutes() / 60;
 
-      // Update Header Clock & Date
-      document.getElementById('headerClock').textContent = formatClockDisplay(timeInfo.hours, timeInfo.minutes);
-      document.getElementById('headerDate').textContent = timeInfo.dateString;
-
-      // Update Batch & Clock Buttons
-      ['B1', 'B2', 'B3'].forEach(b => {
-        const btn = document.getElementById(`batchBtn-${b}`);
-        if (state.selectedBatch === b) {
-          btn.className = 'px-3.5 py-1.5 rounded-lg text-xs sm:text-[13px] font-bold transition-all bg-white text-[#0b0e17] shadow cursor-pointer';
-        } else {
-          btn.className = 'px-3.5 py-1.5 rounded-lg text-xs sm:text-[13px] font-semibold transition-all text-[#949eb8] hover:text-white cursor-pointer';
+      for (let offset = 0; offset < 7; offset++) {
+        const checkDay = (currentDay + offset) % 7;
+        const daySessions = getSessionsForDayOfWeek(checkDay);
+        for (const sess of daySessions) {
+          if (offset === 0) {
+            if (sess.startHour > currentDecHour) {
+              return { session: sess, dayOffset: offset, dayOfWeek: checkDay };
+            }
+          } else {
+            return { session: sess, dayOffset: offset, dayOfWeek: checkDay };
+          }
         }
-      });
-
-      ['12h', '24h'].forEach(fmt => {
-        const btn = document.getElementById(`clockBtn-${fmt}`);
-        if (state.clockFormat === fmt) {
-          btn.className = 'px-3 py-1.5 rounded-lg text-xs sm:text-[13px] font-bold transition-all bg-white text-[#0b0e17] shadow cursor-pointer';
-        } else {
-          btn.className = 'px-3 py-1.5 rounded-lg text-xs sm:text-[13px] font-semibold transition-all text-[#949eb8] hover:text-white cursor-pointer';
-        }
-      });
-
-      renderLiveClassCard(timeInfo);
-      renderDaySelectorRow();
-      renderDailyTimeline(timeInfo);
-      renderWeeklyGrid(timeInfo);
-      updateTodoBadges();
-
-      if (state.currentPage === 'todo') {
-        renderTodoPage();
       }
+      return null;
     }
 
-    function renderLiveClassCard(timeInfo) {
-      const schedule = getScheduleForBatch(state.selectedBatch);
-      const todayClasses = schedule[timeInfo.dayKey] || [];
-      const currentSession = todayClasses.find(
-        s => timeInfo.decimalHour >= s.startHour && timeInfo.decimalHour < s.endHour
+    /**************************************************************
+     * 4. RENDER LIVE STATUS CARD (LEFT GREEN PANEL)
+     **************************************************************/
+    function renderLiveStatusCard() {
+      const card = document.getElementById('liveStatusCard');
+      const now = new Date();
+      const currentDay = now.getDay();
+      const currentHourDec = now.getHours() + now.getMinutes() / 60;
+      const todaySessions = getSessionsForDayOfWeek(currentDay);
+
+      // 1. Check if user is currently inside an active class right now
+      const activeSession = todaySessions.find(
+        s => currentHourDec >= s.startHour && currentHourDec < s.endHour
       );
 
-      const container = document.getElementById('liveClassCard');
+      const nextInfo = findNextUpcomingSession(now);
 
-      // Default to the 5:00-6:00 PM Friday Programming Lab when in Demo Mode or if active
-      const activeSession = currentSession || schedule.fri[3];
-      const course = COURSES[activeSession.courseCode];
-      const isActuallyLive = Boolean(currentSession);
+      if (activeSession) {
+        const course = COURSES[activeSession.courseKey];
+        const minsLeft = Math.max(1, Math.ceil((activeSession.endHour - currentHourDec) * 60));
+        const totalMins = (activeSession.endHour - activeSession.startHour) * 60;
+        const progressPct = Math.min(100, Math.max(5, ((totalMins - minsLeft) / totalMins) * 100));
 
-      const minutesLeft = isActuallyLive
-        ? Math.max(1, Math.round((activeSession.endHour - timeInfo.decimalHour) * 60))
-        : 21;
-      const progressPercent = isActuallyLive
-        ? Math.min(100, Math.max(5, ((timeInfo.decimalHour - activeSession.startHour) / (activeSession.endHour - activeSession.startHour)) * 100))
-        : 65;
+        let nextLineText = 'No more classes scheduled after this.';
+        if (nextInfo) {
+          const nextCourse = COURSES[nextInfo.session.courseKey];
+          const dayLabel = nextInfo.dayOffset === 0 ? 'Today' : SHORT_DAYS[nextInfo.dayOfWeek];
+          nextLineText = `Then ${dayLabel} at ${formatHourLabel(nextInfo.session.startHour)}: ${nextCourse.title}, room ${nextInfo.session.room}.`;
+        }
 
-      const typeLabel = activeSession.isLab
-        ? `${activeSession.sessionType}, batch ${state.selectedBatch}`
-        : `${activeSession.sessionType}, whole division`;
-
-      const pendingCountForCourse = state.todos.filter(t => t.courseCode === course.code && !t.completed).length;
-
-      container.innerHTML = `
-        <div>
-          <!-- Status Pill -->
-          <div class="inline-flex items-center gap-2 bg-white/15 backdrop-blur-xs px-3 py-1 rounded-full text-xs font-semibold mb-3">
-            <span class="w-2 h-2 rounded-full bg-white animate-ping"></span>
-            <span>${isActuallyLive ? 'In class now' : 'Featured Session (Fri 5:00 pm)'}</span>
-          </div>
-
-          <!-- Big Minute Counter -->
-          <div class="font-condensed font-extrabold text-5xl sm:text-[62px] leading-none tracking-tight text-white mb-2">
-            ${minutesLeft} min left
-          </div>
-
-          <!-- Course Title & Room Box Row -->
-          <div class="flex items-start justify-between gap-3 mt-3">
-            <div class="space-y-1">
-              <h3 class="font-bold text-xl sm:text-2xl text-white leading-snug">
-                ${course.title}
-              </h3>
-              <p class="text-white/90 text-xs sm:text-sm font-medium pt-0.5">
-                ${typeLabel} &nbsp;${formatRange(activeSession.startHour, activeSession.endHour)}
-              </p>
-              <p class="text-white/85 text-xs sm:text-sm">
-                Faculty ${course.facultyFull}
-              </p>
-              <p class="text-white/75 text-xs sm:text-sm pt-0.5">
-                ${course.code}
-              </p>
+        card.innerHTML = `
+          <div>
+            <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/15 text-white text-xs sm:text-sm font-bold mb-4">
+              <span class="w-2.5 h-2.5 rounded-full bg-white pulse-dot"></span>
+              <span>In class now</span>
             </div>
 
-            <!-- Framed Room Box matching screenshot -->
-            <div class="border-2 border-white rounded-xl p-0.5 shrink-0 bg-[#0f6350] shadow-md">
-              <div class="border border-white/80 rounded-[9px] px-3 py-1.5 text-center min-w-[74px]">
-                <div class="text-[11px] font-semibold uppercase tracking-wider text-white/90 leading-none">
-                  Room
-                </div>
-                <div class="font-condensed font-extrabold text-3xl sm:text-[34px] text-white leading-none mt-1">
-                  ${activeSession.room}
-                </div>
+            <div class="font-condensed text-5xl sm:text-6xl font-bold text-white tracking-tight leading-none mb-4">
+              ${minsLeft} min left
+            </div>
+
+            <div class="flex items-start justify-between gap-4">
+              <div>
+                <h3 class="text-xl sm:text-2xl font-extrabold text-white leading-snug">
+                  ${course.title}
+                </h3>
+                <p class="text-emerald-50/90 text-xs sm:text-sm font-medium mt-1">
+                  ${activeSession.type} &nbsp;${formatRangeLabel(activeSession.startHour, activeSession.endHour)}
+                </p>
+                <p class="text-emerald-50/90 text-xs sm:text-sm font-medium mt-0.5">
+                  Faculty ${course.faculty}
+                </p>
+                <p class="text-emerald-100/80 text-xs font-medium mt-1">
+                  ${course.code}
+                </p>
+              </div>
+
+              <div class="shrink-0 rounded-xl border-2 border-white px-3.5 py-2 text-center bg-black/15 shadow-inner">
+                <div class="text-[10px] font-bold uppercase tracking-widest text-emerald-100">Room</div>
+                <div class="font-condensed text-2xl sm:text-3xl font-bold text-white leading-none mt-0.5">${activeSession.room}</div>
               </div>
             </div>
+
+            <div class="w-full h-1.5 bg-black/25 rounded-full overflow-hidden mt-5 mb-3">
+              <div class="h-full bg-white rounded-full transition-all duration-500" style="width: ${progressPct}%"></div>
+            </div>
+
+            <p class="text-xs sm:text-sm text-emerald-50/95 leading-relaxed">
+              ${nextLineText}
+            </p>
           </div>
 
-          <!-- Progress Bar -->
-          <div class="w-full h-1.5 bg-black/25 rounded-full overflow-hidden mt-5 mb-4">
-            <div class="h-full bg-white rounded-full transition-all duration-500" style="width: ${progressPercent}%"></div>
-          </div>
-
-          <!-- Next Class Info -->
-          <p class="text-xs sm:text-[13px] text-white/90 leading-relaxed">
-            Then Mon at ${state.clockFormat === '24h' ? '10:00' : '10:00 am'}: Logic and Quantitative Aptitude 1, room 1125.
-          </p>
-        </div>
-
-        <!-- Bottom Action Buttons -->
-        <div class="mt-5 pt-1 flex flex-wrap items-center gap-2.5">
-          <button
-            onclick="openClassModal('${activeSession.id}', 'fri')"
-            class="px-4 py-2.5 rounded-xl border border-white/70 hover:bg-white hover:text-[#0e614e] text-white font-semibold text-xs sm:text-[13px] transition-all cursor-pointer shadow-sm"
-          >
-            Details & Add To-Do
-          </button>
-          ${pendingCountForCourse > 0 ? `
-            <button
-              onclick="switchPage('todo')"
-              class="px-3 py-2.5 rounded-xl bg-black/25 hover:bg-black/35 text-white text-xs font-semibold transition-all cursor-pointer flex items-center gap-1.5"
-            >
-              <span>${pendingCountForCourse} Pending To-Do${pendingCountForCourse > 1 ? 's' : ''}</span>
-              <span>→</span>
-            </button>
-          ` : ''}
-        </div>
-      `;
-    }
-
-    function renderDaySelectorRow() {
-      const schedule = getScheduleForBatch(state.selectedBatch);
-      const row = document.getElementById('daySelectorRow');
-
-      row.innerHTML = DAY_TABS.map(tab => {
-        const count = (schedule[tab.key] || []).length;
-        const countText = count === 0 ? 'No classes' : `${count} classes`;
-        const isSelected = state.selectedDayKey === tab.key;
-
-        return `
-          <button
-            onclick="selectDayTab('${tab.key}')"
-            class="flex flex-col items-center justify-center py-2.5 px-2 rounded-xl border text-center transition-all cursor-pointer ${
-              isSelected
-                ? 'bg-white text-[#0b0e17] border-white shadow-md'
-                : 'bg-[#171c2e] text-[#949eb8] border-[#242c44] hover:border-[#384569] hover:text-white'
-            }"
-          >
-            <div class="flex items-center gap-1 text-xs font-bold leading-tight">
-              ${tab.isToday ? `<span class="w-1.5 h-1.5 rounded-full bg-rose-500"></span>` : ''}
-              <span>${tab.label}</span>
-            </div>
-            <div class="text-[11px] ${isSelected ? 'text-[#334155] font-semibold' : 'text-[#7b859e]'} mt-0.5">
-              ${tab.dateShort}
-            </div>
-            <div class="text-[10px] ${isSelected ? 'text-[#0b0e17] font-semibold' : 'text-[#64708a]'} mt-0.5">
-              ${countText}
-            </div>
-          </button>
-        `;
-      }).join('');
-    }
-
-    function renderDailyTimeline(timeInfo) {
-      const schedule = getScheduleForBatch(state.selectedBatch);
-      const dayTab = DAY_TABS.find(d => d.key === state.selectedDayKey) || DAY_TABS[0];
-      const sessions = schedule[dayTab.key] || [];
-
-      document.getElementById('selectedDayTitle').textContent = dayTab.fullDate;
-
-      const summaryEl = document.getElementById('selectedDaySummary');
-      const container = document.getElementById('dailyTimelineContainer');
-
-      if (sessions.length === 0) {
-        summaryEl.textContent = 'No classes scheduled';
-        container.innerHTML = `
-          <div class="bg-[#161b2e] border border-[#232b42] rounded-xl p-8 text-center my-2">
-            <div class="text-base font-bold text-white mb-1">No classes on ${dayTab.fullDay}</div>
-            <p class="text-xs text-[#8e98b0] mb-4">Use this free day to catch up on your pending class To-Dos and lab journals.</p>
-            <button onclick="switchPage('todo')" class="px-4 py-2 rounded-lg bg-[#137a63] hover:bg-[#179478] text-white text-xs font-semibold transition-all cursor-pointer">
-              Review To-Do List →
+          <div class="mt-5 pt-1">
+            <button onclick="openClassModal('${activeSession.id}')" class="px-4 py-2 rounded-xl border border-white/60 hover:bg-white/15 text-white text-xs sm:text-sm font-bold transition">
+              Details & Add To-Do
             </button>
           </div>
         `;
         return;
       }
 
-      const minHour = Math.min(...sessions.map(s => s.startHour));
-      const maxHour = Math.max(...sessions.map(s => s.endHour));
-      summaryEl.textContent = `${sessions.length} classes, ${formatFullRangeWithStartAmPm(minHour, maxHour)}`;
+      // 2. If not in class right now -> Show live "Free / Next Up" status
+      let statusBadge = 'No class in session';
+      let headline = 'Free right now';
 
-      const ROW_HEIGHT = 66; // px per hour
+      if (currentDay === 0 || currentDay === 6) {
+        statusBadge = 'Weekend · No classes today';
+      } else if (todaySessions.length === 0) {
+        statusBadge = 'Holiday · No classes today';
+      } else {
+        const firstToday = todaySessions[0];
+        const lastToday = todaySessions[todaySessions.length - 1];
+        if (currentHourDec < firstToday.startHour) {
+          const minsUntil = Math.ceil((firstToday.startHour - currentHourDec) * 60);
+          statusBadge = 'Classes start soon';
+          headline = minsUntil < 60 ? `In ${minsUntil} min` : `In ${Math.floor(minsUntil / 60)}h ${minsUntil % 60}m`;
+        } else if (currentHourDec >= lastToday.endHour) {
+          statusBadge = 'Done for today';
+          headline = 'Classes finished';
+        }
+      }
+
+      if (nextInfo) {
+        const nextSess = nextInfo.session;
+        const nextCourse = COURSES[nextSess.courseKey];
+        const dayWord =
+          nextInfo.dayOffset === 0
+            ? 'Today'
+            : nextInfo.dayOffset === 1
+            ? `Tomorrow (${SHORT_DAYS[nextInfo.dayOfWeek]})`
+            : LONG_DAYS[nextInfo.dayOfWeek];
+
+        card.innerHTML = `
+          <div>
+            <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-black/25 text-emerald-50 text-xs sm:text-sm font-bold mb-4">
+              <span class="w-2 h-2 rounded-full bg-emerald-300"></span>
+              <span>${statusBadge}</span>
+            </div>
+
+            <div class="font-condensed text-4xl sm:text-5xl font-bold text-white tracking-tight leading-none mb-4">
+              ${headline}
+            </div>
+
+            <div class="p-3.5 rounded-xl bg-black/20 border border-white/15 mb-4">
+              <div class="text-[11px] font-bold uppercase tracking-wider text-emerald-200 mb-1">
+                Next Up · ${dayWord} at ${formatHourLabel(nextSess.startHour)}
+              </div>
+              <div class="flex items-start justify-between gap-3">
+                <div>
+                  <h3 class="text-lg sm:text-xl font-extrabold text-white leading-snug">
+                    ${nextCourse.title}
+                  </h3>
+                  <p class="text-emerald-50/90 text-xs font-medium mt-0.5">
+                    ${nextSess.type} · ${formatRangeLabel(nextSess.startHour, nextSess.endHour)}
+                  </p>
+                  <p class="text-emerald-50/80 text-xs mt-0.5">
+                    Faculty ${nextCourse.faculty}
+                  </p>
+                </div>
+                <div class="shrink-0 rounded-xl border-2 border-white px-3 py-1.5 text-center bg-black/15">
+                  <div class="text-[9px] font-bold uppercase tracking-widest text-emerald-100">Room</div>
+                  <div class="font-condensed text-2xl font-bold text-white leading-none">${nextSess.room}</div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="mt-2 flex items-center gap-2">
+            <button onclick="openClassModal('${nextSess.id}')" class="px-4 py-2 rounded-xl border border-white/60 hover:bg-white/15 text-white text-xs sm:text-sm font-bold transition">
+              Next Class Details & To-Do
+            </button>
+          </div>
+        `;
+      }
+    }
+
+    /**************************************************************
+     * 5. RENDER ROLLING 7-DAY TABS & DAILY TIMELINE (RIGHT PANEL)
+     **************************************************************/
+    function renderDayTabsAndDailyTimeline() {
+      const now = new Date();
+      const tabsContainer = document.getElementById('dayTabsContainer');
+      tabsContainer.innerHTML = '';
+
+      for (let offset = 0; offset < 7; offset++) {
+        const d = new Date(now);
+        d.setDate(now.getDate() + offset);
+        const dow = d.getDay();
+        const sessions = getSessionsForDayOfWeek(dow);
+        const countLabel = sessions.length === 0 ? 'No classes' : `${sessions.length} classes`;
+
+        let topLabel = LONG_DAYS[dow];
+        if (offset === 0) topLabel = 'Today';
+        else if (offset === 1) topLabel = 'Tomorrow';
+
+        const isSelected = state.selectedDayOffset === offset;
+
+        const btn = document.createElement('button');
+        btn.onclick = () => {
+          state.selectedDayOffset = offset;
+          renderDayTabsAndDailyTimeline();
+        };
+        btn.className = isSelected
+          ? 'p-2 rounded-xl bg-white text-slate-950 text-center shadow transition flex flex-col items-center justify-center'
+          : 'p-2 rounded-xl bg-[#181f2c] hover:bg-[#1f293a] text-slate-300 border border-slate-800/80 text-center transition flex flex-col items-center justify-center';
+
+        btn.innerHTML = `
+          <div class="text-[11px] font-bold flex items-center gap-1">
+            ${offset === 0 ? `<span class="w-1.5 h-1.5 rounded-full bg-rose-500"></span>` : ''}
+            <span>${topLabel}</span>
+          </div>
+          <div class="text-[11px] ${isSelected ? 'text-slate-700 font-semibold' : 'text-slate-400'} mt-0.5">
+            ${d.getDate()} ${SHORT_MONTHS[d.getMonth()]}
+          </div>
+          <div class="text-[10px] ${isSelected ? 'text-slate-900 font-bold' : 'text-slate-500'} mt-0.5">
+            ${countLabel}
+          </div>
+        `;
+        tabsContainer.appendChild(btn);
+      }
+
+      // Render Selected Day Header & Timeline
+      const selectedDate = new Date(now);
+      selectedDate.setDate(now.getDate() + state.selectedDayOffset);
+      const selectedDow = selectedDate.getDay();
+      const daySessions = getSessionsForDayOfWeek(selectedDow);
+
+      document.getElementById('selectedDayTitle').textContent =
+        `${LONG_DAYS[selectedDow]}, ${selectedDate.getDate()} ${LONG_MONTHS[selectedDate.getMonth()]}`;
+
+      const summaryEl = document.getElementById('selectedDaySummary');
+      const timelineEl = document.getElementById('dailyTimelineContainer');
+
+      if (daySessions.length === 0) {
+        summaryEl.textContent = 'No classes scheduled';
+        timelineEl.innerHTML = `
+          <div class="h-56 rounded-xl bg-[#0e131d] border border-dashed border-slate-800 flex flex-col items-center justify-center text-center p-6">
+            <div class="text-slate-300 font-bold text-base">No classes on ${LONG_DAYS[selectedDow]}!</div>
+            <p class="text-slate-500 text-xs mt-1 max-w-xs">Use the day tabs above to inspect upcoming lectures or switch to the To-Do tab to plan ahead.</p>
+          </div>
+        `;
+        return;
+      }
+
+      const minHour = daySessions[0].startHour;
+      const maxHour = daySessions[daySessions.length - 1].endHour;
+      summaryEl.textContent = `${daySessions.length} classes, ${formatRangeLabel(minHour, maxHour)}`;
+
+      const ROW_HEIGHT = 64; // px per hour
       const totalHours = maxHour - minHour;
-      const totalHeight = totalHours * ROW_HEIGHT;
+      let html = `<div class="relative" style="height: ${totalHours * ROW_HEIGHT + 24}px;">`;
 
-      // Hour labels & horizontal grid lines
-      let gridLinesHtml = '';
+      // Hour grid lines
       for (let h = minHour; h <= maxHour; h++) {
         const topPx = (h - minHour) * ROW_HEIGHT;
-        gridLinesHtml += `
+        html += `
           <div class="absolute left-0 right-0 flex items-center" style="top: ${topPx}px;">
-            <span class="w-12 text-right pr-3 text-[11px] text-[#7b859e] font-medium -translate-y-1/2 select-none">
-              ${formatHourAxis(h)}
-            </span>
-            <div class="flex-1 border-t border-[#1e2538]"></div>
+            <span class="w-12 text-[11px] font-medium text-slate-400 text-right pr-3 -mt-2">${formatHourLabel(h)}</span>
+            <div class="flex-1 border-t border-slate-800/80"></div>
           </div>
         `;
       }
 
-      // Session Blocks
-      let blocksHtml = '';
-      sessions.forEach(session => {
-        const course = COURSES[session.courseCode];
-        const topPx = (session.startHour - minHour) * ROW_HEIGHT + 3;
-        const heightPx = (session.endHour - session.startHour) * ROW_HEIGHT - 6;
+      // Session blocks
+      const currentDecHour = now.getHours() + now.getMinutes() / 60;
+      daySessions.forEach(sess => {
+        const course = COURSES[sess.courseKey];
+        const topPx = (sess.startHour - minHour) * ROW_HEIGHT + 3;
+        const heightPx = (sess.endHour - sess.startHour) * ROW_HEIGHT - 6;
+        const isNow = state.selectedDayOffset === 0 && currentDecHour >= sess.startHour && currentDecHour < sess.endHour;
+        const pendingCount = state.todos.filter(t => t.courseKey === sess.courseKey && !t.completed).length;
 
-        const isCurrentNow =
-          dayTab.key === timeInfo.dayKey &&
-          timeInfo.decimalHour >= session.startHour &&
-          timeInfo.decimalHour < session.endHour;
-
-        const pendingTodos = state.todos.filter(t => t.courseCode === course.code && !t.completed).length;
-
-        blocksHtml += `
-          <div
-            onclick="openClassModal('${session.id}', '${dayTab.key}')"
-            style="top: ${topPx}px; height: ${heightPx}px;"
-            class="absolute left-12 right-0 rounded-xl border px-3.5 py-2 transition-all cursor-pointer flex items-center justify-between ${course.colorClass} ${
-              isCurrentNow ? 'active-class-card z-10' : ''
-            }"
-          >
-            <div class="min-w-0 pr-2">
-              <div class="font-bold text-xs sm:text-sm text-white truncate">
-                ${course.title}
-              </div>
-              <div class="flex items-center gap-2 text-[11px] sm:text-xs text-white/80 mt-0.5">
-                <span class="font-bold text-white">${session.room}</span>
-                <span class="opacity-80">${session.sessionType}</span>
-                <span class="opacity-80">${course.facultyCode}</span>
+        html += `
+          <div onclick="openClassModal('${sess.id}')"
+               style="top: ${topPx}px; height: ${heightPx}px;"
+               class="absolute left-12 right-1 rounded-xl px-3.5 py-2 cursor-pointer transition flex items-center justify-between theme-${course.theme} ${isNow ? 'active-now-ring' : ''}">
+            <div class="min-w-0">
+              <div class="font-bold text-sm text-white truncate">${course.title}</div>
+              <div class="flex items-center gap-2 text-xs opacity-90 mt-0.5">
+                <span class="font-extrabold text-white">${sess.room}</span>
+                <span>${sess.type}</span>
+                <span>${course.facultyShort}</span>
               </div>
             </div>
-
             <div class="flex items-center gap-2 shrink-0">
-              ${pendingTodos > 0 ? `
-                <span title="${pendingTodos} pending To-Do(s)" class="px-2 py-0.5 rounded-full bg-black/40 border border-white/20 text-[10px] font-bold text-emerald-300">
-                  ${pendingTodos} To-Do${pendingTodos > 1 ? 's' : ''}
-                </span>
-              ` : ''}
-              ${isCurrentNow ? `
-                <span class="inline-flex items-center gap-1.5 bg-white text-[#0b0e17] text-[11px] font-bold px-2.5 py-0.5 rounded-full shadow">
-                  <span class="w-1.5 h-1.5 rounded-full bg-rose-500"></span>
-                  <span>Now</span>
-                </span>
-              ` : ''}
+              ${pendingCount > 0 ? `<span class="px-2 py-0.5 rounded-full bg-black/35 text-[11px] font-bold text-emerald-300">${pendingCount} to-do</span>` : ''}
+              ${isNow ? `<span class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full bg-white text-slate-950 text-[11px] font-extrabold"><span class="w-1.5 h-1.5 rounded-full bg-rose-600"></span>Now</span>` : ''}
             </div>
           </div>
         `;
       });
 
-      // Red Current Time Line if viewing Today and within timeline range
-      let redLineHtml = '';
-      if (dayTab.key === timeInfo.dayKey && timeInfo.decimalHour >= minHour && timeInfo.decimalHour <= maxHour) {
-        const lineTopPx = (timeInfo.decimalHour - minHour) * ROW_HEIGHT;
-        redLineHtml = `
-          <div class="absolute left-0 right-0 z-20 pointer-events-none flex items-center" style="top: ${lineTopPx}px;">
-            <span class="bg-[#dc2626] text-white text-[10px] font-bold px-1.5 py-0.5 rounded-md shadow-md -translate-y-1/2">
-              ${formatShortPillTime(timeInfo.hours, timeInfo.minutes)}
-            </span>
-            <div class="flex-1 h-[2px] bg-[#dc2626] -translate-y-1/2"></div>
+      // Live Red Current-Time Line (if Today and within range)
+      if (state.selectedDayOffset === 0 && currentDecHour >= minHour && currentDecHour <= maxHour) {
+        const lineTop = (currentDecHour - minHour) * ROW_HEIGHT;
+        const badgeTime = `${now.getHours() % 12 || 12}:${String(now.getMinutes()).padStart(2, '0')}`;
+        html += `
+          <div class="absolute left-0 right-0 pointer-events-none flex items-center z-20" style="top: ${lineTop}px;">
+            <span class="px-1.5 py-0.5 rounded bg-rose-600 text-white text-[10px] font-extrabold leading-none">${badgeTime}</span>
+            <div class="flex-1 h-[2px] bg-rose-500"></div>
           </div>
         `;
       }
 
-      container.innerHTML = `
-        <div class="relative" style="height: ${totalHeight + 14}px;">
-          ${gridLinesHtml}
-          ${blocksHtml}
-          ${redLineHtml}
-        </div>
-      `;
+      html += `</div>`;
+      timelineEl.innerHTML = html;
     }
 
-    function renderWeeklyGrid(timeInfo) {
-      const schedule = getScheduleForBatch(state.selectedBatch);
-      document.getElementById('weekRangeLabel').textContent = `19 Oct to 24 Oct, batch ${state.selectedBatch}`;
-      document.getElementById('weeklyFooterSummary').textContent =
-        `Each week for batch ${state.selectedBatch}: 16 h of theory, 6 h of labs and 1 h of tutorials. Saturday and Sunday have no classes.`;
+    /**************************************************************
+     * 6. RENDER FULL WEEKLY TIMETABLE GRID (BOTTOM PANEL)
+     **************************************************************/
+    function renderWeeklyGrid() {
+      const now = new Date();
+      const currentDow = now.getDay();
+      // Compute Monday of the current week
+      const diffToMon = currentDow === 0 ? -6 : 1 - currentDow;
+      const mondayDate = new Date(now);
+      mondayDate.setDate(now.getDate() + diffToMon);
 
-      const weekCols = [
-        { key: 'mon', title: 'Mon', date: '19 Oct', isHoliday: false },
-        { key: 'tue', title: 'Tue', date: '20 Oct', isHoliday: true }, // Matches screenshot "Holiday" on Tue 20 Oct
-        { key: 'wed', title: 'Wed', date: '21 Oct', isHoliday: false },
-        { key: 'thu', title: 'Thu', date: '22 Oct', isHoliday: false },
-        { key: 'fri', title: 'Fri', date: '23 Oct', isHoliday: false, isToday: true },
-        { key: 'sat', title: 'Sat', date: '24 Oct', isHoliday: false }
-      ];
+      const saturdayDate = new Date(mondayDate);
+      saturdayDate.setDate(mondayDate.getDate() + 5);
+
+      document.getElementById('weekRangeLabel').textContent =
+        `${mondayDate.getDate()} ${SHORT_MONTHS[mondayDate.getMonth()]} to ${saturdayDate.getDate()} ${SHORT_MONTHS[saturdayDate.getMonth()]}`;
 
       const START_HOUR = 10;
       const END_HOUR = 18;
       const HOUR_HEIGHT = 56;
-      const totalHeight = (END_HOUR - START_HOUR) * HOUR_HEIGHT;
+      const wrapper = document.getElementById('weeklyGridWrapper');
 
-      // Header Row
-      const headerColsHtml = weekCols.map(col => `
-        <div class="px-2 pb-2.5 text-left">
-          <div class="flex items-center gap-1.5 text-xs sm:text-[13px] font-bold ${col.isToday ? 'text-white' : 'text-[#b0b9d1]'}">
-            ${col.isToday ? `<span class="w-1.5 h-1.5 rounded-full bg-rose-500"></span>` : ''}
-            <span>${col.title}</span>
+      // Header Row (Mon - Sat)
+      let headerCols = `<div class="w-14 shrink-0"></div>`;
+      for (let i = 0; i < 6; i++) {
+        const d = new Date(mondayDate);
+        d.setDate(mondayDate.getDate() + i);
+        const dow = d.getDay();
+        const isToday = d.toDateString() === now.toDateString();
+
+        headerCols += `
+          <div class="flex-1 px-2 pb-3 text-left">
+            <div class="text-xs font-bold ${isToday ? 'text-white flex items-center gap-1' : 'text-slate-300'}">
+              ${isToday ? `<span class="w-1.5 h-1.5 rounded-full bg-rose-500"></span>` : ''}
+              <span>${SHORT_DAYS[dow]}</span>
+            </div>
+            <div class="text-[11px] text-slate-400">${d.getDate()} ${SHORT_MONTHS[d.getMonth()]}</div>
           </div>
-          <div class="text-[11px] text-[#7b859e]">${col.date}</div>
-        </div>
-      `).join('');
+        `;
+      }
 
-      // Horizontal Hour Lines
-      let hourLinesHtml = '';
+      const totalHeight = (END_HOUR - START_HOUR) * HOUR_HEIGHT;
+      let gridBody = `<div class="relative flex" style="height: ${totalHeight}px;">`;
+
+      // Left Hour Labels + Horizontal Lines
       for (let h = START_HOUR; h <= END_HOUR; h++) {
         const topPx = (h - START_HOUR) * HOUR_HEIGHT;
-        hourLinesHtml += `
+        gridBody += `
           <div class="absolute left-0 right-0 flex items-center pointer-events-none" style="top: ${topPx}px;">
-            <span class="w-12 text-right pr-2.5 text-[11px] text-[#7b859e] -translate-y-1/2 select-none">
-              ${formatHourAxis(h)}
-            </span>
-            <div class="flex-1 border-t border-[#1d2438]"></div>
+            <span class="w-14 pr-3 text-right text-[11px] text-slate-400 font-medium -mt-2">${formatHourLabel(h)}</span>
+            <div class="flex-1 border-t border-slate-800/80"></div>
           </div>
         `;
       }
 
-      // Vertical Columns + Blocks
-      const columnsHtml = weekCols.map((col, colIndex) => {
-        if (col.isHoliday) {
-          return `
-            <div class="relative border-l border-[#1d2438] h-full">
-              <div class="p-2 text-[11px] font-semibold text-rose-400/85">Holiday</div>
-            </div>
-          `;
+      // 6 Day Columns (Mon=1 .. Sat=6)
+      gridBody += `<div class="w-14 shrink-0"></div>`;
+      const currentDecHour = now.getHours() + now.getMinutes() / 60;
+
+      for (let dayIdx = 1; dayIdx <= 6; dayIdx++) {
+        const colSessions = getSessionsForDayOfWeek(dayIdx);
+        gridBody += `<div class="flex-1 relative border-l border-slate-800/60">`;
+
+        if (dayIdx === 2 && colSessions.length === 0) {
+          gridBody += `<div class="p-2 text-[11px] font-semibold text-rose-400/90">Holiday</div>`;
         }
 
-        const daySessions = schedule[col.key] || [];
-        const sessionCards = daySessions.map(session => {
-          const course = COURSES[session.courseCode];
-          const topPx = (session.startHour - START_HOUR) * HOUR_HEIGHT + 2;
-          const heightPx = (session.endHour - session.startHour) * HOUR_HEIGHT - 4;
+        colSessions.forEach(sess => {
+          const course = COURSES[sess.courseKey];
+          const topPx = (sess.startHour - START_HOUR) * HOUR_HEIGHT + 2;
+          const heightPx = (sess.endHour - sess.startHour) * HOUR_HEIGHT - 4;
+          const isNow = currentDow === dayIdx && currentDecHour >= sess.startHour && currentDecHour < sess.endHour;
+          const todoCount = state.todos.filter(t => t.courseKey === sess.courseKey && !t.completed).length;
 
-          const isCurrentNow =
-            col.key === timeInfo.dayKey &&
-            timeInfo.decimalHour >= session.startHour &&
-            timeInfo.decimalHour < session.endHour;
-
-          const pendingTodos = state.todos.filter(t => t.courseCode === course.code && !t.completed).length;
-
-          return `
-            <div
-              onclick="openClassModal('${session.id}', '${col.key}')"
-              style="top: ${topPx}px; height: ${heightPx}px;"
-              class="absolute left-1 right-1 rounded-lg border px-2.5 py-1.5 transition-all cursor-pointer flex flex-col justify-between overflow-hidden ${course.colorClass} ${
-                isCurrentNow ? 'active-class-card z-10' : ''
-              }"
-            >
+          gridBody += `
+            <div onclick="openClassModal('${sess.id}')"
+                 style="top: ${topPx}px; height: ${heightPx}px;"
+                 class="absolute left-1 right-1 rounded-lg p-2 cursor-pointer transition theme-${course.theme} ${isNow ? 'active-now-ring' : ''} flex flex-col justify-between overflow-hidden">
               <div class="flex items-start justify-between gap-1">
-                <span class="font-bold text-[12px] text-white leading-tight truncate">
-                  ${course.shortTitle}
-                </span>
-                ${pendingTodos > 0 ? `
-                  <span class="w-4 h-4 rounded-full bg-black/45 text-emerald-300 text-[9px] font-bold flex items-center justify-center shrink-0" title="${pendingTodos} To-Do(s)">
-                    ${pendingTodos}
-                  </span>
-                ` : ''}
+                <span class="font-bold text-xs text-white leading-tight truncate">${course.shortTitle}</span>
+                ${todoCount > 0 ? `<span class="w-2 h-2 rounded-full bg-emerald-400 shrink-0 mt-0.5" title="${todoCount} pending To-Do(s)"></span>` : ''}
               </div>
-              <div class="text-[10px] text-white/80 truncate">
-                <strong class="text-white">${session.room}</strong> &nbsp;${session.sessionType} &nbsp;${course.facultyCode}
+              <div class="text-[11px] opacity-90 truncate">
+                <span class="font-extrabold text-white">${sess.room}</span> ${sess.type} ${course.facultyShort}
               </div>
             </div>
           `;
-        }).join('');
+        });
 
-        return `
-          <div class="relative border-l border-[#1d2438] h-full">
-            ${sessionCards}
-          </div>
-        `;
-      }).join('');
+        gridBody += `</div>`;
+      }
 
-      // Red Current Time Line across Weekly Grid
-      let weeklyRedLine = '';
-      if (timeInfo.decimalHour >= START_HOUR && timeInfo.decimalHour <= END_HOUR) {
-        const topPx = (timeInfo.decimalHour - START_HOUR) * HOUR_HEIGHT;
-        weeklyRedLine = `
-          <div class="absolute left-0 right-0 z-20 pointer-events-none flex items-center" style="top: ${topPx}px;">
-            <span class="bg-[#dc2626] text-white text-[10px] font-bold px-1.5 py-0.5 rounded-md shadow-md -translate-y-1/2">
-              ${formatShortPillTime(timeInfo.hours, timeInfo.minutes)}
-            </span>
-            <div class="flex-1 h-[2px] bg-[#dc2626] -translate-y-1/2"></div>
+      // Live Red Current-Time Line across weekly grid
+      if (currentDow >= 1 && currentDow <= 6 && currentDecHour >= START_HOUR && currentDecHour <= END_HOUR) {
+        const lineTop = (currentDecHour - START_HOUR) * HOUR_HEIGHT;
+        const badgeTime = `${now.getHours() % 12 || 12}:${String(now.getMinutes()).padStart(2, '0')}`;
+        gridBody += `
+          <div class="absolute left-0 right-0 pointer-events-none flex items-center z-20" style="top: ${lineTop}px;">
+            <span class="px-1.5 py-0.5 rounded bg-rose-600 text-white text-[10px] font-extrabold leading-none">${badgeTime}</span>
+            <div class="flex-1 h-[2px] bg-rose-500"></div>
           </div>
         `;
       }
 
-      const wrapper = document.getElementById('weeklyGridWrapper');
-      wrapper.innerHTML = `
-        <!-- Day Headers -->
-        <div class="pl-12 grid grid-cols-6">
-          ${headerColsHtml}
-        </div>
-
-        <!-- Grid Body -->
-        <div class="relative" style="height: ${totalHeight}px;">
-          ${hourLinesHtml}
-          <div class="pl-12 grid grid-cols-6 h-full relative">
-            ${columnsHtml}
-          </div>
-          ${weeklyRedLine}
-        </div>
-      `;
+      gridBody += `</div>`;
+      wrapper.innerHTML = `<div class="flex">${headerCols}</div>${gridBody}`;
     }
 
-    /********************************************************************
-     * 6. CLASS DETAIL POPUP MODAL (Matches Screenshots 2 & 3 + To-Do)
-     ********************************************************************/
-    function openClassModal(sessionId, dayKey) {
-      const schedule = getScheduleForBatch(state.selectedBatch);
-      const daySessions = schedule[dayKey] || [];
-      const session = daySessions.find(s => s.id === sessionId);
-      if (!session) return;
+    /**************************************************************
+     * 7. CLASS DETAIL POPUP MODAL & SUBJECT TO-DO HANDLERS
+     **************************************************************/
+    function openClassModal(sessionId) {
+      const sess = WEEKLY_SESSIONS.find(s => s.id === sessionId);
+      if (!sess) return;
+      state.activeModalSessionId = sessionId;
 
-      const course = COURSES[session.courseCode];
-      const dayTab = DAY_TABS.find(d => d.key === dayKey) || { modalDate: 'Friday, 23 Oct' };
-      const timeInfo = getCurrentTimeInfo();
+      const course = COURSES[sess.courseKey];
+      const headerEl = document.getElementById('modalHeaderBanner');
+      headerEl.className = `modal-header-${course.theme} p-6 sm:p-7 relative transition-colors`;
 
-      state.activeModalSession = { ...session, dayKey, modalDate: dayTab.modalDate };
-
-      // Style Banner Color
-      const banner = document.getElementById('modalHeaderBanner');
-      banner.style.backgroundColor = course.bannerHex;
-
-      // Title & Subtitle
       document.getElementById('modalCourseTitle').textContent = course.title;
-      const subText = session.isLab
-        ? `${course.code}, ${session.sessionType}, batch ${state.selectedBatch}`
-        : `${course.code}, ${session.sessionType}`;
-      document.getElementById('modalCourseSub').textContent = subText;
+      document.getElementById('modalCourseSub').textContent = `${course.code}, ${sess.type}`;
 
-      // Status Pill Calculation (Matches "Finished for today" or "In progress, 20 min left")
-      let statusLabel = 'Scheduled';
-      if (dayKey === timeInfo.dayKey) {
-        if (timeInfo.decimalHour >= session.endHour) {
+      // Live status calculation for this class
+      const now = new Date();
+      const currentDow = now.getDay();
+      const currentDec = now.getHours() + now.getMinutes() / 60;
+      let statusLabel = `Scheduled on ${LONG_DAYS[sess.dayOfWeek]}`;
+
+      if (currentDow === sess.dayOfWeek) {
+        if (currentDec >= sess.startHour && currentDec < sess.endHour) {
+          const left = Math.max(1, Math.ceil((sess.endHour - currentDec) * 60));
+          statusLabel = `In progress, ${left} min left`;
+        } else if (currentDec >= sess.endHour) {
           statusLabel = 'Finished for today';
-        } else if (timeInfo.decimalHour >= session.startHour && timeInfo.decimalHour < session.endHour) {
-          const minsLeft = Math.max(1, Math.round((session.endHour - timeInfo.decimalHour) * 60));
-          statusLabel = `In progress, ${minsLeft} min left`;
         } else {
-          const minsUntil = Math.max(1, Math.round((session.startHour - timeInfo.decimalHour) * 60));
-          statusLabel = `Starts in ${minsUntil} min`;
+          const minsUntil = Math.ceil((sess.startHour - currentDec) * 60);
+          statusLabel = minsUntil < 60 ? `Starts in ${minsUntil} min` : `Today at ${formatHourLabel(sess.startHour)}`;
         }
-      } else {
-        statusLabel = `Upcoming · ${dayTab.modalDate}`;
       }
-      document.getElementById('modalStatusPill').textContent = statusLabel;
 
-      // Populate Metadata Table
-      const durationHours = session.endHour - session.startHour;
-      document.getElementById('modalWhen').textContent = dayTab.modalDate;
-      document.getElementById('modalTime').textContent = `${formatRange(session.startHour, session.endHour)} (${durationHours} h)`;
-      document.getElementById('modalRoom').textContent = session.room;
-      document.getElementById('modalType').textContent = session.isLab
-        ? `${session.sessionType}, batch ${state.selectedBatch}`
-        : `${session.sessionType}, whole division`;
-      document.getElementById('modalFaculty').textContent = course.facultyFull;
+      document.getElementById('modalStatusBadge').textContent = statusLabel;
+      document.getElementById('modalMetaWhen').textContent = LONG_DAYS[sess.dayOfWeek];
+      document.getElementById('modalMetaTime').textContent = `${formatRangeLabel(sess.startHour, sess.endHour)} (${sess.endHour - sess.startHour} h)`;
+      document.getElementById('modalMetaRoom').textContent = sess.room;
+      document.getElementById('modalMetaType').textContent = sess.typeDetail;
+      document.getElementById('modalMetaFaculty').textContent = course.faculty;
 
-      // Reset Quick Add Input
-      document.getElementById('modalTodoInput').value = '';
-      document.getElementById('modalTodoDue').value = dayKey === 'fri' ? 'Mon, 26 Oct' : dayTab.modalDate;
-
-      renderModalExistingTodos(course.code);
-
-      // Show Modal
-      const modal = document.getElementById('classDetailModal');
-      modal.classList.remove('hidden');
-      modal.classList.add('flex');
+      renderModalTodoList(sess.courseKey);
+      document.getElementById('classModalOverlay').classList.remove('hidden');
     }
 
-    function renderModalExistingTodos(courseCode) {
-      const courseTodos = state.todos.filter(t => t.courseCode === courseCode);
-      document.getElementById('modalClassTodoCount').textContent = courseTodos.length;
+    function renderModalTodoList(courseKey) {
+      const listEl = document.getElementById('modalTodoList');
+      const subjectTodos = state.todos.filter(t => t.courseKey === courseKey);
 
-      const listEl = document.getElementById('modalExistingTodos');
-      if (courseTodos.length === 0) {
-        listEl.innerHTML = `
-          <div class="text-xs text-[#7b859e] bg-[#0d101b] border border-[#1f263d] rounded-lg px-3 py-2.5">
-            No tasks added for this subject yet. Add one below to track it on the To-Do page!
-          </div>
-        `;
+      if (subjectTodos.length === 0) {
+        listEl.innerHTML = `<div class="text-xs text-slate-400 py-2">No tasks added for this subject yet.</div>`;
         return;
       }
 
-      listEl.innerHTML = courseTodos.map(todo => `
-        <div class="flex items-center justify-between gap-2.5 bg-[#0d101b] border border-[#232b42] rounded-lg px-3 py-2">
-          <label class="flex items-center gap-2.5 min-w-0 cursor-pointer flex-1">
-            <input
-              type="checkbox"
-              ${todo.completed ? 'checked' : ''}
-              onchange="toggleTodoStatus('${todo.id}')"
-              class="w-4 h-4 rounded accent-emerald-500 cursor-pointer shrink-0"
-            />
-            <span class="text-xs ${todo.completed ? 'line-through text-[#64708a]' : 'text-white font-medium'} truncate">
-              ${escapeHtml(todo.text)}
-            </span>
+      listEl.innerHTML = subjectTodos.map(t => `
+        <div class="flex items-center justify-between gap-2 p-2.5 rounded-xl bg-[#0c1017] border border-slate-800">
+          <label class="flex items-center gap-2.5 cursor-pointer min-w-0 flex-1">
+            <input type="checkbox" ${t.completed ? 'checked' : ''} onchange="toggleTodo('${t.id}')" class="w-4 h-4 rounded accent-emerald-500" />
+            <span class="text-xs sm:text-sm ${t.completed ? 'line-through text-slate-500' : 'text-slate-100'} truncate">${escapeHtml(t.title)}</span>
           </label>
-          <div class="flex items-center gap-1.5 shrink-0">
-            <span class="text-[10px] px-2 py-0.5 rounded bg-[#1a2033] text-[#949eb8]">${escapeHtml(todo.dueDate)}</span>
-            <button onclick="deleteTodoItem('${todo.id}')" class="text-[#64708a] hover:text-rose-400 text-xs px-1 cursor-pointer" title="Delete">
-              ✕
-            </button>
-          </div>
+          <button onclick="deleteTodo('${t.id}')" class="text-slate-500 hover:text-rose-400 text-xs px-1.5">✕</button>
         </div>
       `).join('');
     }
 
-    function handleModalAddTodo(event) {
-      event.preventDefault();
-      if (!state.activeModalSession) return;
+    function handleModalTodoSubmit(e) {
+      e.preventDefault();
+      const input = document.getElementById('modalTodoInput');
+      const title = input.value.trim();
+      if (!title || !state.activeModalSessionId) return;
 
-      const textInput = document.getElementById('modalTodoInput');
-      const text = textInput.value.trim();
-      if (!text) return;
-
-      const tag = document.getElementById('modalTodoTag').value;
-      const priority = document.getElementById('modalTodoPriority').value;
-      const dueDate = document.getElementById('modalTodoDue').value.trim() || 'Next class';
-
-      const sess = state.activeModalSession;
-      const newTodo = {
-        id: 'todo-' + Date.now(),
-        courseCode: sess.courseCode,
-        text,
-        tag,
-        priority,
-        dueDate,
-        room: sess.room,
-        sessionContext: `${sess.modalDate} · ${formatRange(sess.startHour, sess.endHour)}`,
-        completed: false,
-        createdAt: `Added from ${sess.modalDate} ${sess.sessionType}`
-      };
-
-      state.todos.unshift(newTodo);
-      saveTodos();
-      renderModalExistingTodos(sess.courseCode);
-      renderAll();
-
-      textInput.value = '';
-
-      // Show inline confirmation & toast
-      const feedback = document.getElementById('modalTodoFeedback');
-      feedback.classList.remove('opacity-0');
-      setTimeout(() => feedback.classList.add('opacity-0'), 2200);
-      showToast(`Added To-Do for ${COURSES[sess.courseCode].shortTitle}`);
-    }
-
-    function closeClassModal() {
-      const modal = document.getElementById('classDetailModal');
-      modal.classList.add('hidden');
-      modal.classList.remove('flex');
-      state.activeModalSession = null;
-    }
-
-    function closeClassModalAndGoToTodo() {
-      const courseCode = state.activeModalSession ? state.activeModalSession.courseCode : 'ALL';
-      closeClassModal();
-      document.getElementById('todoSubjectFilter').value = courseCode;
-      switchPage('todo');
-    }
-
-    /********************************************************************
-     * 7. TO-DO PAGE RENDERING & ACTIONS
-     ********************************************************************/
-    function updateTodoBadges() {
-      const pendingCount = state.todos.filter(t => !t.completed).length;
-      const badge = document.getElementById('navTodoBadge');
-      badge.textContent = pendingCount;
-    }
-
-    function renderTodoPage() {
-      const total = state.todos.length;
-      const pending = state.todos.filter(t => !t.completed).length;
-      const completed = state.todos.filter(t => t.completed).length;
-      const highPending = state.todos.filter(t => !t.completed && t.priority === 'High').length;
-
-      document.getElementById('statTotalTasks').textContent = total;
-      document.getElementById('statPendingTasks').textContent = pending;
-      document.getElementById('statCompletedTasks').textContent = completed;
-      document.getElementById('statHighPriority').textContent = highPending;
-
-      // Update filter buttons
-      ['all', 'pending', 'completed'].forEach(f => {
-        const btn = document.getElementById(`todoFilter-${f}`);
-        if (state.todoStatusFilter === f) {
-          btn.className = 'px-3 py-1.5 rounded-lg text-xs font-bold bg-white text-[#0b0e17] transition-all cursor-pointer';
-        } else {
-          btn.className = 'px-3 py-1.5 rounded-lg text-xs font-semibold text-[#8e98b0] hover:text-white transition-all cursor-pointer';
-        }
-      });
-
-      const subjectFilter = document.getElementById('todoSubjectFilter').value;
-      const searchQuery = document.getElementById('todoSearchInput').value.trim().toLowerCase();
-
-      const filtered = state.todos.filter(todo => {
-        if (state.todoStatusFilter === 'pending' && todo.completed) return false;
-        if (state.todoStatusFilter === 'completed' && !todo.completed) return false;
-        if (subjectFilter !== 'ALL' && todo.courseCode !== subjectFilter) return false;
-
-        if (searchQuery) {
-          const course = COURSES[todo.courseCode];
-          const haystack = `${todo.text} ${course.title} ${course.code} ${todo.tag} ${todo.room} ${course.facultyFull}`.toLowerCase();
-          if (!haystack.includes(searchQuery)) return false;
-        }
-        return true;
-      });
-
-      const container = document.getElementById('todoListContainer');
-
-      if (filtered.length === 0) {
-        container.innerHTML = `
-          <div class="bg-[#121624] border border-[#22293e] rounded-2xl p-10 text-center">
-            <div class="font-condensed font-bold text-2xl text-white mb-1">No matching To-Do tasks</div>
-            <p class="text-xs sm:text-sm text-[#8e98b0] mb-4">
-              Click any class block on the Timetable or use the "Add New To-Do" button to create a task.
-            </p>
-            <button onclick="switchPage('timetable')" class="px-4 py-2 rounded-xl bg-[#1a2033] hover:bg-[#252e47] text-white text-xs font-semibold transition-all cursor-pointer">
-              ← Back to Timetable
-            </button>
-          </div>
-        `;
-        return;
-      }
-
-      container.innerHTML = filtered.map(todo => {
-        const course = COURSES[todo.courseCode] || COURSES.ES26104;
-        const priorityColors = {
-          High: 'bg-rose-500/20 text-rose-300 border-rose-500/30',
-          Medium: 'bg-amber-500/20 text-amber-300 border-amber-500/30',
-          Low: 'bg-sky-500/20 text-sky-300 border-sky-500/30'
-        };
-
-        return `
-          <div
-            style="border-left: 5px solid ${course.borderHex};"
-            class="bg-[#121624] border border-[#22293e] rounded-2xl p-4 sm:p-5 flex flex-col sm:flex-row sm:items-center justify-between gap-4 hover:border-[#323d5c] transition-all shadow-md"
-          >
-            <div class="flex items-start gap-3.5 min-w-0">
-              <input
-                type="checkbox"
-                ${todo.completed ? 'checked' : ''}
-                onchange="toggleTodoStatus('${todo.id}')"
-                class="mt-1 w-5 h-5 rounded accent-emerald-500 cursor-pointer shrink-0"
-              />
-              <div class="min-w-0 space-y-1.5">
-                <!-- Subject & Metadata Badges -->
-                <div class="flex flex-wrap items-center gap-2">
-                  <span
-                    style="background-color: ${course.badgeBg}; color: ${course.badgeText};"
-                    class="px-2.5 py-0.5 rounded-full text-[11px] font-bold"
-                  >
-                    ${course.title} (${course.code})
-                  </span>
-                  <span class="px-2 py-0.5 rounded-md text-[11px] font-semibold bg-[#1a2033] text-[#a3adc2]">
-                    ${escapeHtml(todo.tag)}
-                  </span>
-                  <span class="px-2 py-0.5 rounded-md text-[11px] font-semibold border ${priorityColors[todo.priority] || priorityColors.Medium}">
-                    ${todo.priority} Priority
-                  </span>
-                </div>
-
-                <!-- Task Description -->
-                <p class="text-sm sm:text-base font-semibold ${todo.completed ? 'line-through text-[#64708a]' : 'text-white'} break-words">
-                  ${escapeHtml(todo.text)}
-                </p>
-
-                <!-- Room, Faculty & Context -->
-                <div class="flex flex-wrap items-center gap-x-4 gap-y-1 text-xs text-[#7b859e]">
-                  <span>Room <strong class="text-[#a3adc2]">${escapeHtml(todo.room || '1102')}</strong></span>
-                  <span>Faculty: <strong class="text-[#a3adc2]">${course.facultyFull}</strong></span>
-                  <span>${escapeHtml(todo.createdAt || '')}</span>
-                </div>
-              </div>
-            </div>
-
-            <!-- Right Side Due Date & Delete -->
-            <div class="flex sm:flex-col items-center sm:items-end justify-between gap-2 shrink-0 border-t sm:border-t-0 border-[#1e2538] pt-2.5 sm:pt-0">
-              <div class="text-xs font-semibold text-white bg-[#192034] border border-[#26304d] px-3 py-1 rounded-lg">
-                Due: <span class="text-emerald-400">${escapeHtml(todo.dueDate)}</span>
-              </div>
-              <button
-                onclick="deleteTodoItem('${todo.id}')"
-                class="text-xs text-[#7b859e] hover:text-rose-400 font-medium flex items-center gap-1 cursor-pointer px-2 py-1"
-              >
-                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/>
-                </svg>
-                <span>Delete</span>
-              </button>
-            </div>
-          </div>
-        `;
-      }).join('');
-    }
-
-    function toggleTodoStatus(todoId) {
-      const item = state.todos.find(t => t.id === todoId);
-      if (!item) return;
-      item.completed = !item.completed;
-      saveTodos();
-      if (state.activeModalSession) {
-        renderModalExistingTodos(state.activeModalSession.courseCode);
-      }
-      renderAll();
-    }
-
-    function deleteTodoItem(todoId) {
-      state.todos = state.todos.filter(t => t.id !== todoId);
-      saveTodos();
-      if (state.activeModalSession) {
-        renderModalExistingTodos(state.activeModalSession.courseCode);
-      }
-      renderAll();
-      showToast('Task removed');
-    }
-
-    function setTodoStatusFilter(filter) {
-      state.todoStatusFilter = filter;
-      renderTodoPage();
-    }
-
-    function openStandaloneTodoModal() {
-      const modal = document.getElementById('standaloneTodoModal');
-      modal.classList.remove('hidden');
-      modal.classList.add('flex');
-      document.getElementById('standaloneTodoText').focus();
-    }
-
-    function closeStandaloneTodoModal() {
-      const modal = document.getElementById('standaloneTodoModal');
-      modal.classList.add('hidden');
-      modal.classList.remove('flex');
-    }
-
-    function handleStandaloneTodoSubmit(event) {
-      event.preventDefault();
-      const courseCode = document.getElementById('standaloneCourseCode').value;
-      const text = document.getElementById('standaloneTodoText').value.trim();
-      if (!text) return;
-
-      const tag = document.getElementById('standaloneTodoTag').value;
-      const priority = document.getElementById('standaloneTodoPriority').value;
-      const dueDate = document.getElementById('standaloneTodoDue').value.trim() || 'Mon, 26 Oct';
-
-      const defaultRooms = {
-        ES26104: '1201',
-        ES26106: '1001',
-        ES26101: '1125',
-        ES26103: '1109',
-        ES26102: '1109',
-        ES26105: '1409',
-        ES26107: '1001'
-      };
+      const sess = WEEKLY_SESSIONS.find(s => s.id === state.activeModalSessionId);
+      if (!sess) return;
 
       state.todos.unshift({
         id: 'todo-' + Date.now(),
-        courseCode,
-        text,
-        tag,
-        priority,
-        dueDate,
-        room: defaultRooms[courseCode] || '1102',
-        sessionContext: 'Added from To-Do Page',
+        title,
+        courseKey: sess.courseKey,
+        dueDate: '',
         completed: false,
-        createdAt: 'Added from To-Do Page'
+        createdAt: Date.now()
       });
 
-      saveTodos();
-      document.getElementById('standaloneTodoText').value = '';
-      closeStandaloneTodoModal();
+      input.value = '';
+      saveTodos(true);
+      renderModalTodoList(sess.courseKey);
       renderAll();
-      showToast(`Added To-Do for ${COURSES[courseCode].shortTitle}`);
     }
 
-    /********************************************************************
-     * 8. NAVIGATION & UI CONTROLS
-     ********************************************************************/
-    function switchPage(page) {
-      state.currentPage = page;
-      const timetableEl = document.getElementById('page-timetable');
-      const todoEl = document.getElementById('page-todo');
-      const btnTimetable = document.getElementById('navBtn-timetable');
-      const btnTodo = document.getElementById('navBtn-todo');
+    function closeClassModal() {
+      document.getElementById('classModalOverlay').classList.add('hidden');
+      state.activeModalSessionId = null;
+    }
 
-      if (page === 'timetable') {
-        timetableEl.classList.remove('hidden');
-        todoEl.classList.add('hidden');
-        btnTimetable.className = 'flex items-center gap-2 px-4 py-2 rounded-lg text-xs sm:text-sm font-bold transition-all bg-white text-[#0b0e17] shadow cursor-pointer';
-        btnTodo.className = 'flex items-center gap-2 px-4 py-2 rounded-lg text-xs sm:text-sm font-semibold transition-all text-[#a3adc2] hover:text-white cursor-pointer';
-      } else {
-        timetableEl.classList.add('hidden');
-        todoEl.classList.remove('hidden');
-        btnTodo.className = 'flex items-center gap-2 px-4 py-2 rounded-lg text-xs sm:text-sm font-bold transition-all bg-white text-[#0b0e17] shadow cursor-pointer';
-        btnTimetable.className = 'flex items-center gap-2 px-4 py-2 rounded-lg text-xs sm:text-sm font-semibold transition-all text-[#a3adc2] hover:text-white cursor-pointer';
-        renderTodoPage();
+    function handleModalBackdropClick(e) {
+      if (e.target.id === 'classModalOverlay') closeClassModal();
+    }
+
+    /**************************************************************
+     * 8. DEDICATED TO-DO PAGE LOGIC
+     **************************************************************/
+    function populateSubjectDropdowns() {
+      const pageSelect = document.getElementById('pageTodoSubject');
+      const filterSelect = document.getElementById('todoFilterSubjectSelect');
+
+      const optionsHtml = Object.values(COURSES).map(c =>
+        `<option value="${c.key}">${c.title} (${c.code})</option>`
+      ).join('');
+
+      pageSelect.innerHTML = optionsHtml;
+      filterSelect.innerHTML = `<option value="ALL">All Subjects</option>` + optionsHtml;
+    }
+
+    function handlePageTodoSubmit(e) {
+      e.preventDefault();
+      const titleEl = document.getElementById('pageTodoTitle');
+      const subjEl = document.getElementById('pageTodoSubject');
+      const dueEl = document.getElementById('pageTodoDue');
+
+      const title = titleEl.value.trim();
+      if (!title) return;
+
+      state.todos.unshift({
+        id: 'todo-' + Date.now(),
+        title,
+        courseKey: subjEl.value,
+        dueDate: dueEl.value || '',
+        completed: false,
+        createdAt: Date.now()
+      });
+
+      titleEl.value = '';
+      dueEl.value = '';
+      saveTodos(true);
+      renderAll();
+    }
+
+    function toggleTodo(id) {
+      const item = state.todos.find(t => t.id === id);
+      if (item) {
+        item.completed = !item.completed;
+        saveTodos(true);
+        if (state.activeModalSessionId) {
+          const sess = WEEKLY_SESSIONS.find(s => s.id === state.activeModalSessionId);
+          if (sess) renderModalTodoList(sess.courseKey);
+        }
+        renderAll();
       }
     }
 
-    function setBatch(batch) {
-      state.selectedBatch = batch;
-      renderAll();
-      showToast(`Switched schedule to Lab batch ${batch}`);
-    }
-
-    function setClockFormat(format) {
-      state.clockFormat = format;
-      renderAll();
-    }
-
-    function selectDayTab(dayKey) {
-      state.selectedDayKey = dayKey;
-      renderDaySelectorRow();
-      renderDailyTimeline(getCurrentTimeInfo());
-    }
-
-    function toggleTimeMode() {
-      state.useDemoTime = !state.useDemoTime;
-      const label = document.getElementById('timeModeLabel');
-      const dot = document.getElementById('timeModeDot');
-      const btn = label.nextElementSibling;
-
-      if (state.useDemoTime) {
-        label.textContent = 'Demo: Fri 5:39 PM';
-        dot.className = 'w-1.5 h-1.5 rounded-full bg-emerald-400';
-        btn.textContent = 'Switch to Live Clock';
-      } else {
-        label.textContent = 'Live System Time';
-        dot.className = 'w-1.5 h-1.5 rounded-full bg-sky-400 animate-ping';
-        btn.textContent = 'Switch to Demo (5:39 PM)';
+    function deleteTodo(id) {
+      state.todos = state.todos.filter(t => t.id !== id);
+      saveTodos(true);
+      if (state.activeModalSessionId) {
+        const sess = WEEKLY_SESSIONS.find(s => s.id === state.activeModalSessionId);
+        if (sess) renderModalTodoList(sess.courseKey);
       }
       renderAll();
     }
 
-    function showToast(message) {
-      const toast = document.getElementById('toastNotification');
-      document.getElementById('toastMessage').textContent = message;
-      toast.classList.remove('opacity-0', 'translate-y-2');
-      clearTimeout(window._toastTimer);
-      window._toastTimer = setTimeout(() => {
-        toast.classList.add('opacity-0', 'translate-y-2');
-      }, 2500);
+    function clearCompletedTodos() {
+      state.todos = state.todos.filter(t => !t.completed);
+      saveTodos(true);
+      renderAll();
+    }
+
+    function setTodoFilterStatus(status) {
+      state.todoFilterStatus = status;
+      document.querySelectorAll('.todo-status-btn').forEach(btn => {
+        if (btn.dataset.status === status) {
+          btn.className = 'todo-status-btn px-3 py-1.5 rounded-lg text-xs font-bold bg-white text-slate-950';
+        } else {
+          btn.className = 'todo-status-btn px-3 py-1.5 rounded-lg text-xs font-semibold text-slate-400 hover:text-white bg-[#1a2130]';
+        }
+      });
+      renderTodoPage();
+    }
+
+    function updateTodoBadgeCount() {
+      const pending = state.todos.filter(t => !t.completed).length;
+      const done = state.todos.filter(t => t.completed).length;
+      document.getElementById('navTodoCounter').textContent = pending;
+      document.getElementById('statPendingCount').textContent = pending;
+      document.getElementById('statCompletedCount').textContent = done;
+    }
+
+    function renderTodoPage() {
+      updateTodoBadgeCount();
+      const container = document.getElementById('todoPageListContainer');
+      const subjectFilter = document.getElementById('todoFilterSubjectSelect').value;
+
+      const filtered = state.todos.filter(t => {
+        if (state.todoFilterStatus === 'pending' && t.completed) return false;
+        if (state.todoFilterStatus === 'completed' && !t.completed) return false;
+        if (subjectFilter !== 'ALL' && t.courseKey !== subjectFilter) return false;
+        return true;
+      });
+
+      if (filtered.length === 0) {
+        container.innerHTML = `
+          <div class="text-center py-12 text-slate-400 text-sm">
+            No tasks match this filter. Click any class on your timetable or use the form above to add one!
+          </div>
+        `;
+        return;
+      }
+
+      container.innerHTML = filtered.map(t => {
+        const course = COURSES[t.courseKey] || COURSES.PROG;
+        return `
+          <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 p-3.5 rounded-xl bg-[#0c1017] border border-slate-800/90 hover:border-slate-700 transition">
+            <label class="flex items-start sm:items-center gap-3 cursor-pointer flex-1 min-w-0">
+              <input type="checkbox" ${t.completed ? 'checked' : ''} onchange="toggleTodo('${t.id}')" class="w-4 h-4 mt-0.5 sm:mt-0 rounded accent-emerald-500 shrink-0" />
+              <div class="min-w-0 flex-1">
+                <div class="text-sm font-semibold ${t.completed ? 'line-through text-slate-500' : 'text-white'} break-words">
+                  ${escapeHtml(t.title)}
+                </div>
+                <div class="flex flex-wrap items-center gap-2 mt-1">
+                  <span class="px-2 py-0.5 rounded text-[11px] font-bold theme-${course.theme}">
+                    ${course.title} (${course.code})
+                  </span>
+                  ${t.dueDate ? `<span class="text-[11px] text-slate-400">Due: ${t.dueDate}</span>` : ''}
+                </div>
+              </div>
+            </label>
+            <button onclick="deleteTodo('${t.id}')" class="self-end sm:self-center px-2.5 py-1 rounded-lg bg-slate-900 hover:bg-rose-950 text-slate-400 hover:text-rose-300 text-xs font-semibold transition">
+              Delete
+            </button>
+          </div>
+        `;
+      }).join('');
+    }
+
+    /**************************************************************
+     * 9. REAL-TIME MAC <-> IPHONE SYNC (NTFY CLOUD RELAY)
+     **************************************************************/
+    function openSyncModal() {
+      document.getElementById('syncKeyInput').value = state.syncChannel;
+      document.getElementById('syncModalOverlay').classList.remove('hidden');
+    }
+
+    function closeSyncModal() {
+      document.getElementById('syncModalOverlay').classList.add('hidden');
+    }
+
+    function saveSyncKey() {
+      const val = document.getElementById('syncKeyInput').value.trim().replace(/[^a-zA-Z0-9_-]/g, '');
+      state.syncChannel = val;
+      localStorage.setItem(STORAGE_KEY_SYNC, val);
+      closeSyncModal();
+      initCloudSync();
+      if (val) pushTodosToCloud();
+    }
+
+    async function pushTodosToCloud() {
+      if (!state.syncChannel) return;
+      try {
+        await fetch(`https://ntfy.sh/${state.syncChannel}`, {
+          method: 'POST',
+          body: JSON.stringify({
+            updatedAt: Date.now(),
+            todos: state.todos
+          })
+        });
+      } catch (e) {
+        console.warn('Cloud sync push failed:', e);
+      }
+    }
+
+    async function pullFromCloudNow() {
+      if (!state.syncChannel) return;
+      try {
+        const res = await fetch(`https://ntfy.sh/${state.syncChannel}/json?poll=1&since=all`);
+        const text = await res.text();
+        const lines = text.trim().split('\n').filter(Boolean);
+        if (lines.length > 0) {
+          const lastMsg = JSON.parse(lines[lines.length - 1]);
+          if (lastMsg.message) {
+            const payload = JSON.parse(lastMsg.message);
+            if (Array.isArray(payload.todos)) {
+              state.todos = payload.todos;
+              saveTodos(false);
+              renderAll();
+            }
+          }
+        }
+      } catch (e) {
+        console.warn('Cloud pull failed:', e);
+      }
+    }
+
+    function initCloudSync() {
+      const dot = document.getElementById('syncIndicatorDot');
+      const statusText = document.getElementById('statSyncStatus');
+
+      if (state.eventSource) {
+        state.eventSource.close();
+        state.eventSource = null;
+      }
+
+      if (!state.syncChannel) {
+        dot.className = 'w-2 h-2 rounded-full bg-slate-500';
+        statusText.textContent = 'Local Only';
+        return;
+      }
+
+      dot.className = 'w-2 h-2 rounded-full bg-emerald-400 pulse-dot';
+      statusText.textContent = `Synced (${state.syncChannel})`;
+
+      pullFromCloudNow();
+
+      // Live real-time listener
+      const es = new EventSource(`https://ntfy.sh/${state.syncChannel}/sse`);
+      es.onmessage = (event) => {
+        try {
+          const data = JSON.parse(event.data);
+          if (data.message) {
+            const payload = JSON.parse(data.message);
+            if (Array.isArray(payload.todos)) {
+              state.todos = payload.todos;
+              saveTodos(false);
+              renderAll();
+            }
+          }
+        } catch (err) {}
+      };
+      state.eventSource = es;
+    }
+
+    /**************************************************************
+     * 10. VIEW & CLOCK CONTROLS
+     **************************************************************/
+    function setClockFormat(fmt) {
+      state.clockFormat = fmt;
+      document.getElementById('clock-btn-12h').className =
+        fmt === '12h'
+          ? 'px-3.5 py-1.5 rounded-lg text-xs sm:text-sm font-bold transition-all bg-white text-slate-950 shadow'
+          : 'px-3.5 py-1.5 rounded-lg text-xs sm:text-sm font-semibold transition-all text-slate-400 hover:text-white';
+      document.getElementById('clock-btn-24h').className =
+        fmt === '24h'
+          ? 'px-3.5 py-1.5 rounded-lg text-xs sm:text-sm font-bold transition-all bg-white text-slate-950 shadow'
+          : 'px-3.5 py-1.5 rounded-lg text-xs sm:text-sm font-semibold transition-all text-slate-400 hover:text-white';
+      renderAll();
+    }
+
+    function switchMainView(view) {
+      state.activeView = view;
+      const ttView = document.getElementById('view-timetable');
+      const tdView = document.getElementById('view-todo');
+      const ttBtn = document.getElementById('nav-btn-timetable');
+      const tdBtn = document.getElementById('nav-btn-todo');
+
+      if (view === 'timetable') {
+        ttView.classList.remove('hidden');
+        tdView.classList.add('hidden');
+        ttBtn.className = 'flex items-center gap-2 px-4 py-1.5 rounded-lg text-xs sm:text-sm font-bold transition-all bg-white text-slate-950 shadow';
+        tdBtn.className = 'flex items-center gap-2 px-4 py-1.5 rounded-lg text-xs sm:text-sm font-semibold transition-all text-slate-300 hover:text-white';
+      } else {
+        ttView.classList.add('hidden');
+        tdView.classList.remove('hidden');
+        tdBtn.className = 'flex items-center gap-2 px-4 py-1.5 rounded-lg text-xs sm:text-sm font-bold transition-all bg-white text-slate-950 shadow';
+        ttBtn.className = 'flex items-center gap-2 px-4 py-1.5 rounded-lg text-xs sm:text-sm font-semibold transition-all text-slate-300 hover:text-white';
+      }
+      renderAll();
     }
 
     function escapeHtml(str) {
@@ -1835,33 +1392,30 @@
         .replace(/&/g, '&amp;')
         .replace(/</g, '&lt;')
         .replace(/>/g, '&gt;')
-        .replace(/"/g, '&quot;')
-        .replace(/'/g, '&#039;');
+        .replace(/"/g, '&quot;');
     }
 
-    // Close modals when clicking backdrop or pressing Escape
-    document.getElementById('classDetailModal').addEventListener('click', (e) => {
-      if (e.target.id === 'classDetailModal') closeClassModal();
-    });
-    document.getElementById('standaloneTodoModal').addEventListener('click', (e) => {
-      if (e.target.id === 'standaloneTodoModal') closeStandaloneTodoModal();
-    });
-    window.addEventListener('keydown', (e) => {
-      if (e.key === 'Escape') {
-        closeClassModal();
-        closeStandaloneTodoModal();
-      }
-    });
+    function renderAll() {
+      updateHeaderClock();
+      renderLiveStatusCard();
+      renderDayTabsAndDailyTimeline();
+      renderWeeklyGrid();
+      renderTodoPage();
+    }
 
-    // Initialize App on Load
-    window.onload = function () {
-      loadTodos();
-      renderAll();
-      // Keep live clock updated every 30 seconds
-      setInterval(() => {
-        if (!state.useDemoTime) renderAll();
-      }, 30000);
-    };
+    // Initialize App
+    loadTodos();
+    populateSubjectDropdowns();
+    renderAll();
+    initCloudSync();
+
+    // Update live clock & schedule progress every 15 seconds
+    setInterval(() => {
+      updateHeaderClock();
+      renderLiveStatusCard();
+      renderDayTabsAndDailyTimeline();
+      renderWeeklyGrid();
+    }, 15000);
   </script>
 </body>
 </html>
