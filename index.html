@@ -1,10 +1,9 @@
 <!DOCTYPE html>
-<html lang="en" class="dark">
+<html lang="en">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
   <title>IT-A Timetable & To-Do Tracker</title>
-  <script src="https://cdn.tailwindcss.com"></script>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Oswald:wght@600;700&display=swap" rel="stylesheet">
@@ -12,94 +11,623 @@
     :root {
       --bg-main: #0c1017;
       --bg-panel: #131822;
-      --bg-card: #1a2130;
-      --border-subtle: #242c3d;
+      --bg-card: #181f2c;
+      --bg-input: #0c1017;
+      --border-subtle: #222938;
+      --border-focus: #10b981;
+      --text-white: #f8fafc;
+      --text-light: #cbd5e1;
+      --text-muted: #94a3b8;
+      --text-dim: #64748b;
+      --emerald-primary: #107c65;
+      --emerald-accent: #10b981;
+      --rose-accent: #e11d48;
+      --amber-accent: #f59e0b;
     }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
     body {
       background-color: var(--bg-main);
-      color: #f1f5f9;
+      color: var(--text-white);
       font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
       -webkit-font-smoothing: antialiased;
+      min-height: 100vh;
+      padding-bottom: 3.5rem;
       overflow-x: hidden;
     }
+
     .font-condensed {
       font-family: 'Oswald', sans-serif;
       letter-spacing: -0.02em;
     }
+
+    button, input, select {
+      font-family: inherit;
+    }
+
+    /* Custom Scrollbar */
     ::-webkit-scrollbar { width: 6px; height: 6px; }
     ::-webkit-scrollbar-track { background: #0c1017; }
     ::-webkit-scrollbar-thumb { background: #263042; border-radius: 3px; }
     ::-webkit-scrollbar-thumb:hover { background: #3b4963; }
 
+    /* Main Container */
+    .app-container {
+      max-width: 1180px;
+      margin: 0 auto;
+      padding: 1.25rem 1rem 0;
+    }
+    @media (min-width: 640px) {
+      .app-container {
+        padding: 1.75rem 1.5rem 0;
+      }
+    }
+
+    /* Header */
+    .top-header {
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      gap: 1rem;
+      margin-bottom: 1.25rem;
+    }
+    @media (min-width: 640px) {
+      .top-header {
+        flex-direction: row;
+        align-items: flex-start;
+      }
+    }
+
+    .brand-title {
+      font-size: 3.25rem;
+      font-weight: 700;
+      line-height: 1;
+      color: #ffffff;
+      margin-bottom: 0.75rem;
+    }
+    @media (min-width: 640px) {
+      .brand-title { font-size: 3.75rem; }
+    }
+
+    .schedule-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.28rem 0.75rem;
+      border-radius: 9999px;
+      background-color: #117864;
+      color: #ecfdf5;
+      font-size: 0.78rem;
+      font-weight: 600;
+      margin-bottom: 0.65rem;
+    }
+
+    .campus-row {
+      display: flex;
+      align-items: center;
+      gap: 0.375rem;
+      color: var(--text-light);
+      font-size: 0.8125rem;
+      font-weight: 500;
+      margin-bottom: 0.25rem;
+    }
+
+    .subtitle-text {
+      color: var(--text-muted);
+      font-size: 0.8rem;
+      line-height: 1.5;
+      max-width: 28rem;
+    }
+
+    .clock-box {
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+    }
+    @media (min-width: 640px) {
+      .clock-box {
+        align-items: flex-end;
+        margin-top: 1rem;
+      }
+    }
+
+    .live-clock {
+      font-size: 3.1rem;
+      font-weight: 700;
+      line-height: 1;
+      color: #ffffff;
+    }
+    @media (min-width: 640px) {
+      .live-clock { font-size: 3.5rem; }
+    }
+
+    .live-date {
+      color: var(--text-muted);
+      font-size: 0.85rem;
+      font-weight: 500;
+      margin-top: 0.35rem;
+    }
+
+    /* Controls Bar */
+    .controls-bar {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 0.75rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .control-group {
+      display: flex;
+      align-items: center;
+      gap: 0.625rem;
+    }
+
+    .control-label {
+      color: var(--text-muted);
+      font-size: 0.825rem;
+      font-weight: 500;
+    }
+
+    .segmented-pill {
+      display: inline-flex;
+      padding: 0.25rem;
+      border-radius: 0.75rem;
+      background-color: #161c28;
+      border: 1px solid rgba(36, 44, 61, 0.9);
+      gap: 0.2rem;
+    }
+
+    .seg-btn {
+      border: none;
+      background: transparent;
+      color: var(--text-muted);
+      padding: 0.4rem 0.85rem;
+      border-radius: 0.5rem;
+      font-size: 0.8125rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.15s ease;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.45rem;
+    }
+    .seg-btn:hover {
+      color: #ffffff;
+    }
+    .seg-btn.active {
+      background-color: #ffffff;
+      color: #090d16;
+      font-weight: 700;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
+    }
+
+    .sync-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.45rem;
+      padding: 0.5rem 0.85rem;
+      border-radius: 0.75rem;
+      background-color: #161c28;
+      border: 1px solid rgba(36, 44, 61, 0.9);
+      color: var(--text-light);
+      font-size: 0.8125rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 0.15s ease;
+    }
+    .sync-btn:hover {
+      background-color: #1f283a;
+      color: #ffffff;
+    }
+
+    .badge-counter {
+      padding: 0.1rem 0.42rem;
+      font-size: 0.68rem;
+      font-weight: 800;
+      border-radius: 9999px;
+      background-color: var(--emerald-accent);
+      color: #052e16;
+    }
+
+    /* Layout Grid */
+    .top-panels-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 1.25rem;
+      margin-bottom: 1.5rem;
+    }
+    @media (min-width: 1024px) {
+      .top-panels-grid {
+        grid-template-columns: 5fr 7fr;
+        align-items: stretch;
+      }
+    }
+
+    /* Left Green Live Status Card */
+    .live-status-card {
+      width: 100%;
+      border-radius: 1rem;
+      background-color: var(--emerald-primary);
+      padding: 1.35rem;
+      color: #ffffff;
+      box-shadow: 0 12px 28px -6px rgba(0, 0, 0, 0.5);
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      border: 1px solid rgba(255, 255, 255, 0.12);
+    }
+    @media (min-width: 640px) {
+      .live-status-card { padding: 1.6rem; }
+    }
+
+    .status-pill-live {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.28rem 0.8rem;
+      border-radius: 9999px;
+      background-color: rgba(255, 255, 255, 0.16);
+      color: #ffffff;
+      font-size: 0.8rem;
+      font-weight: 700;
+      margin-bottom: 1rem;
+    }
+
+    .status-headline {
+      font-size: 3.1rem;
+      font-weight: 700;
+      line-height: 1;
+      margin-bottom: 1rem;
+      color: #ffffff;
+    }
+    @media (min-width: 640px) {
+      .status-headline { font-size: 3.6rem; }
+    }
+
+    .live-course-row {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 1rem;
+    }
+
+    .room-badge-box {
+      flex-shrink: 0;
+      border-radius: 0.75rem;
+      border: 2px solid #ffffff;
+      padding: 0.45rem 0.85rem;
+      text-align: center;
+      background-color: rgba(0, 0, 0, 0.16);
+      box-shadow: inset 0 0 0 2px rgba(255, 255, 255, 0.15);
+    }
+
+    .room-badge-label {
+      font-size: 0.65rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: #d1fae5;
+    }
+
+    .room-badge-num {
+      font-size: 1.85rem;
+      font-weight: 700;
+      line-height: 1.05;
+      color: #ffffff;
+    }
+
+    .progress-track {
+      width: 100%;
+      height: 0.4rem;
+      background-color: rgba(0, 0, 0, 0.28);
+      border-radius: 9999px;
+      overflow: hidden;
+      margin: 1.25rem 0 0.85rem;
+    }
+
+    .progress-fill {
+      height: 100%;
+      background-color: #ffffff;
+      border-radius: 9999px;
+      transition: width 0.4s ease;
+    }
+
+    .ghost-btn {
+      display: inline-block;
+      padding: 0.55rem 1.05rem;
+      border-radius: 0.75rem;
+      border: 1.5px solid rgba(255, 255, 255, 0.65);
+      background: transparent;
+      color: #ffffff;
+      font-size: 0.8125rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: background 0.15s ease;
+    }
+    .ghost-btn:hover {
+      background-color: rgba(255, 255, 255, 0.15);
+    }
+
+    /* Panel Box */
+    .panel-box {
+      width: 100%;
+      border-radius: 1rem;
+      background-color: var(--bg-panel);
+      border: 1px solid var(--border-subtle);
+      padding: 1.15rem;
+      box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.4);
+    }
+    @media (min-width: 640px) {
+      .panel-box { padding: 1.4rem; }
+    }
+
+    /* 7-Day Selector Tabs */
+    .day-tabs-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 0.4rem;
+      margin-bottom: 1.1rem;
+    }
+    @media (min-width: 640px) {
+      .day-tabs-grid {
+        grid-template-columns: repeat(7, 1fr);
+      }
+    }
+
+    .day-tab-btn {
+      padding: 0.55rem 0.35rem;
+      border-radius: 0.75rem;
+      background-color: var(--bg-card);
+      border: 1px solid rgba(36, 44, 61, 0.85);
+      color: var(--text-light);
+      text-align: center;
+      cursor: pointer;
+      transition: all 0.15s ease;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+    }
+    .day-tab-btn:hover {
+      background-color: #212a3b;
+    }
+    .day-tab-btn.active {
+      background-color: #ffffff;
+      color: #090d16;
+      border-color: #ffffff;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.35);
+    }
+
+    .day-header-row {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: baseline;
+      gap: 0.65rem;
+      margin-bottom: 0.9rem;
+    }
+
+    .day-header-title {
+      font-size: 1.75rem;
+      font-weight: 700;
+      color: #ffffff;
+    }
+
+    .day-header-summary {
+      font-size: 0.825rem;
+      color: var(--text-muted);
+      font-weight: 500;
+    }
+
+    /* Special Override Notice Banner */
+    .special-banner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 0.5rem;
+      padding: 0.55rem 0.85rem;
+      border-radius: 0.65rem;
+      background-color: rgba(245, 158, 11, 0.14);
+      border: 1px solid rgba(245, 158, 11, 0.4);
+      color: #fde68a;
+      font-size: 0.76rem;
+      font-weight: 600;
+      margin-bottom: 0.85rem;
+    }
+
     /* Subject Themes */
     .theme-emerald {
       background-color: rgba(16, 86, 79, 0.45);
-      border: 1px solid rgba(25, 133, 122, 0.6);
+      border: 1px solid rgba(25, 133, 122, 0.62);
       color: #e2f8f5;
     }
-    .theme-emerald:hover { background-color: rgba(20, 107, 98, 0.65); }
+    .theme-emerald:hover { background-color: rgba(20, 107, 98, 0.68); }
     .modal-header-emerald { background-color: #0e7c66; }
 
     .theme-gold {
-      background-color: rgba(92, 74, 30, 0.45);
-      border: 1px solid rgba(145, 115, 42, 0.55);
+      background-color: rgba(92, 74, 30, 0.46);
+      border: 1px solid rgba(145, 115, 42, 0.58);
       color: #fef3c7;
     }
-    .theme-gold:hover { background-color: rgba(115, 92, 36, 0.65); }
+    .theme-gold:hover { background-color: rgba(115, 92, 36, 0.68); }
     .modal-header-gold { background-color: #986c08; }
 
     .theme-purple {
       background-color: rgba(68, 51, 106, 0.48);
-      border: 1px solid rgba(109, 83, 166, 0.55);
+      border: 1px solid rgba(109, 83, 166, 0.58);
       color: #ede9fe;
     }
-    .theme-purple:hover { background-color: rgba(84, 63, 130, 0.65); }
+    .theme-purple:hover { background-color: rgba(84, 63, 130, 0.68); }
     .modal-header-purple { background-color: #5b3ea8; }
 
     .theme-maroon {
       background-color: rgba(102, 43, 66, 0.48);
-      border: 1px solid rgba(153, 66, 99, 0.55);
+      border: 1px solid rgba(153, 66, 99, 0.58);
       color: #fce7f3;
     }
-    .theme-maroon:hover { background-color: rgba(125, 53, 81, 0.65); }
+    .theme-maroon:hover { background-color: rgba(125, 53, 81, 0.68); }
     .modal-header-maroon { background-color: #88294f; }
 
     .theme-blue {
       background-color: rgba(34, 64, 109, 0.48);
-      border: 1px solid rgba(56, 102, 171, 0.55);
+      border: 1px solid rgba(56, 102, 171, 0.58);
       color: #dbeafe;
     }
-    .theme-blue:hover { background-color: rgba(43, 81, 138, 0.65); }
+    .theme-blue:hover { background-color: rgba(43, 81, 138, 0.68); }
     .modal-header-blue { background-color: #1e4b8f; }
 
     .theme-slate {
       background-color: rgba(54, 65, 86, 0.48);
-      border: 1px solid rgba(86, 102, 133, 0.55);
+      border: 1px solid rgba(86, 102, 133, 0.58);
       color: #f1f5f9;
     }
-    .theme-slate:hover { background-color: rgba(69, 83, 110, 0.65); }
+    .theme-slate:hover { background-color: rgba(69, 83, 110, 0.68); }
     .modal-header-slate { background-color: #3b4861; }
 
     .theme-brown {
       background-color: rgba(107, 62, 38, 0.48);
-      border: 1px solid rgba(158, 93, 58, 0.55);
+      border: 1px solid rgba(158, 93, 58, 0.58);
       color: #ffedd5;
     }
-    .theme-brown:hover { background-color: rgba(130, 75, 46, 0.65); }
+    .theme-brown:hover { background-color: rgba(130, 75, 46, 0.68); }
     .modal-header-brown { background-color: #844723; }
 
     .theme-cyan {
       background-color: rgba(21, 94, 117, 0.48);
-      border: 1px solid rgba(6, 182, 212, 0.55);
+      border: 1px solid rgba(6, 182, 212, 0.58);
       color: #cffafe;
     }
-    .theme-cyan:hover { background-color: rgba(14, 116, 144, 0.65); }
+    .theme-cyan:hover { background-color: rgba(14, 116, 144, 0.68); }
     .modal-header-cyan { background-color: #0e7490; }
 
     .active-now-ring {
-      border: 1.5px solid #e2e8f0 !important;
-      box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.2), 0 8px 20px -4px rgba(0, 0, 0, 0.6);
+      border: 1.5px solid #ffffff !important;
+      box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.25), 0 8px 20px -4px rgba(0, 0, 0, 0.65);
     }
+
+    /* Timeline & Grid Positioning */
+    .timeline-scroll-wrap {
+      overflow-x: auto;
+      padding-bottom: 0.5rem;
+    }
+
+    .weekly-grid-min {
+      min-width: 820px;
+      position: relative;
+    }
+
+    /* Modals */
+    .modal-backdrop {
+      position: fixed;
+      inset: 0;
+      z-index: 50;
+      background-color: rgba(0, 0, 0, 0.76);
+      backdrop-filter: blur(4px);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 1rem;
+      overflow-y: auto;
+    }
+
+    .modal-card {
+      width: 100%;
+      max-width: 540px;
+      border-radius: 1.15rem;
+      background-color: #161b28;
+      border: 1px solid rgba(71, 85, 105, 0.55);
+      box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.8);
+      overflow: hidden;
+      margin: 2rem 0;
+    }
+
+    .modal-close-btn {
+      width: 2.75rem;
+      height: 2.75rem;
+      border-radius: 0.9rem;
+      background-color: rgba(255, 255, 255, 0.2);
+      border: none;
+      color: #ffffff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+       position: absolute;
+      top: 1.25rem;
+      right: 1.25rem;
+      cursor: pointer;
+      transition: background 0.15s ease;
+    }
+    .modal-close-btn:hover {
+      background-color: rgba(255, 255, 255, 0.3);
+    }
+
+    .meta-grid {
+      display: grid;
+      grid-template-columns: 95px 1fr;
+      row-gap: 0.75rem;
+      font-size: 0.925rem;
+    }
+
+    /* To-Do View Components */
+    .stats-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 1rem;
+      margin-bottom: 1.5rem;
+    }
+    @media (min-width: 640px) {
+      .stats-grid { grid-template-columns: repeat(3, 1fr); }
+    }
+
+    .todo-form-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 0.75rem;
+    }
+    @media (min-width: 768px) {
+      .todo-form-grid {
+        grid-template-columns: 5fr 3fr 2fr 2fr;
+        align-items: end;
+      }
+    }
+
+    .input-field {
+      width: 100%;
+      padding: 0.625rem 0.85rem;
+      border-radius: 0.75rem;
+      background-color: var(--bg-input);
+      border: 1px solid #334155;
+      color: #ffffff;
+      font-size: 0.875rem;
+      outline: none;
+    }
+    .input-field:focus {
+      border-color: var(--emerald-accent);
+    }
+
+    .btn-emerald {
+      padding: 0.65rem 1rem;
+      border-radius: 0.75rem;
+      background-color: #059669;
+      border: none;
+      color: #ffffff;
+      font-weight: 700;
+      font-size: 0.85rem;
+      cursor: pointer;
+      transition: background 0.15s ease;
+    }
+    .btn-emerald:hover {
+      background-color: #10b981;
+    }
+
+    .hidden { display: none !important; }
+
     @keyframes pulseDot {
       0%, 100% { opacity: 1; transform: scale(1); }
       50% { opacity: 0.45; transform: scale(0.92); }
@@ -107,62 +635,58 @@
     .pulse-dot { animation: pulseDot 2s infinite ease-in-out; }
   </style>
 </head>
-<body class="min-h-screen pb-14 selection:bg-emerald-500 selection:text-white">
+<body>
 
-  <div class="max-w-[1180px] mx-auto px-3.5 sm:px-6 pt-5 sm:pt-7">
+  <div class="app-container">
 
     <!-- TOP HEADER -->
-    <header class="flex flex-col sm:flex-row sm:items-start justify-between gap-4 mb-5">
+    <header class="top-header">
       <div>
-        <h1 class="font-condensed text-5xl sm:text-6xl font-bold tracking-tight text-white leading-none mb-3">IT-A</h1>
-        <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#117864] text-emerald-50 text-xs sm:text-[13px] font-semibold mb-2.5 shadow-sm">
-          <span class="w-2 h-2 rounded-full bg-white pulse-dot"></span>
+        <h1 class="font-condensed brand-title">IT-A</h1>
+        <div class="schedule-pill">
+          <span style="width:8px;height:8px;border-radius:50%;background:#fff;" class="pulse-dot"></span>
           <span>Latest schedule · V1 · from 15 September 2026</span>
         </div>
-        <div class="flex items-center gap-1.5 text-slate-300 text-xs sm:text-[13px] font-medium mb-1">
-          <svg class="w-3.5 h-3.5 text-slate-400 shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+        <div class="campus-row">
+          <svg style="width:14px;height:14px;color:#94a3b8;flex-shrink:0;" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/>
             <path stroke-linecap="round" stroke-linejoin="round" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/>
           </svg>
           <span>Bibwewadi Campus</span>
         </div>
-        <p class="text-slate-400 text-xs sm:text-[13px] leading-relaxed max-w-md">
+        <p class="subtitle-text">
           First year, semester 1. Timetable version V1, valid 15 September 2026 to 10 January 2027.
         </p>
       </div>
 
       <!-- LIVE SYSTEM CLOCK ONLY -->
-      <div class="flex flex-col sm:items-end justify-end mt-1 sm:mt-4">
-        <div id="liveClockDisplay" class="font-condensed text-5xl sm:text-[56px] font-bold text-white leading-none tracking-tight">
-          --:--
-        </div>
-        <div id="liveDateDisplay" class="text-slate-400 text-xs sm:text-sm font-medium mt-1.5">
-          Loading date...
-        </div>
+      <div class="clock-box">
+        <div id="liveClockDisplay" class="font-condensed live-clock">--:--</div>
+        <div id="liveDateDisplay" class="live-date">Loading date...</div>
       </div>
     </header>
 
     <!-- CONTROLS BAR -->
-    <div class="flex flex-wrap items-center justify-between gap-3 mb-6 pb-1">
+    <div class="controls-bar">
       <!-- Left: Clock Format Toggle -->
-      <div class="flex items-center gap-2.5">
-        <span class="text-slate-400 text-xs sm:text-sm font-medium">Clock</span>
-        <div class="inline-flex p-1 rounded-xl bg-[#161c28] border border-slate-800/80">
-          <button onclick="setClockFormat('12h')" id="clock-btn-12h" class="px-3.5 py-1.5 rounded-lg text-xs sm:text-sm font-bold transition-all bg-white text-slate-950 shadow">12 h</button>
-          <button onclick="setClockFormat('24h')" id="clock-btn-24h" class="px-3.5 py-1.5 rounded-lg text-xs sm:text-sm font-semibold transition-all text-slate-400 hover:text-white">24 h</button>
+      <div class="control-group">
+        <span class="control-label">Clock</span>
+        <div class="segmented-pill">
+          <button onclick="setClockFormat('12h')" id="clock-btn-12h" class="seg-btn active">12 h</button>
+          <button onclick="setClockFormat('24h')" id="clock-btn-24h" class="seg-btn">24 h</button>
         </div>
       </div>
 
       <!-- Right: Sync + Page Switcher -->
-      <div class="flex items-center gap-2">
-        <button onclick="openSyncModal()" id="syncStatusBtn" class="inline-flex items-center gap-1.5 px-3 py-2 rounded-xl bg-[#161c28] hover:bg-slate-800 border border-slate-800/90 text-xs sm:text-sm font-semibold text-slate-300 transition-all" title="Sync To-Dos across Mac and iPhone">
-          <span id="syncIndicatorDot" class="w-2 h-2 rounded-full bg-slate-500"></span>
+      <div class="control-group">
+        <button onclick="openSyncModal()" id="syncStatusBtn" class="sync-btn" title="Sync To-Dos across Mac and iPhone">
+          <span id="syncIndicatorDot" style="width:8px;height:8px;border-radius:50%;background:#64748b;"></span>
           <span>☁️ Sync</span>
         </button>
 
-        <div class="inline-flex p-1 rounded-xl bg-[#161c28] border border-slate-800/90">
-          <button onclick="switchMainView('timetable')" id="nav-btn-timetable" class="flex items-center gap-2 px-4 py-1.5 rounded-lg text-xs sm:text-sm font-bold transition-all bg-white text-slate-950 shadow">
-            <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
+        <div class="segmented-pill">
+          <button onclick="switchMainView('timetable')" id="nav-btn-timetable" class="seg-btn active">
+            <svg style="width:15px;height:15px;" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
               <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
               <line x1="16" y1="2" x2="16" y2="6"></line>
               <line x1="8" y1="2" x2="8" y2="6"></line>
@@ -170,12 +694,12 @@
             </svg>
             <span>Timetable</span>
           </button>
-          <button onclick="switchMainView('todo')" id="nav-btn-todo" class="flex items-center gap-2 px-4 py-1.5 rounded-lg text-xs sm:text-sm font-semibold transition-all text-slate-300 hover:text-white">
-            <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
+          <button onclick="switchMainView('todo')" id="nav-btn-todo" class="seg-btn">
+            <svg style="width:15px;height:15px;" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4"/>
             </svg>
             <span>To-Do</span>
-            <span id="navTodoCounter" class="px-1.5 py-0.5 text-[11px] font-extrabold rounded-full bg-emerald-500 text-slate-950">0</span>
+            <span id="navTodoCounter" class="badge-counter">0</span>
           </button>
         </div>
       </div>
@@ -184,52 +708,67 @@
     <!-- ========================================== -->
     <!-- VIEW 1: TIMETABLE                          -->
     <!-- ========================================== -->
-    <div id="view-timetable" class="space-y-6">
-      <div class="grid grid-cols-1 lg:grid-cols-12 gap-5 items-stretch">
+    <div id="view-timetable">
+      <div class="top-panels-grid">
         <!-- LEFT LIVE STATUS CARD -->
-        <div class="lg:col-span-5 flex">
-          <div id="liveStatusCard" class="w-full rounded-2xl bg-[#107c65] p-5 sm:p-6 text-white shadow-xl flex flex-col justify-between relative overflow-hidden border border-white/10"></div>
+        <div style="display:flex;">
+          <div id="liveStatusCard" class="live-status-card"></div>
         </div>
 
         <!-- RIGHT DAILY SCHEDULE PANEL -->
-        <div class="lg:col-span-7 flex">
-          <div class="w-full rounded-2xl bg-[#131822] border border-[#222938] p-4 sm:p-5 flex flex-col justify-between shadow-lg">
-            <!-- Rolling 7-Day Selector Pills -->
-            <div id="dayTabsContainer" class="grid grid-cols-4 sm:grid-cols-7 gap-1.5 mb-4"></div>
+        <div style="display:flex;">
+          <div class="panel-box" style="display:flex;flex-direction:column;justify-content:space-between;">
+            <div>
+              <!-- Rolling 7-Day Selector Pills -->
+              <div id="dayTabsContainer" class="day-tabs-grid"></div>
 
-            <!-- Selected Day Header -->
-            <div class="flex flex-wrap items-baseline gap-x-3 gap-y-1 mb-4">
-              <h2 id="selectedDayTitle" class="font-condensed text-2xl sm:text-3xl font-bold text-white tracking-tight">Today</h2>
-              <span id="selectedDaySummary" class="text-slate-400 text-xs sm:text-sm font-medium"></span>
+              <!-- Selected Day Header -->
+              <div class="day-header-row">
+                <h2 id="selectedDayTitle" class="font-condensed day-header-title">Today</h2>
+                <span id="selectedDaySummary" class="day-header-summary"></span>
+              </div>
+
+              <!-- Dynamic Special Notice Banner (Shows when viewing Nov 2-5, 2026) -->
+              <div id="dailySpecialBanner" class="special-banner hidden">
+                <span>⚡ Special Morning Schedule (2–5 Nov 2026 · Room 1117, 8:00 AM – 12:00 PM)</span>
+                <span style="opacity:0.85;">Reverts to regular timetable after 5 Nov</span>
+              </div>
             </div>
 
             <!-- Daily Timeline Container -->
-            <div id="dailyTimelineContainer" class="relative flex-1 min-h-[260px]"></div>
+            <div id="dailyTimelineContainer" style="position:relative;flex:1;min-height:255px;"></div>
           </div>
         </div>
       </div>
 
       <!-- BOTTOM WEEKLY TIMETABLE GRID -->
-      <div class="rounded-2xl bg-[#131822] border border-[#222938] p-4 sm:p-6 shadow-lg">
-        <div class="flex flex-wrap items-center justify-between gap-2 mb-5">
-          <div class="flex items-center gap-3">
-            <h2 class="font-condensed text-2xl sm:text-3xl font-bold text-white tracking-tight">This week</h2>
-            <div class="inline-flex rounded-lg bg-[#1a2130] p-0.5 border border-slate-800 text-xs">
-              <button onclick="changeWeekOffset(0)" id="week-btn-current" class="px-2.5 py-1 rounded-md font-bold bg-white text-slate-950">Current Week</button>
-              <button onclick="changeWeekOffset(1)" id="week-btn-next" class="px-2.5 py-1 rounded-md font-semibold text-slate-400 hover:text-white">Next Week</button>
+      <div class="panel-box">
+        <div style="display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:0.75rem;margin-bottom:1.15rem;">
+          <div style="display:flex;flex-wrap:wrap;align-items:center;gap:0.75rem;">
+            <h2 class="font-condensed" style="font-size:1.75rem;font-weight:700;color:#fff;">This week</h2>
+            <div class="segmented-pill">
+              <button onclick="changeWeekOffset(0)" id="week-btn-0" class="seg-btn active" style="padding:0.3rem 0.65rem;font-size:0.75rem;">Current Week</button>
+              <button onclick="changeWeekOffset(1)" id="week-btn-1" class="seg-btn" style="padding:0.3rem 0.65rem;font-size:0.75rem;">Next Week</button>
+              <button onclick="changeWeekOffset(2)" id="week-btn-2" class="seg-btn" style="padding:0.3rem 0.65rem;font-size:0.75rem;">+2 Weeks</button>
+              <button onclick="changeWeekOffset(3)" id="week-btn-3" class="seg-btn" style="padding:0.3rem 0.65rem;font-size:0.75rem;">+3 Weeks</button>
             </div>
           </div>
-          <span id="weekRangeLabel" class="text-slate-400 text-xs sm:text-sm font-medium">Monday to Saturday</span>
+          <span id="weekRangeLabel" style="color:var(--text-muted);font-size:0.825rem;font-weight:500;">Monday to Saturday</span>
         </div>
 
-        <div class="overflow-x-auto pb-2">
-          <div class="min-w-[820px] relative" id="weeklyGridWrapper"></div>
+        <!-- Special Week Banner (Shows when viewing the Nov 2-5 week) -->
+        <div id="weeklySpecialBanner" class="special-banner hidden" style="margin-bottom:1rem;">
+          <span>📌 Viewing Temporary Schedule for 2–5 November 2026 (FY IT-A · Room 1117 · 8:00 AM to 12:00 PM). Friday 6 Nov begins Diwali Vacation.</span>
+        </div>
+
+        <div class="timeline-scroll-wrap">
+          <div class="weekly-grid-min" id="weeklyGridWrapper"></div>
         </div>
 
         <!-- Upcoming Official Holidays Strip -->
-        <div class="mt-4 pt-3 border-t border-slate-800/80 flex flex-col sm:flex-row sm:items-center justify-between gap-2 text-xs text-slate-400">
-          <span>Weekly schedule: 15 h theory, 6 h labs, 1 h tutorial (including German 8–10 am Fri). Saturday and Sunday have no classes.</span>
-          <span class="text-amber-400/90 font-medium">Next Holidays: Diwali (6–12 Nov) · Gurunanak Jayanti (24 Nov) · Christmas (25 Dec)</span>
+        <div style="margin-top:1rem;padding-top:0.85rem;border-top:1px solid var(--border-subtle);display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:0.5rem;font-size:0.75rem;color:var(--text-muted);">
+          <span>Regular week: 15 h theory, 6 h labs, 1 h tutorial (including German 8–10 am Fri). Special Override active 2–5 Nov (Room 1117).</span>
+          <span style="color:#fbbf24;font-weight:600;">Upcoming Holidays: Diwali (6–12 Nov) · Gurunanak Jayanti (24 Nov) · Christmas (25 Dec)</span>
         </div>
       </div>
     </div>
@@ -237,70 +776,68 @@
     <!-- ========================================== -->
     <!-- VIEW 2: TO-DO PAGE                         -->
     <!-- ========================================== -->
-    <div id="view-todo" class="hidden space-y-6">
-      <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
-        <div class="rounded-2xl bg-[#131822] border border-[#222938] p-5">
-          <span class="text-xs font-semibold uppercase tracking-wider text-slate-400">Pending Tasks</span>
-          <div id="statPendingCount" class="font-condensed text-4xl font-bold text-white mt-1">0</div>
-          <p class="text-xs text-slate-400 mt-1">Linked to your IT-A subjects</p>
+    <div id="view-todo" class="hidden">
+      <div class="stats-grid">
+        <div class="panel-box">
+          <span style="font-size:0.72rem;font-weight:700;text-transform:uppercase;letter-spacing:0.05em;color:var(--text-muted);">Pending Tasks</span>
+          <div id="statPendingCount" class="font-condensed" style="font-size:2.4rem;font-weight:700;color:#fff;margin-top:0.2rem;">0</div>
+          <p style="font-size:0.75rem;color:var(--text-muted);margin-top:0.2rem;">Linked to your IT-A subjects</p>
         </div>
-        <div class="rounded-2xl bg-[#131822] border border-[#222938] p-5">
-          <span class="text-xs font-semibold uppercase tracking-wider text-emerald-400">Completed</span>
-          <div id="statCompletedCount" class="font-condensed text-4xl font-bold text-emerald-400 mt-1">0</div>
-          <p class="text-xs text-slate-400 mt-1">Finished assignments & labs</p>
+        <div class="panel-box">
+          <span style="font-size:0.72rem;font-weight:700;text-transform:uppercase;letter-spacing:0.05em;color:#34d399;">Completed</span>
+          <div id="statCompletedCount" class="font-condensed" style="font-size:2.4rem;font-weight:700;color:#34d399;margin-top:0.2rem;">0</div>
+          <p style="font-size:0.75rem;color:var(--text-muted);margin-top:0.2rem;">Finished assignments & labs</p>
         </div>
-        <div class="rounded-2xl bg-[#131822] border border-[#222938] p-5">
-          <span class="text-xs font-semibold uppercase tracking-wider text-amber-400">Mac ↔ iPhone Sync</span>
-          <div id="statSyncStatus" class="font-condensed text-2xl font-bold text-amber-400 mt-2 truncate">Local Only</div>
-          <button onclick="openSyncModal()" class="text-xs text-emerald-400 hover:underline mt-1 inline-block">Configure Cloud Sync →</button>
+        <div class="panel-box">
+          <span style="font-size:0.72rem;font-weight:700;text-transform:uppercase;letter-spacing:0.05em;color:#fbbf24;">Mac ↔ iPhone Sync</span>
+          <div id="statSyncStatus" class="font-condensed" style="font-size:1.6rem;font-weight:700;color:#fbbf24;margin-top:0.45rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">Local Only</div>
+          <button onclick="openSyncModal()" style="background:none;border:none;color:#34d399;font-size:0.75rem;font-weight:600;cursor:pointer;margin-top:0.35rem;text-decoration:underline;">Configure Cloud Sync →</button>
         </div>
       </div>
 
       <!-- Quick Add To-Do Card -->
-      <div class="rounded-2xl bg-[#131822] border border-[#222938] p-5 shadow-lg">
-        <h3 class="text-base font-bold text-white mb-3.5 flex items-center gap-2">
-          <span class="w-2 h-2 rounded-full bg-emerald-400"></span>
+      <div class="panel-box" style="margin-bottom:1.5rem;">
+        <h3 style="font-size:1rem;font-weight:700;color:#fff;margin-bottom:0.9rem;display:flex;align-items:center;gap:0.5rem;">
+          <span style="width:8px;height:8px;border-radius:50%;background:#10b981;"></span>
           <span>Add New Class Task</span>
         </h3>
-        <form id="pageTodoForm" onsubmit="handlePageTodoSubmit(event)" class="grid grid-cols-1 sm:grid-cols-12 gap-3">
-          <div class="sm:col-span-5">
-            <label class="block text-[11px] font-semibold uppercase tracking-wider text-slate-400 mb-1">Task Description</label>
-            <input type="text" id="pageTodoTitle" required placeholder="e.g., Complete Lab 4 C program or German worksheet..." class="w-full px-3.5 py-2.5 rounded-xl bg-[#0c1017] border border-slate-700/80 text-sm text-white placeholder-slate-500 focus:outline-none focus:border-emerald-500" />
+        <form id="pageTodoForm" onsubmit="handlePageTodoSubmit(event)" class="todo-form-grid">
+          <div>
+            <label style="display:block;font-size:0.68rem;font-weight:700;text-transform:uppercase;letter-spacing:0.05em;color:var(--text-muted);margin-bottom:0.3rem;">Task Description</label>
+            <input type="text" id="pageTodoTitle" required placeholder="e.g., Complete Python / C program or German worksheet..." class="input-field" />
           </div>
-          <div class="sm:col-span-3">
-            <label class="block text-[11px] font-semibold uppercase tracking-wider text-slate-400 mb-1">Subject / Class</label>
-            <select id="pageTodoSubject" class="w-full px-3 py-2.5 rounded-xl bg-[#0c1017] border border-slate-700/80 text-sm text-white focus:outline-none focus:border-emerald-500"></select>
+          <div>
+            <label style="display:block;font-size:0.68rem;font-weight:700;text-transform:uppercase;letter-spacing:0.05em;color:var(--text-muted);margin-bottom:0.3rem;">Subject / Class</label>
+            <select id="pageTodoSubject" class="input-field"></select>
           </div>
-          <div class="sm:col-span-2">
-            <label class="block text-[11px] font-semibold uppercase tracking-wider text-slate-400 mb-1">Due Date</label>
-            <input type="date" id="pageTodoDue" class="w-full px-3 py-2.5 rounded-xl bg-[#0c1017] border border-slate-700/80 text-sm text-white focus:outline-none focus:border-emerald-500" />
+          <div>
+            <label style="display:block;font-size:0.68rem;font-weight:700;text-transform:uppercase;letter-spacing:0.05em;color:var(--text-muted);margin-bottom:0.3rem;">Due Date</label>
+            <input type="date" id="pageTodoDue" class="input-field" />
           </div>
-          <div class="sm:col-span-2 flex items-end">
-            <button type="submit" class="w-full py-2.5 px-4 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-sm transition shadow-md">
-              + Add Task
-            </button>
+          <div>
+            <button type="submit" class="btn-emerald" style="width:100%;">+ Add Task</button>
           </div>
         </form>
       </div>
 
       <!-- Filter & Task List -->
-      <div class="rounded-2xl bg-[#131822] border border-[#222938] p-5 shadow-lg">
-        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-4 mb-4 border-b border-slate-800">
-          <div class="flex flex-wrap items-center gap-1.5" id="todoStatusFilterBar">
-            <button onclick="setTodoFilterStatus('all')" data-status="all" class="todo-status-btn px-3 py-1.5 rounded-lg text-xs font-bold bg-white text-slate-950">All Tasks</button>
-            <button onclick="setTodoFilterStatus('pending')" data-status="pending" class="todo-status-btn px-3 py-1.5 rounded-lg text-xs font-semibold text-slate-400 hover:text-white bg-[#1a2130]">Pending</button>
-            <button onclick="setTodoFilterStatus('completed')" data-status="completed" class="todo-status-btn px-3 py-1.5 rounded-lg text-xs font-semibold text-slate-400 hover:text-white bg-[#1a2130]">Completed</button>
+      <div class="panel-box">
+        <div style="display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:0.75rem;padding-bottom:1rem;margin-bottom:1rem;border-bottom:1px solid var(--border-subtle);">
+          <div class="segmented-pill" id="todoStatusFilterBar">
+            <button onclick="setTodoFilterStatus('all')" data-status="all" class="seg-btn active">All Tasks</button>
+            <button onclick="setTodoFilterStatus('pending')" data-status="pending" class="seg-btn">Pending</button>
+            <button onclick="setTodoFilterStatus('completed')" data-status="completed" class="seg-btn">Completed</button>
           </div>
-          <div class="flex items-center gap-2">
-            <select id="todoFilterSubjectSelect" onchange="renderTodoPage()" class="px-3 py-1.5 rounded-lg bg-[#0c1017] border border-slate-700/80 text-xs text-slate-200 focus:outline-none">
+          <div style="display:flex;align-items:center;gap:0.5rem;">
+            <select id="todoFilterSubjectSelect" onchange="renderTodoPage()" class="input-field" style="width:auto;padding:0.4rem 0.7rem;font-size:0.78rem;">
               <option value="ALL">All Subjects</option>
             </select>
-            <button onclick="clearCompletedTodos()" class="px-3 py-1.5 rounded-lg bg-rose-950/50 hover:bg-rose-900/60 text-rose-300 border border-rose-800/50 text-xs font-semibold transition">
+            <button onclick="clearCompletedTodos()" style="padding:0.42rem 0.75rem;border-radius:0.6rem;background:rgba(136,19,55,0.35);border:1px solid rgba(225,29,72,0.4);color:#fda4af;font-size:0.75rem;font-weight:600;cursor:pointer;">
               Clear Done
             </button>
           </div>
         </div>
-        <div id="todoPageListContainer" class="space-y-2.5"></div>
+        <div id="todoPageListContainer" style="display:flex;flex-direction:column;gap:0.65rem;"></div>
       </div>
     </div>
 
@@ -309,67 +846,63 @@
   <!-- ========================================== -->
   <!-- CLASS DETAIL & TO-DO POPUP MODAL           -->
   <!-- ========================================== -->
-  <div id="classModalOverlay" onclick="handleModalBackdropClick(event)" class="fixed inset-0 z-50 hidden bg-black/75 backdrop-blur-sm flex items-center justify-center p-4 overflow-y-auto">
-    <div id="classModalCard" class="w-full max-w-[540px] rounded-2xl bg-[#161b28] border border-slate-700/70 shadow-2xl overflow-hidden my-8">
-      <div id="modalHeaderBanner" class="modal-header-emerald p-6 sm:p-7 relative transition-colors">
-        <button onclick="closeClassModal()" class="w-11 h-11 rounded-2xl bg-white/20 hover:bg-white/30 text-white flex items-center justify-center absolute top-5 right-5 transition" aria-label="Close modal">
-          <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
+  <div id="classModalOverlay" onclick="handleModalBackdropClick(event)" class="modal-backdrop hidden">
+    <div id="classModalCard" class="modal-card">
+      <div id="modalHeaderBanner" class="modal-header-emerald" style="padding:1.6rem;position:relative;">
+        <button onclick="closeClassModal()" class="modal-close-btn" aria-label="Close modal">
+          <svg style="width:22px;height:22px;" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/>
           </svg>
         </button>
-        <h3 id="modalCourseTitle" class="font-condensed text-3xl sm:text-4xl font-bold text-white leading-tight pr-14">
+        <h3 id="modalCourseTitle" class="font-condensed" style="font-size:2.1rem;font-weight:700;color:#fff;line-height:1.15;padding-right:3.2rem;">
           Programming for Engineers
         </h3>
-        <p id="modalCourseSub" class="text-white/90 text-sm sm:text-base font-medium mt-1">
-          ES26104, Lab
+        <p id="modalCourseSub" style="color:rgba(255,255,255,0.9);font-size:0.92rem;font-weight:500;margin-top:0.25rem;">
+          ES26104, Theory
         </p>
-        <div class="mt-4">
-          <span id="modalStatusBadge" class="inline-block px-3.5 py-1 rounded-full bg-black/25 text-white text-xs sm:text-sm font-bold backdrop-blur-xs">
+        <div style="margin-top:0.9rem;">
+          <span id="modalStatusBadge" style="display:inline-block;padding:0.28rem 0.85rem;border-radius:9999px;background:rgba(0,0,0,0.28);color:#fff;font-size:0.8rem;font-weight:700;">
             Scheduled
           </span>
         </div>
       </div>
 
-      <div class="p-6 sm:p-7 space-y-6">
-        <div class="grid grid-cols-12 gap-y-3 text-sm sm:text-[15px]">
-          <div class="col-span-3 text-slate-400 font-medium">When</div>
-          <div id="modalMetaWhen" class="col-span-9 text-white font-bold">Friday</div>
+      <div style="padding:1.6rem;">
+        <div class="meta-grid" style="margin-bottom:1.4rem;">
+          <div style="color:var(--text-muted);font-weight:500;">When</div>
+          <div id="modalMetaWhen" style="color:#fff;font-weight:700;">Monday</div>
 
-          <div class="col-span-3 text-slate-400 font-medium">Time</div>
-          <div id="modalMetaTime" class="col-span-9 text-white font-bold">5:00–6:00 pm (1 h)</div>
+          <div style="color:var(--text-muted);font-weight:500;">Time</div>
+          <div id="modalMetaTime" style="color:#fff;font-weight:700;">8:00–9:00 am (1 h)</div>
 
-          <div class="col-span-3 text-slate-400 font-medium">Room</div>
-          <div id="modalMetaRoom" class="col-span-9 text-white font-bold">1201</div>
+          <div style="color:var(--text-muted);font-weight:500;">Room</div>
+          <div id="modalMetaRoom" style="color:#fff;font-weight:700;">1117</div>
 
-          <div class="col-span-3 text-slate-400 font-medium">Type</div>
-          <div id="modalMetaType" class="col-span-9 text-white font-bold">Lab</div>
+          <div style="color:var(--text-muted);font-weight:500;">Type</div>
+          <div id="modalMetaType" style="color:#fff;font-weight:700;">Theory</div>
 
-          <div class="col-span-3 text-slate-400 font-medium">Faculty</div>
-          <div id="modalMetaFaculty" class="col-span-9 text-white font-bold">Mr. Vijay Krishna Itnal (VKI)</div>
+          <div style="color:var(--text-muted);font-weight:500;">Faculty</div>
+          <div id="modalMetaFaculty" style="color:#fff;font-weight:700;">Mr. Vijay Krishna Itnal (VKI)</div>
         </div>
 
-        <hr class="border-slate-800" />
+        <hr style="border:none;border-top:1px solid var(--border-subtle);margin-bottom:1.25rem;" />
 
         <div>
-          <div class="flex items-center justify-between mb-3">
-            <h4 class="text-xs font-bold uppercase tracking-wider text-slate-300 flex items-center gap-2">
-              <svg class="w-4 h-4 text-emerald-400" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
-              </svg>
+          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:0.75rem;">
+            <h4 style="font-size:0.75rem;font-weight:700;text-transform:uppercase;letter-spacing:0.05em;color:var(--text-light);display:flex;align-items:center;gap:0.4rem;">
+              <span style="width:8px;height:8px;border-radius:50%;background:#10b981;"></span>
               <span>To-Dos for this Subject</span>
             </h4>
-            <button onclick="closeClassModal(); switchMainView('todo');" class="text-xs font-semibold text-emerald-400 hover:underline">
+            <button onclick="closeClassModal(); switchMainView('todo');" style="background:none;border:none;color:#34d399;font-size:0.75rem;font-weight:600;cursor:pointer;text-decoration:underline;">
               Open To-Do Page →
             </button>
           </div>
 
-          <div id="modalTodoList" class="space-y-2 max-h-40 overflow-y-auto mb-3 pr-1"></div>
+          <div id="modalTodoList" style="display:flex;flex-direction:column;gap:0.45rem;max-height:150px;overflow-y:auto;margin-bottom:0.85rem;"></div>
 
-          <form onsubmit="handleModalTodoSubmit(event)" class="flex flex-col sm:flex-row gap-2">
-            <input type="text" id="modalTodoInput" required placeholder="Add homework, lab journal, or exam note..." class="flex-1 px-3.5 py-2.5 rounded-xl bg-[#0c1017] border border-slate-700 text-sm text-white placeholder-slate-500 focus:outline-none focus:border-emerald-500" />
-            <button type="submit" class="px-4 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs sm:text-sm shrink-0 transition shadow">
-              + Add to To-Do
-            </button>
+          <form onsubmit="handleModalTodoSubmit(event)" style="display:flex;gap:0.5rem;">
+            <input type="text" id="modalTodoInput" required placeholder="Add homework, lab journal, or exam note..." class="input-field" style="flex:1;" />
+            <button type="submit" class="btn-emerald" style="flex-shrink:0;">+ Add to To-Do</button>
           </form>
         </div>
       </div>
@@ -379,26 +912,26 @@
   <!-- ========================================== -->
   <!-- MAC <-> IPHONE CLOUD SYNC MODAL            -->
   <!-- ========================================== -->
-  <div id="syncModalOverlay" onclick="if(event.target.id==='syncModalOverlay') closeSyncModal()" class="fixed inset-0 z-50 hidden bg-black/75 backdrop-blur-sm flex items-center justify-center p-4">
-    <div class="w-full max-w-md rounded-2xl bg-[#161b28] border border-slate-700 p-6 shadow-2xl space-y-4">
-      <div class="flex items-center justify-between">
-        <h3 class="font-condensed text-2xl font-bold text-white">☁️ Mac & iPhone Live Sync</h3>
-        <button onclick="closeSyncModal()" class="text-slate-400 hover:text-white text-xl font-bold">&times;</button>
+  <div id="syncModalOverlay" onclick="if(event.target.id==='syncModalOverlay') closeSyncModal()" class="modal-backdrop hidden">
+    <div class="modal-card" style="max-width:440px;padding:1.5rem;">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:0.75rem;">
+        <h3 class="font-condensed" style="font-size:1.5rem;font-weight:700;color:#fff;">☁️ Mac & iPhone Live Sync</h3>
+        <button onclick="closeSyncModal()" style="background:none;border:none;color:var(--text-muted);font-size:1.4rem;cursor:pointer;">&times;</button>
       </div>
-      <p class="text-xs text-slate-300 leading-relaxed">
+      <p style="font-size:0.8rem;color:var(--text-light);line-height:1.5;margin-bottom:1rem;">
         Enter the exact same private Sync Key on both your <strong>Mac</strong> and <strong>iPhone</strong>. Whenever you add or complete a To-Do on one device, it pushes to the other automatically.
       </p>
-      <div>
-        <label class="block text-[11px] font-bold uppercase tracking-wider text-slate-400 mb-1">Your Private Sync Key</label>
-        <input type="text" id="syncKeyInput" placeholder="e.g., aaditwa-vit-ita-2026" class="w-full px-3.5 py-2.5 rounded-xl bg-[#0c1017] border border-slate-700 text-sm text-white font-mono focus:outline-none focus:border-emerald-500" />
+      <div style="margin-bottom:1.1rem;">
+        <label style="display:block;font-size:0.68rem;font-weight:700;text-transform:uppercase;letter-spacing:0.05em;color:var(--text-muted);margin-bottom:0.35rem;">Your Private Sync Key</label>
+        <input type="text" id="syncKeyInput" placeholder="e.g., aaditwa-vit-ita-2026" class="input-field" style="font-family:monospace;" />
       </div>
-      <div class="flex items-center justify-between gap-2 pt-2">
-        <button onclick="pullFromCloudNow()" class="px-3.5 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-xs font-semibold text-slate-200 transition">
+      <div style="display:flex;align-items:center;justify-content:space-between;gap:0.5rem;">
+        <button onclick="pullFromCloudNow()" style="padding:0.55rem 0.85rem;border-radius:0.65rem;background:#1e293b;border:1px solid #334155;color:#e2e8f0;font-size:0.75rem;font-weight:600;cursor:pointer;">
           ⬇️ Force Pull Now
         </button>
-        <div class="flex gap-2">
-          <button onclick="closeSyncModal()" class="px-4 py-2 rounded-xl bg-slate-800 text-xs font-semibold text-slate-300">Cancel</button>
-          <button onclick="saveSyncKey()" class="px-4 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-xs font-bold text-white">Save & Connect</button>
+        <div style="display:flex;gap:0.5rem;">
+          <button onclick="closeSyncModal()" style="padding:0.55rem 0.9rem;border-radius:0.65rem;background:#1e293b;border:none;color:var(--text-light);font-size:0.75rem;font-weight:600;cursor:pointer;">Cancel</button>
+          <button onclick="saveSyncKey()" class="btn-emerald" style="padding:0.55rem 1rem;font-size:0.75rem;">Save & Connect</button>
         </div>
       </div>
     </div>
@@ -436,14 +969,14 @@
     }
 
     /**************************************************************
-     * 2. ACTUAL IT-A COURSE CATALOG & WEEKLY SCHEDULE
+     * 2. COURSE CATALOG (IT-A)
      **************************************************************/
     const COURSES = {
       PROG: {
         key: 'PROG',
         code: 'ES26104',
-        title: 'Programming for Engineers',
-        shortTitle: 'Programming',
+        title: 'Programming for Engineers (Python)',
+        shortTitle: 'Python / Prog.',
         faculty: 'Mr. Vijay Krishna Itnal (VKI)',
         facultyShort: 'VKI',
         theme: 'emerald'
@@ -513,16 +1046,51 @@
       }
     };
 
-    // Day Index: 1 = Monday, 2 = Tuesday, 3 = Wednesday, 4 = Thursday, 5 = Friday
+    /**************************************************************
+     * 3. TEMPORARY SCHEDULE OVERRIDES (2 NOV TO 5 NOV 2026)
+     *    Room 1117 | Monday to Thursday, 8:00 AM - 12:00 PM
+     *    Automatically reverts to regular schedule after 5 Nov!
+     **************************************************************/
+    const SPECIAL_DATE_OVERRIDES = {
+      // Monday (2-11-2026)
+      '2026-11-02': [
+        { id: 'sp-1102-8',  dateKey: '2026-11-02', dayOfWeek: 1, courseKey: 'BOE',  startHour: 8,  endHour: 9,  room: '1117', type: 'Theory', typeDetail: 'Special Schedule · Room 1117' },
+        { id: 'sp-1102-9',  dateKey: '2026-11-02', dayOfWeek: 1, courseKey: 'PROG', startHour: 9,  endHour: 10, room: '1117', type: 'Theory', typeDetail: 'Python · Special Schedule (Room 1117)', customTitle: 'Python (Programming for Engineers)', customShort: 'Python' }
+      ],
+      // Tuesday (3-11-2026)
+      '2026-11-03': [
+        { id: 'sp-1103-8',  dateKey: '2026-11-03', dayOfWeek: 2, courseKey: 'BOE',  startHour: 8,  endHour: 9,  room: '1117', type: 'Theory', typeDetail: 'Special Schedule · Room 1117' },
+        { id: 'sp-1103-9',  dateKey: '2026-11-03', dayOfWeek: 2, courseKey: 'LA',   startHour: 9,  endHour: 10, room: '1117', type: 'Theory', typeDetail: 'Special Schedule · Room 1117' }
+      ],
+      // Wednesday (4-11-2026)
+      '2026-11-04': [
+        { id: 'sp-1104-10', dateKey: '2026-11-04', dayOfWeek: 3, courseKey: 'LA',   startHour: 10, endHour: 11, room: '1117', type: 'Theory', typeDetail: 'Special Schedule · Room 1117' },
+        { id: 'sp-1104-11', dateKey: '2026-11-04', dayOfWeek: 3, courseKey: 'PROG', startHour: 11, endHour: 12, room: '1117', type: 'Theory', typeDetail: 'Python · Special Schedule (Room 1117)', customTitle: 'Python (Programming for Engineers)', customShort: 'Python' }
+      ],
+      // Thursday (5-11-2026)
+      '2026-11-05': [
+        { id: 'sp-1105-9',  dateKey: '2026-11-05', dayOfWeek: 4, courseKey: 'PROG', startHour: 9,  endHour: 10, room: '1117', type: 'Theory', typeDetail: 'Python · Special Schedule (Room 1117)', customTitle: 'Python (Programming for Engineers)', customShort: 'Python' },
+        { id: 'sp-1105-10', dateKey: '2026-11-05', dayOfWeek: 4, courseKey: 'BOE',  startHour: 10, endHour: 11, room: '1117', type: 'Theory', typeDetail: 'Special Schedule · Room 1117' },
+        { id: 'sp-1105-11', dateKey: '2026-11-05', dayOfWeek: 4, courseKey: 'LA',   startHour: 11, endHour: 12, room: '1117', type: 'Theory', typeDetail: 'Special Schedule · Room 1117' }
+      ]
+    };
+
+    function isSpecialOverrideDate(dateObj) {
+      return Boolean(SPECIAL_DATE_OVERRIDES[toDateKey(dateObj)]);
+    }
+
+    /**************************************************************
+     * 4. REGULAR WEEKLY SCHEDULE (USED FOR ALL OTHER DATES)
+     **************************************************************/
     const WEEKLY_SESSIONS = [
-      // MONDAY (Day 1) - No English!
+      // MONDAY (Day 1)
       { id: 'mon-10', dayOfWeek: 1, courseKey: 'LOGIC', startHour: 10, endHour: 11, room: '1125', type: 'Theory',   typeDetail: 'Theory, whole division' },
       { id: 'mon-11', dayOfWeek: 1, courseKey: 'LOGIC', startHour: 11, endHour: 12, room: '1125', type: 'Theory',   typeDetail: 'Theory, whole division' },
       { id: 'mon-14', dayOfWeek: 1, courseKey: 'LA',    startHour: 14, endHour: 15, room: '1109', type: 'Theory',   typeDetail: 'Theory, whole division' },
       { id: 'mon-15', dayOfWeek: 1, courseKey: 'ACT',   startHour: 15, endHour: 16, room: '1109', type: 'Theory',   typeDetail: 'Theory, whole division' },
-      { id: 'mon-16', dayOfWeek: 1, courseKey: 'LA',    startHour: 16, endHour: 17, room: '1115', type: 'Tutorial', typeDetail: 'Tutorial' },
+      { id: 'mon-16', dayOfWeek: 1, courseKey: 'LA',    startHour: 16, endHour: 17, room: '1115', type: 'Tutorial', typeDetail: 'Tutorial, Batch B1' },
 
-      // TUESDAY (Day 2) - Full 5-class schedule (1:00 PM to 6:00 PM)
+      // TUESDAY (Day 2)
       { id: 'tue-13', dayOfWeek: 2, courseKey: 'BOE',   startHour: 13, endHour: 14, room: '1002',  type: 'Theory', typeDetail: 'Theory, whole division' },
       { id: 'tue-14', dayOfWeek: 2, courseKey: 'IKS',   startHour: 14, endHour: 15, room: '1002',  type: 'Theory', typeDetail: 'Theory, whole division' },
       { id: 'tue-15', dayOfWeek: 2, courseKey: 'LA',    startHour: 15, endHour: 16, room: '1002',  type: 'Theory', typeDetail: 'Theory, whole division' },
@@ -549,16 +1117,24 @@
       { id: 'fri-17', dayOfWeek: 5, courseKey: 'PROG',  startHour: 17, endHour: 18, room: '1201', type: 'Lab',    typeDetail: 'Lab session' }
     ];
 
+    function findSessionById(sessionId) {
+      for (const arr of Object.values(SPECIAL_DATE_OVERRIDES)) {
+        const found = arr.find(s => s.id === sessionId);
+        if (found) return found;
+      }
+      return WEEKLY_SESSIONS.find(s => s.id === sessionId) || null;
+    }
+
     /**************************************************************
-     * 3. STATE & LOCALSTORAGE
+     * 5. STATE & LOCALSTORAGE
      **************************************************************/
-    const STORAGE_KEY_TODOS = 'vit_ita_todos_v3';
+    const STORAGE_KEY_TODOS = 'vit_ita_todos_v4';
     const STORAGE_KEY_SYNC  = 'vit_ita_sync_channel_v1';
 
     let state = {
       clockFormat: '12h',
       selectedDayOffset: 0,
-      weekOffset: 0, // 0 = Current Week, 1 = Next Week
+      weekOffset: 0,
       activeView: 'timetable',
       activeModalSessionId: null,
       todoFilterStatus: 'all',
@@ -576,17 +1152,17 @@
           state.todos = [
             {
               id: 'seed-1',
-              title: 'Complete Lab Assignment on Functions & Pointers',
+              title: 'Prepare for Room 1117 Morning Python & Basics of Engg lectures (2–5 Nov)',
               courseKey: 'PROG',
-              dueDate: '',
+              dueDate: '2026-11-02',
               completed: false,
               createdAt: Date.now()
             },
             {
               id: 'seed-2',
-              title: 'Revise German vocabulary & sentence structure for Friday morning',
-              courseKey: 'GER',
-              dueDate: '',
+              title: 'Complete Linear Algebra Tutorial problems (JAK)',
+              courseKey: 'LA',
+              dueDate: '2026-11-03',
               completed: false,
               createdAt: Date.now()
             }
@@ -607,7 +1183,7 @@
     }
 
     /**************************************************************
-     * 4. TIME & SCHEDULE ENGINE (WITH HOLIDAY SUPPORT)
+     * 6. TIME & SCHEDULE ENGINE (HOLIDAYS + NOV 2-5 OVERRIDES)
      **************************************************************/
     const SHORT_MONTHS = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
     const LONG_MONTHS  = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
@@ -656,20 +1232,27 @@
         `${LONG_DAYS[now.getDay()]}, ${now.getDate()} ${LONG_MONTHS[now.getMonth()]} ${now.getFullYear()}`;
     }
 
-    // Returns sessions for a specific Date object (returns [] if official holiday)
+    // Returns sessions for a specific Date object:
+    // 1. Official Holiday -> []
+    // 2. Special Override Date (2026-11-02 to 2026-11-05) -> SPECIAL_DATE_OVERRIDES[dateKey]
+    // 3. Otherwise -> Regular WEEKLY_SESSIONS for that weekday
     function getSessionsForDate(dateObj) {
       if (getHolidayName(dateObj)) return [];
+      const key = toDateKey(dateObj);
+      if (SPECIAL_DATE_OVERRIDES[key]) {
+        return SPECIAL_DATE_OVERRIDES[key];
+      }
       const dow = dateObj.getDay();
       return WEEKLY_SESSIONS
         .filter(s => s.dayOfWeek === dow)
         .sort((a, b) => a.startHour - b.startHour);
     }
 
-    // Finds the next upcoming session across the next 14 days (skipping holidays)
+    // Finds the next upcoming session across the next 21 days (handles Nov 2-5 + Diwali week)
     function findNextUpcomingSession(now) {
       const currentDecHour = now.getHours() + now.getMinutes() / 60;
 
-      for (let offset = 0; offset < 14; offset++) {
+      for (let offset = 0; offset < 21; offset++) {
         const checkDate = new Date(now);
         checkDate.setDate(now.getDate() + offset);
         const daySessions = getSessionsForDate(checkDate);
@@ -688,7 +1271,7 @@
     }
 
     /**************************************************************
-     * 5. RENDER LIVE STATUS CARD (LEFT GREEN PANEL)
+     * 7. RENDER LIVE STATUS CARD (LEFT GREEN PANEL)
      **************************************************************/
     function renderLiveStatusCard() {
       const card = document.getElementById('liveStatusCard');
@@ -706,6 +1289,7 @@
 
       if (activeSession) {
         const course = COURSES[activeSession.courseKey];
+        const displayTitle = activeSession.customTitle || course.title;
         const minsLeft = Math.max(1, Math.ceil((activeSession.endHour - currentHourDec) * 60));
         const totalMins = (activeSession.endHour - activeSession.startHour) * 60;
         const progressPct = Math.min(100, Math.max(5, ((totalMins - minsLeft) / totalMins) * 100));
@@ -713,54 +1297,57 @@
         let nextLineText = 'No more classes scheduled after this.';
         if (nextInfo) {
           const nextCourse = COURSES[nextInfo.session.courseKey];
-          const dayLabel = nextInfo.dayOffset === 0 ? 'Today' : SHORT_DAYS[nextInfo.dateObj.getDay()];
-          nextLineText = `Then ${dayLabel} at ${formatHourLabel(nextInfo.session.startHour)}: ${nextCourse.title}, room ${nextInfo.session.room}.`;
+          const nextTitle = nextInfo.session.customTitle || nextCourse.title;
+          const dayLabel = nextInfo.dayOffset === 0
+            ? 'Today'
+            : `${SHORT_DAYS[nextInfo.dateObj.getDay()]} (${nextInfo.dateObj.getDate()} ${SHORT_MONTHS[nextInfo.dateObj.getMonth()]})`;
+          nextLineText = `Then ${dayLabel} at ${formatHourLabel(nextInfo.session.startHour)}: ${nextTitle}, room ${nextInfo.session.room}.`;
         }
 
         card.innerHTML = `
           <div>
-            <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/15 text-white text-xs sm:text-sm font-bold mb-4">
-              <span class="w-2.5 h-2.5 rounded-full bg-white pulse-dot"></span>
+            <div class="status-pill-live">
+              <span style="width:9px;height:9px;border-radius:50%;background:#fff;" class="pulse-dot"></span>
               <span>In class now</span>
             </div>
 
-            <div class="font-condensed text-5xl sm:text-6xl font-bold text-white tracking-tight leading-none mb-4">
+            <div class="font-condensed status-headline">
               ${minsLeft} min left
             </div>
 
-            <div class="flex items-start justify-between gap-4">
+            <div class="live-course-row">
               <div>
-                <h3 class="text-xl sm:text-2xl font-extrabold text-white leading-snug">
-                  ${course.title}
+                <h3 style="font-size:1.35rem;font-weight:800;color:#fff;line-height:1.25;">
+                  ${displayTitle}
                 </h3>
-                <p class="text-emerald-50/90 text-xs sm:text-sm font-medium mt-1">
+                <p style="color:rgba(236,253,245,0.92);font-size:0.84rem;font-weight:500;margin-top:0.3rem;">
                   ${activeSession.type} &nbsp;${formatRangeLabel(activeSession.startHour, activeSession.endHour)}
                 </p>
-                <p class="text-emerald-50/90 text-xs sm:text-sm font-medium mt-0.5">
+                <p style="color:rgba(236,253,245,0.9);font-size:0.84rem;font-weight:500;margin-top:0.15rem;">
                   Faculty ${course.faculty}
                 </p>
-                <p class="text-emerald-100/80 text-xs font-medium mt-1">
+                <p style="color:rgba(209,250,229,0.8);font-size:0.76rem;font-weight:600;margin-top:0.25rem;">
                   ${course.code}
                 </p>
               </div>
 
-              <div class="shrink-0 rounded-xl border-2 border-white px-3.5 py-2 text-center bg-black/15 shadow-inner">
-                <div class="text-[10px] font-bold uppercase tracking-widest text-emerald-100">Room</div>
-                <div class="font-condensed text-2xl sm:text-3xl font-bold text-white leading-none mt-0.5">${activeSession.room}</div>
+              <div class="room-badge-box">
+                <div class="room-badge-label">Room</div>
+                <div class="font-condensed room-badge-num">${activeSession.room}</div>
               </div>
             </div>
 
-            <div class="w-full h-1.5 bg-black/25 rounded-full overflow-hidden mt-5 mb-3">
-              <div class="h-full bg-white rounded-full transition-all duration-500" style="width: ${progressPct}%"></div>
+            <div class="progress-track">
+              <div class="progress-fill" style="width: ${progressPct}%"></div>
             </div>
 
-            <p class="text-xs sm:text-sm text-emerald-50/95 leading-relaxed">
+            <p style="font-size:0.82rem;color:rgba(236,253,245,0.95);line-height:1.45;">
               ${nextLineText}
             </p>
           </div>
 
-          <div class="mt-5 pt-1">
-            <button onclick="openClassModal('${activeSession.id}')" class="px-4 py-2 rounded-xl border border-white/60 hover:bg-white/15 text-white text-xs sm:text-sm font-bold transition">
+          <div style="margin-top:1.25rem;">
+            <button onclick="openClassModal('${activeSession.id}')" class="ghost-btn">
               Details & Add To-Do
             </button>
           </div>
@@ -782,7 +1369,7 @@
         const lastToday = todaySessions[todaySessions.length - 1];
         if (currentHourDec < firstToday.startHour) {
           const minsUntil = Math.ceil((firstToday.startHour - currentHourDec) * 60);
-          statusBadge = 'Classes start soon';
+          statusBadge = isSpecialOverrideDate(now) ? 'Special Schedule (8 AM–12 PM)' : 'Classes start soon';
           headline = minsUntil < 60 ? `In ${minsUntil} min` : `In ${Math.floor(minsUntil / 60)}h ${minsUntil % 60}m`;
         } else if (currentHourDec >= lastToday.endHour) {
           statusBadge = 'Done for today';
@@ -793,51 +1380,53 @@
       if (nextInfo) {
         const nextSess = nextInfo.session;
         const nextCourse = COURSES[nextSess.courseKey];
+        const nextDisplayTitle = nextSess.customTitle || nextCourse.title;
         const nextDow = nextInfo.dateObj.getDay();
+        const isNextSpecial = isSpecialOverrideDate(nextInfo.dateObj);
         const dayWord =
           nextInfo.dayOffset === 0
             ? 'Today'
             : nextInfo.dayOffset === 1
-            ? `Tomorrow (${SHORT_DAYS[nextDow]})`
+            ? `Tomorrow (${SHORT_DAYS[nextDow]}, ${nextInfo.dateObj.getDate()} ${SHORT_MONTHS[nextInfo.dateObj.getMonth()]})`
             : `${LONG_DAYS[nextDow]}, ${nextInfo.dateObj.getDate()} ${SHORT_MONTHS[nextInfo.dateObj.getMonth()]}`;
 
         card.innerHTML = `
           <div>
-            <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-black/25 text-emerald-50 text-xs sm:text-sm font-bold mb-4">
-              <span class="w-2 h-2 rounded-full bg-emerald-300"></span>
+            <div class="status-pill-live" style="background:rgba(0,0,0,0.24);">
+              <span style="width:8px;height:8px;border-radius:50%;background:#6ee7b7;"></span>
               <span>${statusBadge}</span>
             </div>
 
-            <div class="font-condensed text-4xl sm:text-5xl font-bold text-white tracking-tight leading-none mb-4">
+            <div class="font-condensed status-headline" style="font-size:2.9rem;">
               ${headline}
             </div>
 
-            <div class="p-3.5 rounded-xl bg-black/20 border border-white/15 mb-4">
-              <div class="text-[11px] font-bold uppercase tracking-wider text-emerald-200 mb-1">
-                Next Up · ${dayWord} at ${formatHourLabel(nextSess.startHour)}
+            <div style="padding:0.95rem;border-radius:0.85rem;background:rgba(0,0,0,0.22);border:1px solid rgba(255,255,255,0.15);margin-bottom:1rem;">
+              <div style="font-size:0.7rem;font-weight:700;text-transform:uppercase;letter-spacing:0.05em;color:#a7f3d0;margin-bottom:0.3rem;">
+                Next Up · ${dayWord} at ${formatHourLabel(nextSess.startHour)} ${isNextSpecial ? '· Special Schedule' : ''}
               </div>
-              <div class="flex items-start justify-between gap-3">
+              <div class="live-course-row">
                 <div>
-                  <h3 class="text-lg sm:text-xl font-extrabold text-white leading-snug">
-                    ${nextCourse.title}
+                  <h3 style="font-size:1.15rem;font-weight:800;color:#fff;line-height:1.25;">
+                    ${nextDisplayTitle}
                   </h3>
-                  <p class="text-emerald-50/90 text-xs font-medium mt-0.5">
+                  <p style="color:rgba(236,253,245,0.9);font-size:0.78rem;font-weight:500;margin-top:0.2rem;">
                     ${nextSess.type} · ${formatRangeLabel(nextSess.startHour, nextSess.endHour)}
                   </p>
-                  <p class="text-emerald-50/80 text-xs mt-0.5">
+                  <p style="color:rgba(236,253,245,0.8);font-size:0.76rem;margin-top:0.15rem;">
                     Faculty ${nextCourse.faculty}
                   </p>
                 </div>
-                <div class="shrink-0 rounded-xl border-2 border-white px-3 py-1.5 text-center bg-black/15">
-                  <div class="text-[9px] font-bold uppercase tracking-widest text-emerald-100">Room</div>
-                  <div class="font-condensed text-2xl font-bold text-white leading-none">${nextSess.room}</div>
+                <div class="room-badge-box" style="padding:0.35rem 0.7rem;">
+                  <div class="room-badge-label" style="font-size:0.58rem;">Room</div>
+                  <div class="font-condensed room-badge-num" style="font-size:1.55rem;">${nextSess.room}</div>
                 </div>
               </div>
             </div>
           </div>
 
-          <div class="mt-2 flex items-center gap-2">
-            <button onclick="openClassModal('${nextSess.id}')" class="px-4 py-2 rounded-xl border border-white/60 hover:bg-white/15 text-white text-xs sm:text-sm font-bold transition">
+          <div>
+            <button onclick="openClassModal('${nextSess.id}')" class="ghost-btn">
               Next Class Details & To-Do
             </button>
           </div>
@@ -846,7 +1435,7 @@
     }
 
     /**************************************************************
-     * 6. RENDER ROLLING 7-DAY TABS & DAILY TIMELINE (RIGHT PANEL)
+     * 8. RENDER ROLLING 7-DAY TABS & DAILY TIMELINE (RIGHT PANEL)
      **************************************************************/
     function renderDayTabsAndDailyTimeline() {
       const now = new Date();
@@ -858,6 +1447,7 @@
         d.setDate(now.getDate() + offset);
         const dow = d.getDay();
         const holidayName = getHolidayName(d);
+        const isSpecial = isSpecialOverrideDate(d);
         const sessions = getSessionsForDate(d);
         const countLabel = holidayName
           ? 'Holiday'
@@ -876,20 +1466,20 @@
           state.selectedDayOffset = offset;
           renderDayTabsAndDailyTimeline();
         };
-        btn.className = isSelected
-          ? 'p-2 rounded-xl bg-white text-slate-950 text-center shadow transition flex flex-col items-center justify-center'
-          : 'p-2 rounded-xl bg-[#181f2c] hover:bg-[#1f293a] text-slate-300 border border-slate-800/80 text-center transition flex flex-col items-center justify-center';
+        btn.className = `day-tab-btn ${isSelected ? 'active' : ''}`;
 
         btn.innerHTML = `
-          <div class="text-[11px] font-bold flex items-center gap-1">
-            ${offset === 0 ? `<span class="w-1.5 h-1.5 rounded-full bg-rose-500"></span>` : ''}
+          <div style="font-size:0.7rem;font-weight:700;display:flex;align-items:center;gap:0.25rem;">
+            ${offset === 0 ? `<span style="width:6px;height:6px;border-radius:50%;background:#f43f5e;"></span>` : ''}
             <span>${topLabel}</span>
           </div>
-          <div class="text-[11px] ${isSelected ? 'text-slate-700 font-semibold' : 'text-slate-400'} mt-0.5">
+          <div style="font-size:0.68rem;margin-top:0.15rem;color:${isSelected ? '#334155' : '#94a3b8'};font-weight:600;">
             ${d.getDate()} ${SHORT_MONTHS[d.getMonth()]}
           </div>
-          <div class="text-[10px] ${holidayName ? 'text-rose-500 font-bold' : isSelected ? 'text-slate-900 font-bold' : 'text-slate-500'} mt-0.5">
-            ${countLabel}
+          <div style="font-size:0.62rem;margin-top:0.15rem;font-weight:700;color:${
+            holidayName ? '#f43f5e' : isSpecial ? (isSelected ? '#b45309' : '#fbbf24') : isSelected ? '#0f172a' : '#64748b'
+          };">
+            ${isSpecial ? `${countLabel} ★` : countLabel}
           </div>
         `;
         tabsContainer.appendChild(btn);
@@ -900,10 +1490,18 @@
       selectedDate.setDate(now.getDate() + state.selectedDayOffset);
       const selectedDow = selectedDate.getDay();
       const selectedHoliday = getHolidayName(selectedDate);
+      const selectedIsSpecial = isSpecialOverrideDate(selectedDate);
       const daySessions = getSessionsForDate(selectedDate);
 
       document.getElementById('selectedDayTitle').textContent =
         `${LONG_DAYS[selectedDow]}, ${selectedDate.getDate()} ${LONG_MONTHS[selectedDate.getMonth()]}`;
+
+      const specialBannerEl = document.getElementById('dailySpecialBanner');
+      if (selectedIsSpecial) {
+        specialBannerEl.classList.remove('hidden');
+      } else {
+        specialBannerEl.classList.add('hidden');
+      }
 
       const summaryEl = document.getElementById('selectedDaySummary');
       const timelineEl = document.getElementById('dailyTimelineContainer');
@@ -911,10 +1509,10 @@
       if (selectedHoliday) {
         summaryEl.textContent = `Holiday · ${selectedHoliday}`;
         timelineEl.innerHTML = `
-          <div class="h-56 rounded-xl bg-rose-950/20 border border-dashed border-rose-800/60 flex flex-col items-center justify-center text-center p-6">
-            <span class="px-3 py-1 rounded-full bg-rose-500/20 text-rose-300 text-xs font-bold mb-2">Official VIT Holiday</span>
-            <div class="text-white font-bold text-lg">${selectedHoliday}</div>
-            <p class="text-slate-400 text-xs mt-1 max-w-xs">No classes scheduled on this day according to the VIT Holiday circular.</p>
+          <div style="height:220px;border-radius:0.85rem;background:rgba(136,19,55,0.16);border:1px dashed rgba(225,29,72,0.45);display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:1.5rem;">
+            <span style="padding:0.25rem 0.75rem;border-radius:9999px;background:rgba(244,63,94,0.2);color:#fda4af;font-size:0.75rem;font-weight:700;margin-bottom:0.5rem;">Official VIT Holiday</span>
+            <div style="color:#fff;font-weight:700;font-size:1.1rem;">${selectedHoliday}</div>
+            <p style="color:var(--text-muted);font-size:0.78rem;margin-top:0.3rem;max-width:20rem;">No classes scheduled on this date according to the VIT Holiday circular.</p>
           </div>
         `;
         return;
@@ -923,9 +1521,9 @@
       if (daySessions.length === 0) {
         summaryEl.textContent = 'No classes scheduled';
         timelineEl.innerHTML = `
-          <div class="h-56 rounded-xl bg-[#0e131d] border border-dashed border-slate-800 flex flex-col items-center justify-center text-center p-6">
-            <div class="text-slate-300 font-bold text-base">No classes on ${LONG_DAYS[selectedDow]}!</div>
-            <p class="text-slate-500 text-xs mt-1 max-w-xs">Click any weekday tab above (Mon–Fri) to inspect your lectures and labs.</p>
+          <div style="height:220px;border-radius:0.85rem;background:#0e131d;border:1px dashed #1e293b;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:1.5rem;">
+            <div style="color:var(--text-light);font-weight:700;font-size:1rem;">No classes on ${LONG_DAYS[selectedDow]}!</div>
+            <p style="color:var(--text-dim);font-size:0.78rem;margin-top:0.3rem;max-width:20rem;">Click any weekday tab above (Mon–Fri) to inspect your lectures and labs.</p>
           </div>
         `;
         return;
@@ -933,18 +1531,18 @@
 
       const minHour = daySessions[0].startHour;
       const maxHour = daySessions[daySessions.length - 1].endHour;
-      summaryEl.textContent = `${daySessions.length} classes, ${formatRangeLabel(minHour, maxHour)}`;
+      summaryEl.textContent = `${daySessions.length} classes, ${formatRangeLabel(minHour, maxHour)}${selectedIsSpecial ? ' · Room 1117' : ''}`;
 
       const ROW_HEIGHT = 56;
       const totalHours = maxHour - minHour;
-      let html = `<div class="relative" style="height: ${totalHours * ROW_HEIGHT + 24}px;">`;
+      let html = `<div style="position:relative;height:${totalHours * ROW_HEIGHT + 24}px;">`;
 
       for (let h = minHour; h <= maxHour; h++) {
         const topPx = (h - minHour) * ROW_HEIGHT;
         html += `
-          <div class="absolute left-0 right-0 flex items-center" style="top: ${topPx}px;">
-            <span class="w-12 text-[11px] font-medium text-slate-400 text-right pr-3 -mt-2">${formatHourLabel(h)}</span>
-            <div class="flex-1 border-t border-slate-800/80"></div>
+          <div style="position:absolute;left:0;right:0;top:${topPx}px;display:flex;align-items:center;">
+            <span style="width:48px;font-size:0.7rem;font-weight:500;color:var(--text-muted);text-align:right;padding-right:0.7rem;margin-top:-0.45rem;">${formatHourLabel(h)}</span>
+            <div style="flex:1;border-top:1px solid rgba(30,41,59,0.85);"></div>
           </div>
         `;
       }
@@ -952,6 +1550,7 @@
       const currentDecHour = now.getHours() + now.getMinutes() / 60;
       daySessions.forEach(sess => {
         const course = COURSES[sess.courseKey];
+        const blockTitle = sess.customTitle || course.title;
         const topPx = (sess.startHour - minHour) * ROW_HEIGHT + 2;
         const heightPx = (sess.endHour - sess.startHour) * ROW_HEIGHT - 4;
         const isNow = state.selectedDayOffset === 0 && currentDecHour >= sess.startHour && currentDecHour < sess.endHour;
@@ -959,19 +1558,19 @@
 
         html += `
           <div onclick="openClassModal('${sess.id}')"
-               style="top: ${topPx}px; height: ${heightPx}px;"
-               class="absolute left-12 right-1 rounded-xl px-3.5 py-1.5 cursor-pointer transition flex items-center justify-between theme-${course.theme} ${isNow ? 'active-now-ring' : ''}">
-            <div class="min-w-0">
-              <div class="font-bold text-xs sm:text-sm text-white truncate">${course.title}</div>
-              <div class="flex items-center gap-2 text-[11px] opacity-90">
-                <span class="font-extrabold text-white">${sess.room}</span>
+               style="position:absolute;left:50px;right:4px;top:${topPx}px;height:${heightPx}px;border-radius:0.75rem;padding:0.4rem 0.85rem;cursor:pointer;display:flex;align-items:center;justify-content:space-between;transition:background 0.15s ease;"
+               class="theme-${course.theme} ${isNow ? 'active-now-ring' : ''}">
+            <div style="min-width:0;">
+              <div style="font-weight:700;font-size:0.85rem;color:#fff;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${blockTitle}</div>
+              <div style="display:flex;align-items:center;gap:0.5rem;font-size:0.72rem;opacity:0.92;">
+                <span style="font-weight:800;color:#fff;">${sess.room}</span>
                 <span>${sess.type}</span>
                 <span>${course.facultyShort}</span>
               </div>
             </div>
-            <div class="flex items-center gap-2 shrink-0">
-              ${pendingCount > 0 ? `<span class="px-2 py-0.5 rounded-full bg-black/35 text-[10px] font-bold text-emerald-300">${pendingCount} to-do</span>` : ''}
-              ${isNow ? `<span class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full bg-white text-slate-950 text-[10px] font-extrabold"><span class="w-1.5 h-1.5 rounded-full bg-rose-600"></span>Now</span>` : ''}
+            <div style="display:flex;align-items:center;gap:0.45rem;flex-shrink:0;">
+              ${pendingCount > 0 ? `<span style="padding:0.15rem 0.5rem;border-radius:9999px;background:rgba(0,0,0,0.38);font-size:0.65rem;font-weight:700;color:#6ee7b7;">${pendingCount} to-do</span>` : ''}
+              ${isNow ? `<span style="display:inline-flex;align-items:center;gap:0.25rem;padding:0.15rem 0.55rem;border-radius:9999px;background:#fff;color:#090d16;font-size:0.65rem;font-weight:800;"><span style="width:6px;height:6px;border-radius:50%;background:#e11d48;"></span>Now</span>` : ''}
             </div>
           </div>
         `;
@@ -981,9 +1580,9 @@
         const lineTop = (currentDecHour - minHour) * ROW_HEIGHT;
         const badgeTime = `${now.getHours() % 12 || 12}:${String(now.getMinutes()).padStart(2, '0')}`;
         html += `
-          <div class="absolute left-0 right-0 pointer-events-none flex items-center z-20" style="top: ${lineTop}px;">
-            <span class="px-1.5 py-0.5 rounded bg-rose-600 text-white text-[10px] font-extrabold leading-none">${badgeTime}</span>
-            <div class="flex-1 h-[2px] bg-rose-500"></div>
+          <div style="position:absolute;left:0;right:0;top:${lineTop}px;pointer-events:none;display:flex;align-items:center;z-index:20;">
+            <span style="padding:0.12rem 0.38rem;border-radius:0.25rem;background:#e11d48;color:#fff;font-size:0.62rem;font-weight:800;line-height:1;">${badgeTime}</span>
+            <div style="flex:1;height:2px;background:#f43f5e;"></div>
           </div>
         `;
       }
@@ -993,18 +1592,16 @@
     }
 
     /**************************************************************
-     * 7. RENDER FULL WEEKLY TIMETABLE GRID (8 AM TO 6 PM)
+     * 9. RENDER FULL WEEKLY TIMETABLE GRID (8 AM TO 6 PM)
      **************************************************************/
     function changeWeekOffset(offset) {
       state.weekOffset = offset;
-      document.getElementById('week-btn-current').className =
-        offset === 0
-          ? 'px-2.5 py-1 rounded-md font-bold bg-white text-slate-950'
-          : 'px-2.5 py-1 rounded-md font-semibold text-slate-400 hover:text-white';
-      document.getElementById('week-btn-next').className =
-        offset === 1
-          ? 'px-2.5 py-1 rounded-md font-bold bg-white text-slate-950'
-          : 'px-2.5 py-1 rounded-md font-semibold text-slate-400 hover:text-white';
+      for (let i = 0; i <= 3; i++) {
+        const btn = document.getElementById(`week-btn-${i}`);
+        if (btn) {
+          btn.className = i === offset ? 'seg-btn active' : 'seg-btn';
+        }
+      }
       renderWeeklyGrid();
     }
 
@@ -1019,29 +1616,44 @@
       saturdayDate.setDate(mondayDate.getDate() + 5);
 
       document.getElementById('weekRangeLabel').textContent =
-        `${mondayDate.getDate()} ${SHORT_MONTHS[mondayDate.getMonth()]} to ${saturdayDate.getDate()} ${SHORT_MONTHS[saturdayDate.getMonth()]}`;
+        `${mondayDate.getDate()} ${SHORT_MONTHS[mondayDate.getMonth()]} to ${saturdayDate.getDate()} ${SHORT_MONTHS[saturdayDate.getMonth()]} ${saturdayDate.getFullYear()}`;
 
-      const START_HOUR = 8; // Starts at 8:00 AM for Friday German
+      // Check if this week includes the Nov 2-5 special schedule
+      const hasSpecialDays = [0, 1, 2, 3].some(i => {
+        const d = new Date(mondayDate);
+        d.setDate(mondayDate.getDate() + i);
+        return isSpecialOverrideDate(d);
+      });
+      const weeklyBanner = document.getElementById('weeklySpecialBanner');
+      if (hasSpecialDays) {
+        weeklyBanner.classList.remove('hidden');
+      } else {
+        weeklyBanner.classList.add('hidden');
+      }
+
+      const START_HOUR = 8; // Starts at 8:00 AM
       const END_HOUR = 18;  // Ends at 6:00 PM
       const HOUR_HEIGHT = 54;
       const wrapper = document.getElementById('weeklyGridWrapper');
 
       // Header Row (Mon - Sat)
-      let headerCols = `<div class="w-14 shrink-0"></div>`;
+      let headerCols = `<div style="width:54px;flex-shrink:0;"></div>`;
       for (let i = 0; i < 6; i++) {
         const d = new Date(mondayDate);
         d.setDate(mondayDate.getDate() + i);
         const dow = d.getDay();
         const isToday = d.toDateString() === now.toDateString();
         const hol = getHolidayName(d);
+        const isSpec = isSpecialOverrideDate(d);
 
         headerCols += `
-          <div class="flex-1 px-2 pb-3 text-left">
-            <div class="text-xs font-bold ${isToday ? 'text-white flex items-center gap-1' : 'text-slate-300'}">
-              ${isToday ? `<span class="w-1.5 h-1.5 rounded-full bg-rose-500"></span>` : ''}
+          <div style="flex:1;padding:0 0.5rem 0.7rem;text-align:left;">
+            <div style="font-size:0.78rem;font-weight:700;color:${isToday ? '#fff' : 'var(--text-light)'};display:flex;align-items:center;gap:0.3rem;">
+              ${isToday ? `<span style="width:6px;height:6px;border-radius:50%;background:#f43f5e;"></span>` : ''}
               <span>${SHORT_DAYS[dow]}</span>
+              ${isSpec ? `<span style="font-size:0.62rem;padding:0.05rem 0.35rem;border-radius:4px;background:rgba(245,158,11,0.2);color:#fcd34d;">1117</span>` : ''}
             </div>
-            <div class="text-[11px] ${hol ? 'text-rose-400 font-semibold' : 'text-slate-400'}">
+            <div style="font-size:0.7rem;color:${hol ? '#fb7185' : 'var(--text-muted)'};font-weight:${hol ? '600' : '400'};">
               ${d.getDate()} ${SHORT_MONTHS[d.getMonth()]} ${hol ? '· Holiday' : ''}
             </div>
           </div>
@@ -1049,42 +1661,42 @@
       }
 
       const totalHeight = (END_HOUR - START_HOUR) * HOUR_HEIGHT;
-      let gridBody = `<div class="relative flex" style="height: ${totalHeight}px;">`;
+      let gridBody = `<div style="position:relative;display:flex;height:${totalHeight}px;">`;
 
       for (let h = START_HOUR; h <= END_HOUR; h++) {
         const topPx = (h - START_HOUR) * HOUR_HEIGHT;
         gridBody += `
-          <div class="absolute left-0 right-0 flex items-center pointer-events-none" style="top: ${topPx}px;">
-            <span class="w-14 pr-3 text-right text-[11px] text-slate-400 font-medium -mt-2">${formatHourLabel(h)}</span>
-            <div class="flex-1 border-t border-slate-800/80"></div>
+          <div style="position:absolute;left:0;right:0;top:${topPx}px;display:flex;align-items:center;pointer-events:none;">
+            <span style="width:54px;padding-right:0.7rem;text-align:right;font-size:0.7rem;color:var(--text-muted);font-weight:500;margin-top:-0.45rem;">${formatHourLabel(h)}</span>
+            <div style="flex:1;border-top:1px solid rgba(30,41,59,0.85);"></div>
           </div>
         `;
       }
 
-      gridBody += `<div class="w-14 shrink-0"></div>`;
+      gridBody += `<div style="width:54px;flex-shrink:0;"></div>`;
       const currentDecHour = now.getHours() + now.getMinutes() / 60;
 
       for (let i = 0; i < 6; i++) {
         const colDate = new Date(mondayDate);
         colDate.setDate(mondayDate.getDate() + i);
-        const dayIdx = colDate.getDay();
         const holidayName = getHolidayName(colDate);
         const colSessions = getSessionsForDate(colDate);
         const isTodayCol = colDate.toDateString() === now.toDateString();
 
-        gridBody += `<div class="flex-1 relative border-l border-slate-800/60">`;
+        gridBody += `<div style="flex:1;position:relative;border-left:1px solid rgba(30,41,59,0.65);">`;
 
         if (holidayName) {
           gridBody += `
-            <div class="m-1.5 p-2.5 rounded-lg bg-rose-950/30 border border-rose-800/40 text-rose-300 text-[11px] font-semibold leading-snug">
+            <div style="margin:0.35rem;padding:0.55rem;border-radius:0.5rem;background:rgba(136,19,55,0.28);border:1px solid rgba(225,29,72,0.38);color:#fda4af;font-size:0.7rem;font-weight:600;line-height:1.35;">
               <div>Holiday</div>
-              <div class="text-[10px] text-rose-400/80 font-normal mt-0.5">${holidayName}</div>
+              <div style="font-size:0.64rem;color:rgba(253,164,175,0.85);font-weight:400;margin-top:0.15rem;">${holidayName}</div>
             </div>
           `;
         }
 
         colSessions.forEach(sess => {
           const course = COURSES[sess.courseKey];
+          const shortTitle = sess.customShort || course.shortTitle;
           const topPx = (sess.startHour - START_HOUR) * HOUR_HEIGHT + 2;
           const heightPx = (sess.endHour - sess.startHour) * HOUR_HEIGHT - 4;
           const isNow = isTodayCol && currentDecHour >= sess.startHour && currentDecHour < sess.endHour;
@@ -1092,14 +1704,14 @@
 
           gridBody += `
             <div onclick="openClassModal('${sess.id}')"
-                 style="top: ${topPx}px; height: ${heightPx}px;"
-                 class="absolute left-1 right-1 rounded-lg p-2 cursor-pointer transition theme-${course.theme} ${isNow ? 'active-now-ring' : ''} flex flex-col justify-between overflow-hidden">
-              <div class="flex items-start justify-between gap-1">
-                <span class="font-bold text-xs text-white leading-tight truncate">${course.shortTitle}</span>
-                ${todoCount > 0 ? `<span class="w-2 h-2 rounded-full bg-emerald-400 shrink-0 mt-0.5" title="${todoCount} pending To-Do(s)"></span>` : ''}
+                 style="position:absolute;left:4px;right:4px;top:${topPx}px;height:${heightPx}px;border-radius:0.5rem;padding:0.38rem 0.5rem;cursor:pointer;display:flex;flex-direction:column;justify-content:space-between;overflow:hidden;transition:background 0.15s ease;"
+                 class="theme-${course.theme} ${isNow ? 'active-now-ring' : ''}">
+              <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:0.25rem;">
+                <span style="font-weight:700;font-size:0.75rem;color:#fff;line-height:1.15;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${shortTitle}</span>
+                ${todoCount > 0 ? `<span style="width:7px;height:7px;border-radius:50%;background:#34d399;flex-shrink:0;margin-top:2px;" title="${todoCount} pending To-Do(s)"></span>` : ''}
               </div>
-              <div class="text-[11px] opacity-90 truncate">
-                <span class="font-extrabold text-white">${sess.room}</span> ${sess.type} ${course.facultyShort}
+              <div style="font-size:0.68rem;opacity:0.92;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">
+                <span style="font-weight:800;color:#fff;">${sess.room}</span> ${sess.type} ${course.facultyShort}
               </div>
             </div>
           `;
@@ -1112,38 +1724,44 @@
         const lineTop = (currentDecHour - START_HOUR) * HOUR_HEIGHT;
         const badgeTime = `${now.getHours() % 12 || 12}:${String(now.getMinutes()).padStart(2, '0')}`;
         gridBody += `
-          <div class="absolute left-0 right-0 pointer-events-none flex items-center z-20" style="top: ${lineTop}px;">
-            <span class="px-1.5 py-0.5 rounded bg-rose-600 text-white text-[10px] font-extrabold leading-none">${badgeTime}</span>
-            <div class="flex-1 h-[2px] bg-rose-500"></div>
+          <div style="position:absolute;left:0;right:0;top:${lineTop}px;pointer-events:none;display:flex;align-items:center;z-index:20;">
+            <span style="padding:0.12rem 0.38rem;border-radius:0.25rem;background:#e11d48;color:#fff;font-size:0.62rem;font-weight:800;line-height:1;">${badgeTime}</span>
+            <div style="flex:1;height:2px;background:#f43f5e;"></div>
           </div>
         `;
       }
 
       gridBody += `</div>`;
-      wrapper.innerHTML = `<div class="flex">${headerCols}</div>${gridBody}`;
+      wrapper.innerHTML = `<div style="display:flex;">${headerCols}</div>${gridBody}`;
     }
 
     /**************************************************************
-     * 8. CLASS DETAIL POPUP MODAL & TO-DO HANDLERS
+     * 10. CLASS DETAIL POPUP MODAL & TO-DO HANDLERS
      **************************************************************/
     function openClassModal(sessionId) {
-      const sess = WEEKLY_SESSIONS.find(s => s.id === sessionId);
+      const sess = findSessionById(sessionId);
       if (!sess) return;
       state.activeModalSessionId = sessionId;
 
       const course = COURSES[sess.courseKey];
       const headerEl = document.getElementById('modalHeaderBanner');
-      headerEl.className = `modal-header-${course.theme} p-6 sm:p-7 relative transition-colors`;
+      headerEl.className = `modal-header-${course.theme}`;
 
-      document.getElementById('modalCourseTitle').textContent = course.title;
+      document.getElementById('modalCourseTitle').textContent = sess.customTitle || course.title;
       document.getElementById('modalCourseSub').textContent = `${course.code}, ${sess.type}`;
 
       const now = new Date();
       const currentDow = now.getDay();
       const currentDec = now.getHours() + now.getMinutes() / 60;
-      let statusLabel = `Every ${LONG_DAYS[sess.dayOfWeek]}`;
+      let statusLabel = sess.dateKey
+        ? `Special Schedule · ${LONG_DAYS[sess.dayOfWeek]}, ${sess.dateKey.split('-').reverse().join('-')}`
+        : `Every ${LONG_DAYS[sess.dayOfWeek]}`;
 
-      if (currentDow === sess.dayOfWeek && !getHolidayName(now)) {
+      const isTodayMatch = sess.dateKey
+        ? toDateKey(now) === sess.dateKey
+        : (currentDow === sess.dayOfWeek && !getHolidayName(now) && !isSpecialOverrideDate(now));
+
+      if (isTodayMatch) {
         if (currentDec >= sess.startHour && currentDec < sess.endHour) {
           const left = Math.max(1, Math.ceil((sess.endHour - currentDec) * 60));
           statusLabel = `In progress, ${left} min left`;
@@ -1156,7 +1774,9 @@
       }
 
       document.getElementById('modalStatusBadge').textContent = statusLabel;
-      document.getElementById('modalMetaWhen').textContent = LONG_DAYS[sess.dayOfWeek];
+      document.getElementById('modalMetaWhen').textContent = sess.dateKey
+        ? `${LONG_DAYS[sess.dayOfWeek]} (${sess.dateKey.split('-').reverse().join('-')})`
+        : LONG_DAYS[sess.dayOfWeek];
       document.getElementById('modalMetaTime').textContent = `${formatRangeLabel(sess.startHour, sess.endHour)} (${sess.endHour - sess.startHour} h)`;
       document.getElementById('modalMetaRoom').textContent = sess.room;
       document.getElementById('modalMetaType').textContent = sess.typeDetail;
@@ -1171,17 +1791,17 @@
       const subjectTodos = state.todos.filter(t => t.courseKey === courseKey);
 
       if (subjectTodos.length === 0) {
-        listEl.innerHTML = `<div class="text-xs text-slate-400 py-2">No tasks added for this subject yet.</div>`;
+        listEl.innerHTML = `<div style="font-size:0.78rem;color:var(--text-muted);padding:0.4rem 0;">No tasks added for this subject yet.</div>`;
         return;
       }
 
       listEl.innerHTML = subjectTodos.map(t => `
-        <div class="flex items-center justify-between gap-2 p-2.5 rounded-xl bg-[#0c1017] border border-slate-800">
-          <label class="flex items-center gap-2.5 cursor-pointer min-w-0 flex-1">
-            <input type="checkbox" ${t.completed ? 'checked' : ''} onchange="toggleTodo('${t.id}')" class="w-4 h-4 rounded accent-emerald-500" />
-            <span class="text-xs sm:text-sm ${t.completed ? 'line-through text-slate-500' : 'text-slate-100'} truncate">${escapeHtml(t.title)}</span>
+        <div style="display:flex;align-items:center;justify-content:space-between;gap:0.5rem;padding:0.55rem 0.75rem;border-radius:0.65rem;background:#0c1017;border:1px solid var(--border-subtle);">
+          <label style="display:flex;align-items:center;gap:0.6rem;cursor:pointer;min-width:0;flex:1;">
+            <input type="checkbox" ${t.completed ? 'checked' : ''} onchange="toggleTodo('${t.id}')" style="width:16px;height:16px;accent-color:#10b981;" />
+            <span style="font-size:0.82rem;color:${t.completed ? '#64748b' : '#f1f5f9'};text-decoration:${t.completed ? 'line-through' : 'none'};white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${escapeHtml(t.title)}</span>
           </label>
-          <button onclick="deleteTodo('${t.id}')" class="text-slate-500 hover:text-rose-400 text-xs px-1.5">✕</button>
+          <button onclick="deleteTodo('${t.id}')" style="background:none;border:none;color:#64748b;cursor:pointer;font-size:0.8rem;padding:0 0.25rem;">✕</button>
         </div>
       `).join('');
     }
@@ -1192,14 +1812,14 @@
       const title = input.value.trim();
       if (!title || !state.activeModalSessionId) return;
 
-      const sess = WEEKLY_SESSIONS.find(s => s.id === state.activeModalSessionId);
+      const sess = findSessionById(state.activeModalSessionId);
       if (!sess) return;
 
       state.todos.unshift({
         id: 'todo-' + Date.now(),
         title,
         courseKey: sess.courseKey,
-        dueDate: '',
+        dueDate: sess.dateKey || '',
         completed: false,
         createdAt: Date.now()
       });
@@ -1220,7 +1840,7 @@
     }
 
     /**************************************************************
-     * 9. TO-DO PAGE LOGIC
+     * 11. TO-DO PAGE LOGIC
      **************************************************************/
     function populateSubjectDropdowns() {
       const pageSelect = document.getElementById('pageTodoSubject');
@@ -1264,7 +1884,7 @@
         item.completed = !item.completed;
         saveTodos(true);
         if (state.activeModalSessionId) {
-          const sess = WEEKLY_SESSIONS.find(s => s.id === state.activeModalSessionId);
+          const sess = findSessionById(state.activeModalSessionId);
           if (sess) renderModalTodoList(sess.courseKey);
         }
         renderAll();
@@ -1275,7 +1895,7 @@
       state.todos = state.todos.filter(t => t.id !== id);
       saveTodos(true);
       if (state.activeModalSessionId) {
-        const sess = WEEKLY_SESSIONS.find(s => s.id === state.activeModalSessionId);
+        const sess = findSessionById(state.activeModalSessionId);
         if (sess) renderModalTodoList(sess.courseKey);
       }
       renderAll();
@@ -1289,12 +1909,8 @@
 
     function setTodoFilterStatus(status) {
       state.todoFilterStatus = status;
-      document.querySelectorAll('.todo-status-btn').forEach(btn => {
-        if (btn.dataset.status === status) {
-          btn.className = 'todo-status-btn px-3 py-1.5 rounded-lg text-xs font-bold bg-white text-slate-950';
-        } else {
-          btn.className = 'todo-status-btn px-3 py-1.5 rounded-lg text-xs font-semibold text-slate-400 hover:text-white bg-[#1a2130]';
-        }
+      document.querySelectorAll('#todoStatusFilterBar button').forEach(btn => {
+        btn.className = btn.dataset.status === status ? 'seg-btn active' : 'seg-btn';
       });
       renderTodoPage();
     }
@@ -1321,7 +1937,7 @@
 
       if (filtered.length === 0) {
         container.innerHTML = `
-          <div class="text-center py-12 text-slate-400 text-sm">
+          <div style="text-align:center;padding:2.5rem 1rem;color:var(--text-muted);font-size:0.85rem;">
             No tasks match this filter. Click any class on your timetable or use the form above to add one!
           </div>
         `;
@@ -1331,22 +1947,22 @@
       container.innerHTML = filtered.map(t => {
         const course = COURSES[t.courseKey] || COURSES.PROG;
         return `
-          <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 p-3.5 rounded-xl bg-[#0c1017] border border-slate-800/90 hover:border-slate-700 transition">
-            <label class="flex items-start sm:items-center gap-3 cursor-pointer flex-1 min-w-0">
-              <input type="checkbox" ${t.completed ? 'checked' : ''} onchange="toggleTodo('${t.id}')" class="w-4 h-4 mt-0.5 sm:mt-0 rounded accent-emerald-500 shrink-0" />
-              <div class="min-w-0 flex-1">
-                <div class="text-sm font-semibold ${t.completed ? 'line-through text-slate-500' : 'text-white'} break-words">
+          <div style="display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:0.75rem;padding:0.85rem 1rem;border-radius:0.8rem;background:#0c1017;border:1px solid var(--border-subtle);">
+            <label style="display:flex;align-items:flex-start;gap:0.75rem;cursor:pointer;flex:1;min-width:220px;">
+              <input type="checkbox" ${t.completed ? 'checked' : ''} onchange="toggleTodo('${t.id}')" style="width:17px;height:17px;margin-top:2px;accent-color:#10b981;flex-shrink:0;" />
+              <div style="min-width:0;flex:1;">
+                <div style="font-size:0.9rem;font-weight:600;color:${t.completed ? '#64748b' : '#fff'};text-decoration:${t.completed ? 'line-through' : 'none'};word-break:break-word;">
                   ${escapeHtml(t.title)}
                 </div>
-                <div class="flex flex-wrap items-center gap-2 mt-1">
-                  <span class="px-2 py-0.5 rounded text-[11px] font-bold theme-${course.theme}">
+                <div style="display:flex;flex-wrap:wrap;align-items:center;gap:0.5rem;margin-top:0.35rem;">
+                  <span style="padding:0.15rem 0.5rem;border-radius:0.35rem;font-size:0.68rem;font-weight:700;" class="theme-${course.theme}">
                     ${course.title} (${course.code})
                   </span>
-                  ${t.dueDate ? `<span class="text-[11px] text-slate-400">Due: ${t.dueDate}</span>` : ''}
+                  ${t.dueDate ? `<span style="font-size:0.7rem;color:var(--text-muted);">Due: ${t.dueDate}</span>` : ''}
                 </div>
               </div>
             </label>
-            <button onclick="deleteTodo('${t.id}')" class="self-end sm:self-center px-2.5 py-1 rounded-lg bg-slate-900 hover:bg-rose-950 text-slate-400 hover:text-rose-300 text-xs font-semibold transition">
+            <button onclick="deleteTodo('${t.id}')" style="padding:0.35rem 0.65rem;border-radius:0.5rem;background:#161c28;border:1px solid #263042;color:var(--text-muted);font-size:0.72rem;font-weight:600;cursor:pointer;">
               Delete
             </button>
           </div>
@@ -1355,7 +1971,7 @@
     }
 
     /**************************************************************
-     * 10. REAL-TIME MAC <-> IPHONE SYNC (NTFY CLOUD RELAY)
+     * 12. REAL-TIME MAC <-> IPHONE SYNC (NTFY CLOUD RELAY)
      **************************************************************/
     function openSyncModal() {
       document.getElementById('syncKeyInput').value = state.syncChannel;
@@ -1422,12 +2038,14 @@
       }
 
       if (!state.syncChannel) {
-        dot.className = 'w-2 h-2 rounded-full bg-slate-500';
+        dot.style.background = '#64748b';
+        dot.classList.remove('pulse-dot');
         statusText.textContent = 'Local Only';
         return;
       }
 
-      dot.className = 'w-2 h-2 rounded-full bg-emerald-400 pulse-dot';
+      dot.style.background = '#34d399';
+      dot.classList.add('pulse-dot');
       statusText.textContent = `Synced (${state.syncChannel})`;
 
       pullFromCloudNow();
@@ -1450,18 +2068,12 @@
     }
 
     /**************************************************************
-     * 11. VIEW & CLOCK CONTROLS
+     * 13. VIEW & CLOCK CONTROLS
      **************************************************************/
     function setClockFormat(fmt) {
       state.clockFormat = fmt;
-      document.getElementById('clock-btn-12h').className =
-        fmt === '12h'
-          ? 'px-3.5 py-1.5 rounded-lg text-xs sm:text-sm font-bold transition-all bg-white text-slate-950 shadow'
-          : 'px-3.5 py-1.5 rounded-lg text-xs sm:text-sm font-semibold transition-all text-slate-400 hover:text-white';
-      document.getElementById('clock-btn-24h').className =
-        fmt === '24h'
-          ? 'px-3.5 py-1.5 rounded-lg text-xs sm:text-sm font-bold transition-all bg-white text-slate-950 shadow'
-          : 'px-3.5 py-1.5 rounded-lg text-xs sm:text-sm font-semibold transition-all text-slate-400 hover:text-white';
+      document.getElementById('clock-btn-12h').className = fmt === '12h' ? 'seg-btn active' : 'seg-btn';
+      document.getElementById('clock-btn-24h').className = fmt === '24h' ? 'seg-btn active' : 'seg-btn';
       renderAll();
     }
 
@@ -1475,13 +2087,13 @@
       if (view === 'timetable') {
         ttView.classList.remove('hidden');
         tdView.classList.add('hidden');
-        ttBtn.className = 'flex items-center gap-2 px-4 py-1.5 rounded-lg text-xs sm:text-sm font-bold transition-all bg-white text-slate-950 shadow';
-        tdBtn.className = 'flex items-center gap-2 px-4 py-1.5 rounded-lg text-xs sm:text-sm font-semibold transition-all text-slate-300 hover:text-white';
+        ttBtn.className = 'seg-btn active';
+        tdBtn.className = 'seg-btn';
       } else {
         ttView.classList.add('hidden');
         tdView.classList.remove('hidden');
-        tdBtn.className = 'flex items-center gap-2 px-4 py-1.5 rounded-lg text-xs sm:text-sm font-bold transition-all bg-white text-slate-950 shadow';
-        ttBtn.className = 'flex items-center gap-2 px-4 py-1.5 rounded-lg text-xs sm:text-sm font-semibold transition-all text-slate-300 hover:text-white';
+        tdBtn.className = 'seg-btn active';
+        ttBtn.className = 'seg-btn';
       }
       renderAll();
     }
